@@ -7,7 +7,7 @@ Accessing the API with a python module.
 
 #### Get all items
 
-```http
+```
   query()
 ```
 
@@ -18,7 +18,7 @@ Accessing the API with a python module.
 
 #### Get item
 
-```http
+```
   GET /api/items/${id}
 ```
 
