@@ -1,3 +1,19 @@
+Metadata-Version: 2.1
+Name: qbreader
+Version: 0.0.1
+Summary: Access the QBreader API through Python.
+Home-page: https://github.com/qbreader/python-module
+Author: Rohan Arni and Geoffrey Wu
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: Unix
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: Operating System :: Microsoft :: Windows
+Description-Content-Type: text/markdown
+License-File: LICENSE.txt
+
+
 # QBreader Python API wrapper module
 Accessing the QBreader API with a python wrapper module.
 
