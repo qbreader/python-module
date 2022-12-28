@@ -5,7 +5,7 @@ Accessing the API with a python module.
 
 ## Documentation
 
-#### Get all items
+#### Search the QBreader database
 
 ```
   query()
@@ -23,3 +23,18 @@ Accessing the API with a python module.
 | `categories` | `list` | The categories to search for. Defaults to []. Leave as an empty list to search all. |
 | `subcategories` | `list` | The subcategories to search for. Defaults to []. Leave as an empty list to search all. |
 | `maxQueryReturnLength` | `int` | The maximum number of questions to return. Defaults to None. Leave blank to return 50. Anything over 200 will not work. |
+
+
+#### Get a random question from the QBreader database
+
+```
+  random_question()
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `questionType` | `string` | The type of question to search for. Defaults to "all". If one of the three is not set, returns a 400 Bad Request. |
+| `difficulties` | `list` | The string to search for. Defaults to "". |
+| `categories` | `list` | The categories to search for. Defaults to []. Leave as an empty list to search all. |
+| `subcategories` | `list` | The subcategories to search for. Defaults to []. Leave as an empty list to search all. |
+| `number` | `int` | The number of questions to return. Defaults to None. Leave blank to return 1.|
