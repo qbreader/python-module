@@ -106,7 +106,7 @@ def random_name() -> str:
     '''
     Get a random name from the QBreader database.
 
-    This function gets a random name from the QBreader database.
+    This function Generates an adjective-noun pair (used in multiplayer lobbies).
 
     Takes no parameters.
 
