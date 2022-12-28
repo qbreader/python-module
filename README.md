@@ -1,7 +1,5 @@
 # python-module
-Accessing the API with a python module.
-
-
+Accessing the QBreader API with a python wrapper module.
 
 ## Documentation
 
@@ -10,6 +8,7 @@ Accessing the API with a python module.
 ```
   query()
 ```
+This function searches the QBreader database for questions that match the parameters specified.
 
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
@@ -30,6 +29,7 @@ Accessing the API with a python module.
 ```
   random_question()
 ```
+This function gets a random question from the QBreader database.
 
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
@@ -38,3 +38,85 @@ Accessing the API with a python module.
 | `categories` | `list` | The categories to search for. Defaults to []. Leave as an empty list to search all. |
 | `subcategories` | `list` | The subcategories to search for. Defaults to []. Leave as an empty list to search all. |
 | `number` | `int` | The number of questions to return. Defaults to None. Leave blank to return 1.|
+
+#### Generate a random name 
+
+```
+  random_question()
+```
+This function Generates an adjective-noun pair (used in multiplayer lobbies)
+
+#### Get questions from a packet from the QBreader database
+
+```
+  packet()
+```
+This function gets questions from a packet from the QBreader database.
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `setName` | `string` | The name of the set to search. Can be obtained from set_list().|
+| `packetNumber` | `int` | The number of the packet to search for.|
+
+#### Get a packet's tossups from the QBreader database
+
+```
+  packet_tossups()
+```
+This function gets a packet's tossups from the QBreader database. Twice as fast as using packet().
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `setName` | `string` | The name of the set to search. Can be obtained from set_list().|
+| `packetNumber` | `int` | The number of the packet to search for.|
+
+#### Get a packet's bonuses from the QBreader database
+
+```
+  packet_bonuses()
+```
+This function gets a packet's bonuses from the QBreader database. Twice as fast as using packet().
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `setName` | `string` | The name of the set to search. Can be obtained from set_list().|
+| `packetNumber` | `int` | The number of the packet to search for.|
+
+#### Get the number of packets in a set from the QBreader database
+
+```
+  packet_bonuses()
+```
+This function gets the number of packets in a set from the QBreader database
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `setName` | `string` | The name of the set to search. Can be obtained from set_list().|
+
+#### Get a list of sets from the QBreader database 
+
+```
+  set_list()
+```
+
+This function gets a list of sets from the QBreader database.
+
+#### Get a list of rooms from the QBreader database
+
+```
+  room_list()
+```
+This function gets a list of rooms from the QBreader database.
+
+#### Report a question from the QBreader database
+
+```
+  report_question()
+```
+This function gets a packet's bonuses from the QBreader database. Twice as fast as using packet().
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `_id` | `string` | The ID of the question to report.|
+| `reason` | `string` | The reason for reporting the question. Defaults to None. |
+| `description` | `string` | A description of the reason for reporting the question. Defaults to None.|
