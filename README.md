@@ -113,7 +113,7 @@ This function gets a list of rooms from the QBreader database.
 ```
   report_question()
 ```
-This function gets a packet's bonuses from the QBreader database. Twice as fast as using packet().
+This function reports a question from the QBreader database.
 
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
