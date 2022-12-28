@@ -7,7 +7,7 @@ Accessing the API with a python module.
 
 #### Get all items
 
-```http
+```
   query()
 ```
 
