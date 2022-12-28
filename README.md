@@ -1,4 +1,4 @@
-# python-module
+# QBreader Python API wrapper module
 Accessing the QBreader API with a python wrapper module.
 
 ## Documentation
