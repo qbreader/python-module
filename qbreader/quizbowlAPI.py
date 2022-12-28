@@ -128,7 +128,7 @@ def packet(setName:str, packetNumber:int) -> dict:
     '''
     Get a packet from the QBreader database.
 
-    This function gets a packet from the QBreader database.
+    This function gets questions from a packet from the QBreader database.
 
     Parameters
     ----------
