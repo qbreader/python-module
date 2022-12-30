@@ -2,7 +2,19 @@ import requests
 
 base = "https://www.qbreader.org/api"
 
-def query(questionType:str = "all", searchType:str = "all", queryString:str = "", regex:bool = False, randomize:bool = False, setName:str = "", difficulties:list = [], categories:list = [], subcategories:list = [], maxQueryReturnLength:int = None) -> dict: 
+
+def query(
+    questionType: str = "all",
+    searchType: str = "all",
+    queryString: str = "",
+    regex: bool = False,
+    randomize: bool = False,
+    setName: str = "",
+    difficulties: list = [],
+    categories: list = [],
+    subcategories: list = [],
+    maxQueryReturnLength: int = None,
+) -> dict:
     """
     Search the QBreader database.
 
@@ -12,7 +24,7 @@ def query(questionType:str = "all", searchType:str = "all", queryString:str = ""
     ----------
     questionType : str, must be one of "all", "tossup", "bonus"
         The type of question to search for. Defaults to "all". If one of the three is not set, returns a 400 Bad Request.
-    searchType : str, must be one of "all", "answer", "question"    
+    searchType : str, must be one of "all", "answer", "question"
         The type of search to perform. Defaults to "all". If one of the three is not set, returns a 400 Bad Request.
     queryString : str (optional)
         The string to search for. Defaults to "".
@@ -24,18 +36,18 @@ def query(questionType:str = "all", searchType:str = "all", queryString:str = ""
         The name of the set to search. Defaults to "". Leave as an empty string to search all.
     difficulties : list (optional)
         The difficulties to search for. Defaults to []. Leave as an empty list to search all. Must be a list of ints from 1 to 10.
-    categories : list (optional) 
+    categories : list (optional)
         The categories to search for. Defaults to []. Leave as an empty list to search all.
     subcategories : list (optional)
         The subcategories to search for. Defaults to []. Leave as an empty list to search all.
     maxQueryReturnLength : int (optional)
         The maximum number of questions to return. Defaults to None. Leave blank to return 50. Anything over 200 will not work.
-    
+
     Returns
     ----------
     dict
         A dictionary containing the results of the search.
-    
+
     """
     regex_converted = str(regex).lower()
     random_converted = str(randomize).lower()
@@ -51,8 +63,7 @@ def query(questionType:str = "all", searchType:str = "all", queryString:str = ""
         "categories": categories,
         "subcategories": subcategories,
         "difficulties": difficulties,
-        "maxQueryReturnLength": maxQueryReturnLength
-
+        "maxQueryReturnLength": maxQueryReturnLength,
     }
 
     response = requests.post(url, json=data)
@@ -62,7 +73,14 @@ def query(questionType:str = "all", searchType:str = "all", queryString:str = ""
     else:
         raise Exception(str(response.status_code) + " bad request")
 
-def random_question(questionType:str, difficulties:dict = [], categories:list = [], subcategories:list = [], number:int = None) -> list: 
+
+def random_question(
+    questionType: str,
+    difficulties: dict = [],
+    categories: list = [],
+    subcategories: list = [],
+    number: int = None,
+) -> list:
     """
     Get a random question from the QBreader database.
 
@@ -70,7 +88,7 @@ def random_question(questionType:str, difficulties:dict = [], categories:list = 
 
     Parameters
     ----------
-    questionType : str, must be one of "all", "tossup", "bonus" 
+    questionType : str, must be one of "all", "tossup", "bonus"
         The type of question to search for (tossup or bonus). If one of the two is not set, returns a 400 Bad Request.
     difficulties : list (optional)
         The difficulties to search for. Defaults to []. Leave as an empty list to search all. Must be a list of ints from 1 to 10.
@@ -80,7 +98,7 @@ def random_question(questionType:str, difficulties:dict = [], categories:list = 
         The subcategories to search for. Defaults to []. Leave as an empty list to search all.
     number : int (optional)
         The number of questions to return. Defaults to None. Leave blank to return 1.
-    
+
     Returns
     ----------
     list
@@ -94,7 +112,7 @@ def random_question(questionType:str, difficulties:dict = [], categories:list = 
         "categories": categories,
         "subcategories": subcategories,
         "difficulties": difficulties,
-        "number": number
+        "number": number,
     }
 
     response = requests.post(url, json=data)
@@ -104,8 +122,9 @@ def random_question(questionType:str, difficulties:dict = [], categories:list = 
     else:
         raise Exception(str(response.status_code) + " bad request")
 
+
 def random_name() -> str:
-    '''
+    """
     Get a random name from the QBreader database.
 
     This function Generates an adjective-noun pair (used in multiplayer lobbies).
@@ -117,7 +136,7 @@ def random_name() -> str:
     str
         A string containing the random name.
 
-    '''
+    """
     url = base + "/random-name"
     response = requests.get(url)
 
@@ -126,8 +145,9 @@ def random_name() -> str:
     else:
         raise Exception(str(response.status_code) + " bad request")
 
-def packet(setName:str, packetNumber:int) -> dict:
-    '''
+
+def packet(setName: str, packetNumber: int) -> dict:
+    """
     Get a packet from the QBreader database.
 
     This function gets questions from a packet from the QBreader database.
@@ -138,17 +158,14 @@ def packet(setName:str, packetNumber:int) -> dict:
         The name of the set to search. Can be obtained from set_list().
     packetNumber : int
         The number of the packet to search for.
-    
+
     Returns
     ----------
     dict
         A dictionary containing the results of the search.
-    '''
+    """
     url = base + "/packet"
-    data = {
-        "setName": setName,
-        "packetNumber": packetNumber
-    }
+    data = {"setName": setName, "packetNumber": packetNumber}
 
     response = requests.get(url, params=data)
 
@@ -157,8 +174,9 @@ def packet(setName:str, packetNumber:int) -> dict:
     else:
         raise Exception(str(response.status_code) + " bad request")
 
-def packet_tossups(setName:str, packetNumber:int) -> dict:
-    '''
+
+def packet_tossups(setName: str, packetNumber: int) -> dict:
+    """
     Get a packet's tossups from the QBreader database.
 
     This function gets a packet's tossups from the QBreader database. Twice as fast as using packet().
@@ -169,19 +187,16 @@ def packet_tossups(setName:str, packetNumber:int) -> dict:
         The name of the set to search. Can be obtained from set_list().
     packetNumber : int
         The number of the packet to search for.
-    
+
     Returns
     ----------
     dict
         A dictionary containing the results of the search.
 
-    '''
+    """
 
     url = base + "/packet-tossups"
-    data = {
-        "setName": setName,
-        "packetNumber": packetNumber
-    }
+    data = {"setName": setName, "packetNumber": packetNumber}
 
     response = requests.get(url, params=data)
 
@@ -190,8 +205,9 @@ def packet_tossups(setName:str, packetNumber:int) -> dict:
     else:
         raise Exception(str(response.status_code) + " bad request")
 
-def packet_bonuses(setName:str, packetNumber:int) -> dict:
-    '''
+
+def packet_bonuses(setName: str, packetNumber: int) -> dict:
+    """
     Get a packet's bonuses from the QBreader database.
 
     This function gets a packet's bonuses from the QBreader database. Twice as fast as using packet().
@@ -202,18 +218,15 @@ def packet_bonuses(setName:str, packetNumber:int) -> dict:
         The name of the set to search. Can be obtained from set_list().
     packetNumber : int
         The number of the packet to search for.
-    
+
     Returns
     ----------
     dict
         A dictionary containing the results of the search.
 
-    '''
+    """
     url = base + "/packet-bonuses"
-    data = {
-        "setName": setName,
-        "packetNumber": packetNumber
-    }
+    data = {"setName": setName, "packetNumber": packetNumber}
 
     response = requests.get(url, params=data)
 
@@ -222,8 +235,9 @@ def packet_bonuses(setName:str, packetNumber:int) -> dict:
     else:
         raise Exception(str(response.status_code) + " bad request")
 
-def num_packets(setName:str) -> dict:
-    '''
+
+def num_packets(setName: str) -> dict:
+    """
     Get the number of packets in a set from the QBreader database.
 
     This function gets the number of packets in a set from the QBreader database.
@@ -232,12 +246,12 @@ def num_packets(setName:str) -> dict:
     ----------
     setName : str
         The name of the set to search. Can be obtained from set_list().
-    
+
     Returns
     ----------
     dict
         A dictionary containing the results of the search.
-    '''
+    """
     url = base + "/num-packets"
     data = {
         "setName": setName,
@@ -250,8 +264,9 @@ def num_packets(setName:str) -> dict:
     else:
         raise Exception(str(response.status_code) + " bad request")
 
+
 def set_list() -> list:
-    '''
+    """
     Get a list of sets from the QBreader database.
 
     This function gets a list of sets from the QBreader database.
@@ -262,7 +277,7 @@ def set_list() -> list:
     ----------
     list
         A list containing the results of the search.
-    '''
+    """
     url = base + "/set-list"
     response = requests.get(url)
     if response.status_code == 200:
@@ -270,8 +285,9 @@ def set_list() -> list:
     else:
         raise Exception(str(response.status_code) + " bad request")
 
+
 def room_list() -> dict:
-    '''
+    """
     Get a list of rooms from the QBreader database.
 
     This function gets a list of rooms from the QBreader database.
@@ -282,7 +298,7 @@ def room_list() -> dict:
     ----------
     dict
         A dictionary containing the results of the search.
-    '''
+    """
     url = base + "/multiplayer/room-list"
     response = requests.get(url)
     if response.status_code == 200:
@@ -290,10 +306,11 @@ def room_list() -> dict:
     else:
         raise Exception(str(response.status_code) + " bad request")
 
-def report_question(_id:str, reason:str = None, description:str = None) -> int: 
+
+def report_question(_id: str, reason: str = None, description: str = None) -> int:
     """
     Report a question from the QBreader database.
-    
+
     This function reports a question from the QBreader database.
 
     Parameters
@@ -304,7 +321,7 @@ def report_question(_id:str, reason:str = None, description:str = None) -> int:
         The reason for reporting the question. Defaults to None.
     description : str (optional)
         A description of the reason for reporting the question. Defaults to None.
-    
+
     Returns
     ----------
     int
@@ -312,11 +329,7 @@ def report_question(_id:str, reason:str = None, description:str = None) -> int:
     """
     url = base + "/random-question"
 
-    data = {
-        "_id": _id,
-        "reason": reason,
-        "description": description
-    }
+    data = {"_id": _id, "reason": reason, "description": description}
 
     response = requests.post(url, json=data)
 
