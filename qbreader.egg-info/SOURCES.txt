@@ -1,4 +1,4 @@
-LICENSE.txt
+LICENSE
 README.md
 setup.py
 qbreader/__init__.py
