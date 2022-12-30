@@ -3,6 +3,14 @@ Accessing the QBreader API with a python wrapper module.
 
 ## Documentation
 
+#### Get a list of sets from the QBreader database 
+
+```
+  set_list()
+```
+
+This function gets a list of sets from the QBreader database.
+
 #### Search the QBreader database
 
 ```
@@ -12,16 +20,16 @@ This function searches the QBreader database for questions that match the parame
 
 | Parameter | Type     |Values| Description                |
 | :-------- | :------- |:----------|:------------------------- |
-| `questionType` | `string` | The type of question to search for. Defaults to "all". If one of the three is not set, returns a 400 Bad Request. |
-| `searchType` | `string` | The type of search to perform. Defaults to "all". If one of the three is not set, returns a 400 Bad Request. |
-| `queryString` | `string` | The string to search for. Defaults to "". |
-| `regex` | `bool` | Whether or not to use regular expressions for the queryString. Defaults to "False". |
-| `randomize` | `bool` | Whether or not to randomize the order of the results. Defaults to "False". |
-| `setName` | `string` | The difficulties to search for. Defaults to []. Leave as an empty list to search all. Must be a list of ints from 1 to 10. |
-| `difficulties` | `list` | The string to search for. Defaults to "". |
-| `categories` | `list` | The categories to search for. Defaults to []. Leave as an empty list to search all. |
-| `subcategories` | `list` | The subcategories to search for. Defaults to []. Leave as an empty list to search all. |
-| `maxQueryReturnLength` | `int` | The maximum number of questions to return. Defaults to None. Leave blank to return 50. Anything over 200 will not work. |
+| `questionType` | `string` |`tossup`, `bonus`, `all`| The type of question to search for. Defaults to "all". If one of the three is not set, returns a 400 Bad Request. |
+| `searchType` | `string` |`question`, `answer`| The type of search to perform. Defaults to "all". If one of the three is not set, returns a 400 Bad Request. |
+| `queryString` | `string` |Any string.| The string to search for. Defaults to "". |
+| `regex` | `bool` |`True`, `False`| Whether or not to use regular expressions for the queryString. Defaults to "False". |
+| `randomize` | `bool` |`True`, `False`| Whether or not to randomize the order of the results. Defaults to "False". |
+| `setName` | `string` |Any string| The difficulties to search for. Defaults to []. Leave as an empty list to search all. Must be a list of ints from 1 to 10. |
+| `difficulties` | `list`|`[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]`| The string to search for. Defaults to "". |
+| `categories` | `list` |See https://pastebin.com/McVDGDXg for a full list.| The categories to search for. Defaults to []. Leave as an empty list to search all. |
+| `subcategories` | `list` |See https://pastebin.com/McVDGDXg for a full list.| The subcategories to search for. Defaults to []. Leave as an empty list to search all. |
+| `maxQueryReturnLength` | `int` |Any integer. | The maximum number of questions to return. Defaults to None. Leave blank to return 50. Anything over 200 will not work. |
 
 
 #### Get a random question from the QBreader database
@@ -31,13 +39,13 @@ This function searches the QBreader database for questions that match the parame
 ```
 This function gets a random question from the QBreader database.
 
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `questionType` | `string` | The type of question to search for (tossup or bonus). If one of the two is not set, returns a 400 Bad Request. |
-| `difficulties` | `list` | The string to search for. Defaults to "". |
-| `categories` | `list` | The categories to search for. Defaults to []. Leave as an empty list to search all. |
-| `subcategories` | `list` | The subcategories to search for. Defaults to []. Leave as an empty list to search all. |
-| `number` | `int` | The number of questions to return. Defaults to None. Leave blank to return 1.|
+| Parameter | Type     |Values| Description                |
+| :-------- | :------- |:----------| :------------------------- |
+| `questionType` | `string` |`tossup`, `bonus`, `all`| The type of question to search for (tossup or bonus). If one of the two is not set, returns a 400 Bad Request. |
+| `difficulties` | `list` |`[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]`| The string to search for. Defaults to "". |
+| `categories` | `list` |See https://pastebin.com/McVDGDXg for a full list.| The categories to search for. Defaults to []. Leave as an empty list to search all. |
+| `subcategories` | `list` |See https://pastebin.com/McVDGDXg for a full list.| The subcategories to search for. Defaults to []. Leave as an empty list to search all. |
+| `number` | `int` |Any integer. | The number of questions to return. Defaults to None. Leave blank to return 1.|
 
 #### Generate a random name 
 
@@ -53,10 +61,10 @@ This function Generates an adjective-noun pair (used in multiplayer lobbies)
 ```
 This function gets questions from a packet from the QBreader database.
 
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `setName` | `string` | The name of the set to search. Can be obtained from set_list().|
-| `packetNumber` | `int` | The number of the packet to search for.|
+| Parameter | Type     | Values |Description                |
+| :-------- | :------- | :---------|:------------------------- |
+| `setName` | `string` |Names of sets can be obtained by running set_list()| The name of the set to search. Can be obtained from set_list().|
+| `packetNumber` | `int` |Any integer that corresponds to a packet number, usually from 1-11.|The number of the packet to search for.|
 
 #### Get a packet's tossups from the QBreader database
 
@@ -65,10 +73,10 @@ This function gets questions from a packet from the QBreader database.
 ```
 This function gets a packet's tossups from the QBreader database. Twice as fast as using packet().
 
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `setName` | `string` | The name of the set to search. Can be obtained from set_list().|
-| `packetNumber` | `int` | The number of the packet to search for.|
+| Parameter | Type     | Values |Description                |
+| :-------- | :------- | :---------|:------------------------- |
+| `setName` | `string` |Names of sets can be obtained by running set_list()| The name of the set to search. Can be obtained from set_list().|
+| `packetNumber` | `int` |Any integer that corresponds to a packet number, usually from 1-11.|The number of the packet to search for.|
 
 #### Get a packet's bonuses from the QBreader database
 
@@ -77,10 +85,10 @@ This function gets a packet's tossups from the QBreader database. Twice as fast 
 ```
 This function gets a packet's bonuses from the QBreader database. Twice as fast as using packet().
 
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `setName` | `string` | The name of the set to search. Can be obtained from set_list().|
-| `packetNumber` | `int` | The number of the packet to search for.|
+| Parameter | Type     | Values |Description                |
+| :-------- | :------- | :---------|:------------------------- |
+| `setName` | `string` |Names of sets can be obtained by running set_list()| The name of the set to search. Can be obtained from set_list().|
+| `packetNumber` | `int` |Any integer that corresponds to a packet number, usually from 1-11.|The number of the packet to search for.|
 
 #### Get the number of packets in a set from the QBreader database
 
@@ -89,24 +97,10 @@ This function gets a packet's bonuses from the QBreader database. Twice as fast 
 ```
 This function gets the number of packets in a set from the QBreader database
 
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `setName` | `string` | The name of the set to search. Can be obtained from set_list().|
+| Parameter | Type     | Values |Description                |
+| :-------- | :------- | :---------|:------------------------- |
+| `setName` | `string` |Names of sets can be obtained by running set_list()| The name of the set to search. Can be obtained from set_list().|
 
-#### Get a list of sets from the QBreader database 
-
-```
-  set_list()
-```
-
-This function gets a list of sets from the QBreader database.
-
-#### Get a list of rooms from the QBreader database
-
-```
-  room_list()
-```
-This function gets a list of rooms from the QBreader database.
 
 #### Report a question from the QBreader database
 
@@ -115,8 +109,15 @@ This function gets a list of rooms from the QBreader database.
 ```
 This function reports a question from the QBreader database.
 
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `_id` | `string` | The ID of the question to report.|
-| `reason` | `string` | The reason for reporting the question. Defaults to None. |
-| `description` | `string` | A description of the reason for reporting the question. Defaults to None.|
+| Parameter | Type     |Values| Description                |
+| :-------- | :------- |:------| :------------------------- |
+| `_id` | `string` |Can be obtained from the `query()`, `random_question`, `packet()`, `packet_bonuses`, or `packet_tossups`.| The ID of the question to report.|
+| `reason` | `string` |N/A| The reason for reporting the question. Defaults to None. |
+| `description` | `string` |N/A| A description of the reason for reporting the question. Defaults to None.|
+
+#### Get a list of rooms from the QBreader database
+
+```
+  room_list()
+```
+This function gets a list of rooms from the QBreader database.
