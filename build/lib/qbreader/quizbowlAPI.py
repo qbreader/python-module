@@ -60,7 +60,7 @@ def query(questionType:str = "all", searchType:str = "all", queryString:str = ""
     if response.status_code == 200:
         return response.json()
     else:
-        return str(response.status_code) + " bad request"
+        raise Exception(str(response.status_code) + " bad request")
 
 def random_question(questionType:str, difficulties:dict = [], categories:dict = [], subcategories:dict = [], number:int = None) -> list: 
     """
@@ -102,7 +102,7 @@ def random_question(questionType:str, difficulties:dict = [], categories:dict = 
     if response.status_code == 200:
         return response.json()
     else:
-        return str(response.status_code) + " bad request"
+        raise Exception(str(response.status_code) + " bad request")
 
 def random_name() -> str:
     '''
@@ -124,7 +124,7 @@ def random_name() -> str:
     if response.status_code == 200:
         return response.text
     else:
-        return str(response.status_code) + " bad request"
+        raise Exception(str(response.status_code) + " bad request")
 
 def packet(setName:str, packetNumber:int) -> dict:
     '''
@@ -155,7 +155,7 @@ def packet(setName:str, packetNumber:int) -> dict:
     if response.status_code == 200:
         return response.json()
     else:
-        return str(response.status_code) + " bad request"
+        raise Exception(str(response.status_code) + " bad request")
 
 def packet_tossups(setName:str, packetNumber:int) -> dict:
     '''
@@ -188,7 +188,7 @@ def packet_tossups(setName:str, packetNumber:int) -> dict:
     if response.status_code == 200:
         return response.json()
     else:
-        return str(response.status_code) + " bad request"
+        raise Exception(str(response.status_code) + " bad request")
 
 def packet_bonuses(setName:str, packetNumber:int) -> dict:
     '''
@@ -220,7 +220,7 @@ def packet_bonuses(setName:str, packetNumber:int) -> dict:
     if response.status_code == 200:
         return response.json()
     else:
-        return str(response.status_code) + " bad request"
+        raise Exception(str(response.status_code) + " bad request")
 
 def num_packets(setName:str) -> dict:
     '''
@@ -248,7 +248,7 @@ def num_packets(setName:str) -> dict:
     if response.status_code == 200:
         return response.json()
     else:
-        return str(response.status_code) + " bad request"
+        raise Exception(str(response.status_code) + " bad request")
 
 def set_list() -> list:
     '''
@@ -268,7 +268,7 @@ def set_list() -> list:
     if response.status_code == 200:
         return response.json()
     else:
-        return str(response.status_code) + " bad request"
+        raise Exception(str(response.status_code) + " bad request")
 
 def room_list() -> dict:
     '''
@@ -288,7 +288,7 @@ def room_list() -> dict:
     if response.status_code == 200:
         return response.json()
     else:
-        return str(response.status_code) + " bad request"
+        raise Exception(str(response.status_code) + " bad request")
 
 def report_question(_id:str, reason:str = None, description:str = None) -> int: 
     """
