@@ -2,7 +2,7 @@ import requests
 
 base = "https://www.qbreader.org/api"
 
-def query(questionType:str = "all", searchType:str = "all", queryString:str = "", regex:bool = False, randomize:bool = False, setName:str = "", difficulties:dict = [], categories:dict = [], subcategories:dict = [], maxQueryReturnLength:int = None) -> dict: 
+def query(questionType:str = "all", searchType:str = "all", queryString:str = "", regex:bool = False, randomize:bool = False, setName:str = "", difficulties:list = [], categories:list = [], subcategories:list = [], maxQueryReturnLength:int = None) -> dict: 
     """
     Search the QBreader database.
 
@@ -62,7 +62,7 @@ def query(questionType:str = "all", searchType:str = "all", queryString:str = ""
     else:
         raise Exception(str(response.status_code) + " bad request")
 
-def random_question(questionType:str, difficulties:dict = [], categories:dict = [], subcategories:dict = [], number:int = None) -> list: 
+def random_question(questionType:str, difficulties:dict = [], categories:list = [], subcategories:list = [], number:int = None) -> list: 
     """
     Get a random question from the QBreader database.
 

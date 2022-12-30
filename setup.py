@@ -7,7 +7,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
     long_description = "\n" + fh.read()
 
-VERSION = '0.0.5'
+VERSION = input("Input the new version number you are going to use: ")
 DESCRIPTION = 'Access the QBreader API through Python.'
 
 # Setting up
