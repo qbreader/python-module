@@ -2,7 +2,7 @@ import requests
 
 base = "https://www.qbreader.org/api"
 
-def query(questionType:str = "all", searchType:str = "all", queryString:str = "", regex:str = "false", randomize:str = "false", setName:str = "", difficulties:dict = [], categories:dict = [], subcategories:dict = [], maxQueryReturnLength:int = None) -> dict: 
+def query(questionType:str = "all", searchType:str = "all", queryString:str = "", regex:bool = False, randomize:bool = False, setName:str = "", difficulties:dict = [], categories:dict = [], subcategories:dict = [], maxQueryReturnLength:int = None) -> dict: 
     """
     Search the QBreader database.
 
@@ -37,14 +37,16 @@ def query(questionType:str = "all", searchType:str = "all", queryString:str = ""
         A dictionary containing the results of the search.
     
     """
+    regex_converted = str(regex).lower()
+    random_converted = str(randomize).lower()
     url = base + "/query"
 
     data = {
         "questionType": questionType,
         "searchType": searchType,
         "queryString": queryString,
-        "regex": regex,
-        "randomize": randomize,
+        "regex": regex_converted,
+        "randomize": random_converted,
         "setName": setName,
         "categories": categories,
         "subcategories": subcategories,
