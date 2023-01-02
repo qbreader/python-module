@@ -79,7 +79,7 @@ def random_question(
     difficulties: dict = [],
     categories: list = [],
     subcategories: list = [],
-    number: int = None,
+    number: int = 1,
 ) -> list:
     """
     Get a random question from the QBreader database.
@@ -88,8 +88,8 @@ def random_question(
 
     Parameters
     ----------
-    questionType : str, must be one of "all", "tossup", "bonus"
-        The type of question to search for (tossup or bonus). If one of the two is not set, returns a 400 Bad Request.
+    questionType : str, must be one of "tossup" or "bonus"
+        The type of question to search for (tossup or bonus or both). If one of the two is not set, returns a 400 Bad Request.
     difficulties : list (optional)
         The difficulties to search for. Defaults to []. Leave as an empty list to search all. Must be a list of ints from 1 to 10.
     categories : list (optional)

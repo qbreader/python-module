@@ -41,7 +41,7 @@ This function gets a random question from the QBreader database.
 
 | Parameter | Type     |Values| Description                |
 | :-------- | :------- |:----------| :------------------------- |
-| `questionType` | `string` |`tossup`, `bonus`, `all`| The type of question to search for (tossup or bonus). If one of the two is not set, returns a 400 Bad Request. |
+| `questionType` | `string` |`tossup`, `bonus`| The type of question to search for (tossup or bonus). If one of the two is not set, returns a 400 Bad Request. |
 | `difficulties` | `list` |`[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]`| The string to search for. Defaults to "". |
 | `categories` | `list` |See https://pastebin.com/McVDGDXg for a full list.| The categories to search for. Defaults to []. Leave as an empty list to search all. |
 | `subcategories` | `list` |See https://pastebin.com/McVDGDXg for a full list.| The subcategories to search for. Defaults to []. Leave as an empty list to search all. |
