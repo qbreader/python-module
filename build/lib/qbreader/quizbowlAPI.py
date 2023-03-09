@@ -66,7 +66,7 @@ def query(
         "maxQueryReturnLength": maxQueryReturnLength,
     }
 
-    response = requests.post(url, json=data)
+    response = requests.get(url, params=data)
 
     if response.status_code == 200:
         return response.json()
