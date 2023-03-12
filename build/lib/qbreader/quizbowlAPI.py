@@ -334,3 +334,32 @@ def report_question(_id: str, reason: str = None, description: str = None) -> in
     response = requests.post(url, json=data)
 
     return response.status_code
+
+def check_answer(answerline: str, givenAnswer: str) -> list:
+    """
+    Check an answer against an answer line.
+
+    This function checks an answer against an answer line.
+
+    Parameters
+    ----------
+    answerline : str
+        The answer line to check against.
+    givenAnswer : str
+        The answer to check.
+
+    Returns
+    ----------
+    list
+        A list containing the results of the check.
+    """
+    url = base + "/check-answer"
+
+    data = {"answerline": answerline, "givenAnswer": givenAnswer}
+
+    response = requests.get(url, json=data)
+
+    if response.status_code == 200:
+        return response.json()
+    else:
+        raise Exception(str(response.status_code) + " bad request")
