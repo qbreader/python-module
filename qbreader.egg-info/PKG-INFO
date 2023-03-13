@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: qbreader
-Version: 0.1.2
+Version: 0.1.3
 Summary: Access the QBreader API through Python.
 Home-page: https://github.com/qbreader/python-module
 Author: Rohan Arni and Geoffrey Wu

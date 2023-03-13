@@ -357,9 +357,10 @@ def check_answer(answerline: str, givenAnswer: str) -> list:
 
     data = {"answerline": answerline, "givenAnswer": givenAnswer}
 
-    response = requests.get(url, json=data)
+    response = requests.get(url, params=data)
 
     if response.status_code == 200:
         return response.json()
     else:
         raise Exception(str(response.status_code) + " bad request")
+    
