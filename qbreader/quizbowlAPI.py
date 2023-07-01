@@ -105,17 +105,16 @@ def random_question(
         A list containing the results of the search.
 
     """
-    url = base + "/random-question"
+    url = base + f"/random-{questionType}"
 
     data = {
-        "questionType": questionType,
         "categories": categories,
         "subcategories": subcategories,
         "difficulties": difficulties,
         "number": number,
     }
 
-    response = requests.post(url, json=data)
+    response = requests.get(url, params=data)
 
     if response.status_code == 200:
         return response.json()
@@ -363,4 +362,3 @@ def check_answer(answerline: str, givenAnswer: str) -> list:
         return response.json()
     else:
         raise Exception(str(response.status_code) + " bad request")
-    
