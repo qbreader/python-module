@@ -1,6 +1,8 @@
+"""Synchronous API functions."""
+
 import requests
 
-base = "https://www.qbreader.org/api"
+BASE_URL = "https://www.qbreader.org/api"
 
 
 def query(
@@ -51,7 +53,7 @@ def query(
     """
     regex_converted = str(regex).lower()
     random_converted = str(randomize).lower()
-    url = base + "/query"
+    url = BASE_URL + "/query"
 
     data = {
         "questionType": questionType,
@@ -105,7 +107,7 @@ def random_question(
         A list containing the results of the search.
 
     """
-    url = base + f"/random-{questionType}"
+    url = BASE_URL + f"/random-{questionType}"
 
     data = {
         "categories": categories,
@@ -136,7 +138,7 @@ def random_name() -> str:
         A string containing the random name.
 
     """
-    url = base + "/random-name"
+    url = BASE_URL + "/random-name"
     response = requests.get(url)
 
     if response.status_code == 200:
@@ -163,7 +165,7 @@ def packet(setName: str, packetNumber: int) -> dict:
     dict
         A dictionary containing the results of the search.
     """
-    url = base + "/packet"
+    url = BASE_URL + "/packet"
     data = {"setName": setName, "packetNumber": packetNumber}
 
     response = requests.get(url, params=data)
@@ -194,7 +196,7 @@ def packet_tossups(setName: str, packetNumber: int) -> dict:
 
     """
 
-    url = base + "/packet-tossups"
+    url = BASE_URL + "/packet-tossups"
     data = {"setName": setName, "packetNumber": packetNumber}
 
     response = requests.get(url, params=data)
@@ -224,7 +226,7 @@ def packet_bonuses(setName: str, packetNumber: int) -> dict:
         A dictionary containing the results of the search.
 
     """
-    url = base + "/packet-bonuses"
+    url = BASE_URL + "/packet-bonuses"
     data = {"setName": setName, "packetNumber": packetNumber}
 
     response = requests.get(url, params=data)
@@ -251,7 +253,7 @@ def num_packets(setName: str) -> dict:
     dict
         A dictionary containing the results of the search.
     """
-    url = base + "/num-packets"
+    url = BASE_URL + "/num-packets"
     data = {
         "setName": setName,
     }
@@ -277,7 +279,7 @@ def set_list() -> list:
     list
         A list containing the results of the search.
     """
-    url = base + "/set-list"
+    url = BASE_URL + "/set-list"
     response = requests.get(url)
     if response.status_code == 200:
         return response.json()
@@ -298,7 +300,7 @@ def room_list() -> dict:
     dict
         A dictionary containing the results of the search.
     """
-    url = base + "/multiplayer/room-list"
+    url = BASE_URL + "/multiplayer/room-list"
     response = requests.get(url)
     if response.status_code == 200:
         return response.json()
@@ -326,7 +328,7 @@ def report_question(_id: str, reason: str = None, description: str = None) -> in
     int
         The status code of the request. 200 if successful, 400 if not.
     """
-    url = base + "/random-question"
+    url = BASE_URL + "/random-question"
 
     data = {"_id": _id, "reason": reason, "description": description}
 
@@ -353,7 +355,7 @@ def check_answer(answerline: str, givenAnswer: str) -> list:
     list
         A list containing the results of the check.
     """
-    url = base + "/check-answer"
+    url = BASE_URL + "/check-answer"
 
     data = {"answerline": answerline, "givenAnswer": givenAnswer}
 

@@ -1,13 +1,21 @@
-from .quizbowlAPI import (
-    check_answer,
-    num_packets,
-    packet,
-    packet_bonuses,
-    packet_tossups,
-    query,
-    random_name,
-    random_question,
-    report_question,
-    room_list,
-    set_list,
+"""The official qbreader API python wrapper"""
+
+import qbreader.asynchronous as Async
+import qbreader.synchronous as Sync
+from qbreader.types import (
+    Tossup,
+    Bonus,
+    Category,
+    Subcategory,
+    Difficulty,
+)
+
+__all__ = (
+    "Async",
+    "Sync",
+    "Tossup",
+    "Bonus",
+    "Category",
+    "Subcategory",
+    "Difficulty",
 )
