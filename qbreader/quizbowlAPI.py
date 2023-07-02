@@ -334,6 +334,7 @@ def report_question(_id: str, reason: str = None, description: str = None) -> in
 
     return response.status_code
 
+
 def check_answer(answerline: str, givenAnswer: str) -> list:
     """
     Check an answer against an answer line.
