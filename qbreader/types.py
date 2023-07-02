@@ -1,10 +1,12 @@
 """Types and classes used by the library."""
 
 import enum
-from typing import Self, Optional
+from typing import Optional, Self
 
 
 class Category(enum.StrEnum):
+    """Question category."""
+
     LITERATURE = "Literature"
     HISTORY = "History"
     SCIENCE = "Science"
@@ -20,6 +22,8 @@ class Category(enum.StrEnum):
 
 
 class Subcategory(enum.StrEnum):
+    """Question subcategory."""
+
     AMERICAN_LITERATURE = "American Literature"
     BRITISH_LITERATURE = "British Literature"
     CLASSICAL_LITERATURE = "Classical Literature"
@@ -45,6 +49,8 @@ class Subcategory(enum.StrEnum):
 
 
 class Difficulty(enum.IntEnum):
+    """Question difficulty."""
+
     MS = 1
     HS_EASY = 2
     HS_REGS = 3
@@ -58,6 +64,8 @@ class Difficulty(enum.IntEnum):
 
 
 class Tossup:
+    """Tossup."""
+
     def __init__(
         self: Self,
         question: str,
@@ -82,6 +90,8 @@ class Tossup:
 
 
 class Bonus:
+    """Bonus."""
+
     def __init__(
         self: Self,
         leadin: str,

@@ -1,9 +1,3 @@
 """Asynchronous API functions."""
 
-from qbreader.types import (
-    Tossup,
-    Bonus,
-    Category,
-    Subcategory,
-    Difficulty,
-)
+from qbreader.types import Bonus, Category, Difficulty, Subcategory, Tossup
