@@ -474,35 +474,6 @@ def room_list() -> dict:
         raise Exception(str(response.status_code) + " bad request")
 
 
-def report_question(_id: str, reason: str = None, description: str = None) -> int:
-    """
-    Report a question from the QBreader database.
-
-    This function reports a question from the QBreader database.
-
-    Parameters
-    ----------
-    _id : str
-        The ID of the question to report.
-    reason : str (optional)
-        The reason for reporting the question. Defaults to None.
-    description : str (optional)
-        A description of the reason for reporting the question. Defaults to None.
-
-    Returns
-    ----------
-    int
-        The status code of the request. 200 if successful, 400 if not.
-    """
-    url = BASE_URL + "/random-question"
-
-    data = {"_id": _id, "reason": reason, "description": description}
-
-    response = requests.post(url, json=data)
-
-    return response.status_code
-
-
 def check_answer(answerline: str, givenAnswer: str) -> list:
     """
     Check an answer against an answer line.
