@@ -1,7 +1,19 @@
 """Types and classes used by the library."""
 
+from __future__ import annotations
+
 import enum
-from typing import Iterable, Literal, Optional, Self, Sequence, Type, TypeAlias, Union
+from typing import (
+    Any,
+    Iterable,
+    Literal,
+    Optional,
+    Self,
+    Sequence,
+    Type,
+    TypeAlias,
+    Union,
+)
 
 
 class Category(enum.StrEnum):
@@ -75,6 +87,7 @@ class Tossup:
         category: Category,
         subcategory: Subcategory,
         set: str,
+        year: int,
         packet_number: int,
         question_number: int,
         difficulty: Difficulty,
@@ -85,9 +98,33 @@ class Tossup:
         self.category: Category = category
         self.subcategory: Subcategory = subcategory
         self.set: str = set
+        self.year: int = year
         self.packet_number: int = packet_number
         self.question_number: int = question_number
         self.difficulty: Difficulty = difficulty
+
+    @staticmethod
+    def from_json(json: dict[str, Any]) -> Tossup:
+        """Create a Tossup from a JSON object.
+
+        See https://www.qbreader.org/api-docs/schemas#tossups for schema.
+        """
+        return Tossup(
+            question=json["question"],
+            formatted_answer=json.get("formatted_answer", json["answer"]),
+            answer=json["answer"],
+            category=Category(json["category"]),
+            subcategory=Subcategory(json["subcategory"]),
+            set=json["setName"],
+            year=json["setYear"],
+            packet_number=json["packetNumber"],
+            question_number=json["questionNumber"],
+            difficulty=Difficulty(str(json["difficulty"])),
+        )
+
+    def __str__(self) -> str:
+        """Return the question."""
+        return self.question
 
 
 class Bonus:
@@ -102,6 +139,7 @@ class Bonus:
         category: Category,
         subcategory: Subcategory,
         set: str,
+        year: int,
         packet_number: int,
         question_number: int,
         difficulty: Difficulty,
@@ -115,9 +153,34 @@ class Bonus:
         self.category: Category = category
         self.subcategory: Subcategory = subcategory
         self.set: str = set
+        self.year: int = year
         self.packet_number: int = packet_number
         self.question_number: int = question_number
         self.difficulty: Difficulty = difficulty
+
+    @staticmethod
+    def from_json(json: dict[str, Any]) -> Bonus:
+        """Create a Bonus from a JSON object.
+
+        See https://www.qbreader.org/api-docs/schemas#bonus for schema.
+        """
+        return Bonus(
+            leadin=json["leadin"],
+            parts=json["parts"],
+            formatted_answers=json.get("formatted_answers", json["answers"]),
+            answers=json["answers"],
+            category=Category(json["category"]),
+            subcategory=Subcategory(json["subcategory"]),
+            set=json["setName"],
+            year=json["setYear"],
+            packet_number=json["packetNumber"],
+            question_number=json["questionNumber"],
+            difficulty=Difficulty(str(json["difficulty"])),
+        )
+
+    def __str__(self) -> str:
+        """Return the parts of the bonus."""
+        return "\n".join(self.parts)
 
 
 QuestionType: TypeAlias = Union[
@@ -158,3 +221,46 @@ UnnormalizedCategory: TypeAlias = Optional[
 UnnormalizedSubcategory: TypeAlias = Optional[
     Union[Subcategory, str, Iterable[Union[Subcategory, str]]]
 ]
+
+
+class QueryResponse:
+    """Class for responses to `api/query` requests."""
+
+    def __init__(
+        self: Self,
+        tossups: list[Tossup],
+        bonuses: list[Bonus],
+        tossups_found: int,
+        bonuses_found: int,
+        query_string: str,
+    ):
+        self.tossups: list[Tossup] = tossups
+        self.bonuses: list[Bonus] = bonuses
+        self.tossups_found: int = tossups_found
+        self.bonuses_found: int = bonuses_found
+        self.query_string: str = query_string
+
+    @staticmethod
+    def from_json(json: dict[str, Any]) -> QueryResponse:
+        """Create a QueryResponse from a JSON object.
+
+        See https://www.qbreader.org/api-docs/query#returns for schema.
+        """
+        return QueryResponse(
+            tossups=[
+                Tossup.from_json(tossup) for tossup in json["tossups"]["questionArray"]
+            ],
+            bonuses=[
+                Bonus.from_json(bonus) for bonus in json["bonuses"]["questionArray"]
+            ],
+            tossups_found=json["tossups"]["count"],
+            bonuses_found=json["bonuses"]["count"],
+            query_string=json["queryString"],
+        )
+
+    def __str__(self) -> str:
+        return (
+            "\n\n".join([str(tossup) for tossup in self.tossups])
+            + "\n\n\n"
+            + "\n\n".join([str(bonus) for bonus in self.bonuses])
+        )

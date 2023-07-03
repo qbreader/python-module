@@ -10,6 +10,7 @@ from qbreader.types import (
     Bonus,
     Category,
     Difficulty,
+    QueryResponse,
     QuestionType,
     SearchType,
     Subcategory,
@@ -36,8 +37,7 @@ def query(
     tossupPagination: Optional[int] = 1,
     bonusPagination: Optional[int] = 1,
 ) -> dict:
-    """
-    Query the qbreader database for questions.
+    """Query the qbreader database for questions.
 
     Original API doc at https://www.qbreader.org/api-docs/query.
 
@@ -77,7 +77,10 @@ def query(
     bonusPagination : int, default = 1
         The page of bonuses to return.
 
-
+    Returns
+    -------
+    QueryResponse
+        A `QueryResponse` object containing the results of the query.
     """
     # normalize parameters
     if questionType == Tossup:
@@ -118,7 +121,7 @@ def query(
         elif param < 1:
             raise ValueError(f"{name} must be at least 1.")
 
-    url = BASE_URL + "/query"
+    url: str = BASE_URL + "/query"
 
     data = {
         "questionType": questionType,
@@ -137,12 +140,13 @@ def query(
         "bonusPagination": bonusPagination,
     }
 
-    response = requests.get(url, params=data)
+    response: requests.Response = requests.get(url, params=data)
 
-    if response.status_code == 200:
-        return response.json()
-    else:
+    if response.status_code != 200:
         raise Exception(str(response.status_code) + " bad request")
+
+    return QueryResponse.from_json(response.json())  # type: ignore
+    # requests devs didn't type this correctly
 
 
 def random_question(
