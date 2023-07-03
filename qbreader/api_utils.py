@@ -1,4 +1,4 @@
-"""Useful functions used by both the asynchronous and synchronous APIs."""
+"""Useful functions used by both the asynchronous and synchronous API wrappers."""
 
 import warnings
 from enum import Enum, EnumType

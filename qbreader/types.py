@@ -36,6 +36,19 @@ class Category(enum.StrEnum):
 class Subcategory(enum.StrEnum):
     """Question subcategory enum."""
 
+    LITERATURE = "Literature"  # regular cats also included because of database quirks
+    HISTORY = "History"
+    SCIENCE = "Science"
+    FINE_ARTS = "Fine Arts"
+    RELIGION = "Religion"
+    MYTHOLOGY = "Mythology"
+    PHILOSOPHY = "Philosophy"
+    SOCIAL_SCIENCE = "Social Science"
+    CURRENT_EVENTS = "Current Events"
+    GEOGRAPHY = "Geography"
+    OTHER_ACADEMIC = "Other Academic"
+    TRASH = "Trash"
+
     AMERICAN_LITERATURE = "American Literature"
     BRITISH_LITERATURE = "British Literature"
     CLASSICAL_LITERATURE = "Classical Literature"

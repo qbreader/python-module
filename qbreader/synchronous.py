@@ -36,7 +36,7 @@ def query(
     maxReturnLength: Optional[int] = 25,
     tossupPagination: Optional[int] = 1,
     bonusPagination: Optional[int] = 1,
-) -> dict:
+) -> QueryResponse:
     """Query the qbreader database for questions.
 
     Original API doc at https://www.qbreader.org/api-docs/query.
@@ -82,7 +82,7 @@ def query(
     QueryResponse
         A `QueryResponse` object containing the results of the query.
     """
-    # normalize parameters
+    # normalize and type check parameters
     if questionType == Tossup:
         questionType = "tossup"
     elif questionType == Bonus:
@@ -149,75 +149,168 @@ def query(
     # requests devs didn't type this correctly
 
 
-def random_question(
-    questionType: str,
-    difficulties: dict = [],
-    categories: list = [],
-    subcategories: list = [],
+def random_tossup(
+    difficulties: UnnormalizedDifficulty = None,
+    categories: UnnormalizedCategory = None,
+    subcategories: UnnormalizedSubcategory = None,
     number: int = 1,
-) -> list:
-    """
-    Get a random question from the QBreader database.
+    min_year: int = 2010,
+    max_year: int = 2023,
+) -> tuple[Tossup, ...]:
+    """Get random tossups from the database.
 
-    This function gets a random question from the QBreader database.
+    Original API doc at https://www.qbreader.org/api-docs/random-tossup.
 
     Parameters
     ----------
-    questionType : str, must be one of "tossup" or "bonus"
-        The type of question to search for (tossup or bonus or both). If one of the two is not set, returns a 400 Bad Request.
-    difficulties : list (optional)
-        The difficulties to search for. Defaults to []. Leave as an empty list to search all. Must be a list of ints from 1 to 10.
-    categories : list (optional)
-        The categories to search for. Defaults to []. Leave as an empty list to search all.
-    subcategories : list (optional)
-        The subcategories to search for. Defaults to []. Leave as an empty list to search all.
-    number : int (optional)
-        The number of questions to return. Defaults to None. Leave blank to return 1.
+    difficulties : qbreader.types.UnnormalizedDifficulty, optional
+        The difficulties to search for. Can be a single or an array of `Difficulty`
+        enums, strings, or integers.
+    categories : qbreader.types.UnnormalizedCategory, optional
+        The categories to search for. Can be a single or an array of `Category` enums or
+        strings.
+    subcategories : qbreader.types.UnnormalizedSubcategory, optional
+        The subcategories to search for. Can be a single or an array of `Subcategory`
+        enums or strings. The API does not check for consistency between categories and
+        subcategories.
+    number : int, default = 1
+        The number of tossups to return.
+    min_year : int, default = 2010
+        The oldest year to search for.
+    max_year : int, default = 2023
+        The most recent year to search for.
 
     Returns
     ----------
-    list
-        A list containing the results of the search.
+    tuple[Tossup, ...]
+        A tuple of `Tossup` objects.
 
     """
-    url = BASE_URL + f"/random-{questionType}"
+    # normalize and type check parameters
+    for name, param in tuple(
+        zip(
+            ("number", "min_year", "max_year"),
+            (number, min_year, max_year),
+        )
+    ):
+        if not isinstance(param, int):
+            raise TypeError(f"{name} must be an integer, not {type(param).__name__}.")
+        elif param < 1:
+            raise ValueError(f"{name} must be at least 1.")
+
+    url = BASE_URL + "/random-tossup"
 
     data = {
-        "categories": categories,
-        "subcategories": subcategories,
-        "difficulties": difficulties,
+        "difficulties": api_utils.normalize_diff(difficulties),
+        "categories": api_utils.normalize_cat(categories),
+        "subcategories": api_utils.normalize_subcat(subcategories),
         "number": number,
+        "min_year": min_year,
+        "max_year": max_year,
     }
 
-    response = requests.get(url, params=data)
+    response: requests.Response = requests.get(url, params=data)
 
-    if response.status_code == 200:
-        return response.json()
-    else:
+    if response.status_code != 200:
         raise Exception(str(response.status_code) + " bad request")
+
+    return tuple(Tossup.from_json(tu) for tu in response.json()["tossups"])
+
+
+def random_bonus(
+    difficulties: UnnormalizedDifficulty = None,
+    categories: UnnormalizedCategory = None,
+    subcategories: UnnormalizedSubcategory = None,
+    number: int = 1,
+    min_year: int = 2010,
+    max_year: int = 2023,
+    three_part_bonuses: bool = False,
+) -> tuple[Bonus, ...]:
+    """Get random bonuses from the database.
+
+    Original API doc at https://www.qbreader.org/api-docs/random-bonus.
+
+    Parameters
+    ----------
+    difficulties : qbreader.types.UnnormalizedDifficulty, optional
+        The difficulties to search for. Can be a single or an array of `Difficulty`
+        enums, strings, or integers.
+    categories : qbreader.types.UnnormalizedCategory, optional
+        The categories to search for. Can be a single or an array of `Category` enums or
+        strings.
+    subcategories : qbreader.types.UnnormalizedSubcategory, optional
+        The subcategories to search for. Can be a single or an array of `Subcategory`
+        enums or strings. The API does not check for consistency between categories and
+        subcategories.
+    number : int, default = 1
+        The number of bonuses to return.
+    min_year : int, default = 2010
+        The oldest year to search for.
+    max_year : int, default = 2023
+        The most recent year to search for.
+
+    Returns
+    -------
+    tuple[Bonus, ...]
+        A tuple of `Bonus` objects.
+
+    """
+    # normalize and type check parameters
+    for name, param in tuple(
+        zip(
+            ("number", "min_year", "max_year"),
+            (number, min_year, max_year),
+        )
+    ):
+        if not isinstance(param, int):
+            raise TypeError(f"{name} must be an integer, not {type(param).__name__}.")
+        elif param < 1:
+            raise ValueError(f"{name} must be at least 1.")
+
+    if not isinstance(three_part_bonuses, bool):
+        raise TypeError(
+            "three_part_bonuses must be a boolean, not "
+            + f"{type(three_part_bonuses).__name__}."
+        )
+
+    url = BASE_URL + "/random-bonus"
+
+    data = {
+        "difficulties": api_utils.normalize_diff(difficulties),
+        "categories": api_utils.normalize_cat(categories),
+        "subcategories": api_utils.normalize_subcat(subcategories),
+        "number": number,
+        "min_year": min_year,
+        "max_year": max_year,
+    }
+
+    response: requests.Response = requests.get(url, params=data)
+
+    if response.status_code != 200:
+        raise Exception(str(response.status_code) + " bad request")
+
+    return tuple(Bonus.from_json(b) for b in response.json()["bonuses"])
 
 
 def random_name() -> str:
-    """
-    Get a random name from the QBreader database.
+    """Get a random adjective-noun pair that can be used as a name
 
-    This function Generates an adjective-noun pair (used in multiplayer lobbies).
-
-    Takes no parameters.
+    Original API doc at https://www.qbreader.org/api-docs/random-name.
 
     Returns
-    ----------
+    -------
     str
         A string containing the random name.
 
     """
     url = BASE_URL + "/random-name"
-    response = requests.get(url)
 
-    if response.status_code == 200:
-        return response.text
-    else:
+    response: requests.Response = requests.get(url)
+
+    if response.status_code != 200:
         raise Exception(str(response.status_code) + " bad request")
+
+    return response.json()["randomName"]
 
 
 def packet(setName: str, packetNumber: int) -> dict:
@@ -339,25 +432,25 @@ def num_packets(setName: str) -> dict:
         raise Exception(str(response.status_code) + " bad request")
 
 
-def set_list() -> list:
-    """
-    Get a list of sets from the QBreader database.
+def set_list() -> tuple[str, ...]:
+    """Get a list of all the sets in the database.
 
-    This function gets a list of sets from the QBreader database.
-
-    Takes no parameters.
+    Original API doc at https://www.qbreader.org/api-docs/set-list.
 
     Returns
-    ----------
-    list
-        A list containing the results of the search.
+    -------
+    tuple[str, ...]
+        A tuple containing the names of all the sets in the database, sorted in reverse
+        alphanumeric order.
     """
     url = BASE_URL + "/set-list"
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.json()
-    else:
+
+    response: requests.Response = requests.get(url)
+
+    if response.status_code != 200:
         raise Exception(str(response.status_code) + " bad request")
+
+    return response.json()["setList"]
 
 
 def room_list() -> dict:
