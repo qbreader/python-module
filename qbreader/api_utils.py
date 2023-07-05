@@ -13,8 +13,6 @@ from qbreader.types import (
     UnnormalizedSubcategory,
 )
 
-BASE_URL = "https://www.qbreader.org/api"
-
 
 def normalize_bool(boolean: Optional[Union[bool, str]]) -> str:
     """Normalize a boolean value to a string for HTTP requests."""

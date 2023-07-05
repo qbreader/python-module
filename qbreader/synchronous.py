@@ -1,12 +1,13 @@
-"""Synchronous API functions."""
+"""Directly access the qbreader API synchronously."""
 
-from typing import Optional, Type, Union
+from typing import Optional
 
 import requests
 
 import qbreader.api_utils as api_utils
-from qbreader.api_utils import BASE_URL
+from qbreader.consts import BASE_URL
 from qbreader.types import (
+    AnswerJudgement,
     Bonus,
     Category,
     Difficulty,
@@ -474,31 +475,23 @@ def room_list() -> dict:
         raise Exception(str(response.status_code) + " bad request")
 
 
-def check_answer(answerline: str, givenAnswer: str) -> list:
-    """
-    Check an answer against an answer line.
+def check_answer(answerline: str, givenAnswer: str) -> AnswerJudgement:
+    """Judge an answer to be correct, incorrect, or prompt. Directed prompts are
+    supported.
 
-    This function checks an answer against an answer line.
+    Original API doc at https://www.qbreader.org/api-docs/check-answer.
 
     Parameters
     ----------
     answerline : str
-        The answer line to check against.
+        The answerline to check against. Preferably including the HTML tags <b> and <u>,
+        if they are present.
     givenAnswer : str
         The answer to check.
 
     Returns
     ----------
-    list
-        A list containing the results of the check.
+    AnswerJudgement
+        A `AnswerJudgement` object containing the response.
     """
-    url = BASE_URL + "/check-answer"
-
-    data = {"answerline": answerline, "givenAnswer": givenAnswer}
-
-    response = requests.get(url, params=data)
-
-    if response.status_code == 200:
-        return response.json()
-    else:
-        raise Exception(str(response.status_code) + " bad request")
+    return AnswerJudgement.check_answer_sync(answerline, givenAnswer)

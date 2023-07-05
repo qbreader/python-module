@@ -15,6 +15,10 @@ from typing import (
     Union,
 )
 
+import requests
+
+from qbreader.consts import BASE_URL
+
 
 class Category(enum.StrEnum):
     """Question category enum."""
@@ -89,6 +93,79 @@ class Difficulty(enum.StrEnum):
     OPEN = "10"
 
 
+class Directive(enum.StrEnum):
+    """Directives given by `api/check-answer`."""
+
+    ACCEPT = "accept"
+    REJECT = "reject"
+    PROMPT = "prompt"
+
+
+class AnswerJudgement:
+    """A judgement given by `api/check-answer`."""
+
+    def __init__(
+        self: Self, directive: Directive, directed_prompt: Optional[str] = None
+    ):
+        self.directive: Directive = directive
+        self.directed_prompt: Optional[str] = directed_prompt
+
+    def __bool__(self: Self) -> bool:
+        return self.directive == Directive.ACCEPT
+
+    def __str__(self: Self) -> str:
+        return self.directive.value + (
+            f" ({self.directed_prompt})" if self.directed_prompt else ""
+        )
+
+    @staticmethod
+    def from_json(json: dict[str, Any]) -> AnswerJudgement:
+        """Create an AnswerJudgement from a JSON object.
+
+        See https://www.qbreader.org/api-docs/check-answer#returns for schema.
+        """
+        return AnswerJudgement(
+            directive=Directive(json["directive"]),
+            directed_prompt=json.get("directedPrompt", None),
+        )
+
+    @staticmethod
+    def check_answer_sync(answerline: str, givenAnswer: str) -> AnswerJudgement:
+        """Create an AnswerJudgement given an answerline and a given answer.
+
+        Original API doc at https://www.qbreader.org/api-docs/check-answer.
+
+        Parameters
+        ----------
+        answerline : str
+            The answerline to check against. Preferably including the HTML tags <b> and
+            <u>, if they are present.
+        givenAnswer : str
+            The answer to check.
+        """
+        # normalize and type check parameters
+        if not isinstance(answerline, str):
+            raise TypeError(
+                f"answerline must be a string, not {type(answerline).__name__}"
+            )
+
+        if not isinstance(givenAnswer, str):
+            raise TypeError(
+                f"givenAnswer must be a string, not {type(givenAnswer).__name__}"
+            )
+
+        url = BASE_URL + "/check-answer"
+
+        data = {"answerline": answerline, "givenAnswer": givenAnswer}
+
+        response: requests.Response = requests.get(url, params=data)
+
+        if response.status_code != 200:
+            raise Exception(str(response.status_code) + " bad request")
+
+        return AnswerJudgement.from_json(response.json())
+
+
 class Tossup:
     """Tossup class."""
 
@@ -134,6 +211,9 @@ class Tossup:
             question_number=json["questionNumber"],
             difficulty=Difficulty(str(json["difficulty"])),
         )
+
+    def check_answer_sync(self, givenAnswer: str) -> AnswerJudgement:
+        return AnswerJudgement.check_answer_sync(self.formatted_answer, givenAnswer)
 
     def __str__(self) -> str:
         """Return the question."""
@@ -189,6 +269,11 @@ class Bonus:
             packet_number=json["packetNumber"],
             question_number=json["questionNumber"],
             difficulty=Difficulty(str(json["difficulty"])),
+        )
+
+    def check_answer_sync(self, part: int, givenAnswer: str) -> AnswerJudgement:
+        return AnswerJudgement.check_answer_sync(
+            self.formatted_answers[part], givenAnswer
         )
 
     def __str__(self) -> str:
