@@ -6,6 +6,7 @@ import enum
 from collections.abc import Iterable, Sequence
 from typing import Any, Literal, Optional, Self, Type, TypeAlias, Union
 
+import aiohttp
 import requests
 
 from qbreader.consts import BASE_URL
@@ -155,6 +156,47 @@ class AnswerJudgement:
             raise Exception(str(response.status_code) + " bad request")
 
         return AnswerJudgement.from_json(response.json())
+
+    @staticmethod
+    async def check_answer_async(
+        answerline: str, givenAnswer: str, session: aiohttp.ClientSession
+    ) -> AnswerJudgement:
+        """Asynchronouslyc create an AnswerJudgement given an answerline and a given
+        answer.
+
+        Original API doc at https://www.qbreader.org/api-docs/check-answer.
+
+        Parameters
+        ----------
+        answerline : str
+            The answerline to check against. Preferably including the HTML tags <b> and
+            <u>, if they are present.
+        givenAnswer : str
+            The answer to check.
+        session : aiohttp.ClientSession
+            The aiohttp session to use for the request.
+        """
+        # normalize and type check parameters
+        if not isinstance(answerline, str):
+            raise TypeError(
+                f"answerline must be a string, not {type(answerline).__name__}"
+            )
+
+        if not isinstance(givenAnswer, str):
+            raise TypeError(
+                f"givenAnswer must be a string, not {type(givenAnswer).__name__}"
+            )
+
+        url = BASE_URL + "/check-answer"
+
+        data = {"answerline": answerline, "givenAnswer": givenAnswer}
+
+        async with session.get(url, params=data) as response:
+            if response.status != 200:
+                raise Exception(str(response.status) + " bad request")
+
+            json = await response.json()
+            return AnswerJudgement.from_json(json)
 
 
 class Tossup:

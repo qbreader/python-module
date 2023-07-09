@@ -90,3 +90,8 @@ def normalize_cat(unnormalized_cats: UnnormalizedCategory):
 def normalize_subcat(unnormalized_subcats: UnnormalizedSubcategory):
     """Normalize a single or list of subcategories to a comma separated string."""
     return normalize_enumlike(unnormalized_subcats, Subcategory)
+
+
+def prune_none(params: dict[str, Optional[str]]) -> dict[str, str]:
+    """Remove all None values from a dictionary."""
+    return {key: value for key, value in params.items() if value is not None}

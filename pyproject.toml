@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "qbreader"
-version = "0.1.3"
+version = "1.0.0-beta.1"
 description = "The official qbreader API python wrapper"
 authors = ["Sky \"g3ner1c\" Hong <g3ner1c-sky@pm.me>", "Rohan Arni", "Geoffrey Wu <<geoffreywu1000@gmail.com>"]
 license = "MIT"
@@ -21,6 +21,7 @@ classifiers=[
 [tool.poetry.dependencies]
 python = "^3.11"
 requests = "^2.31.0"
+aiohttp = "^3.8.4"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.3.0"

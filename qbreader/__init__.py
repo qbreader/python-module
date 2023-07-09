@@ -1,8 +1,18 @@
 """The official qbreader API python wrapper."""
 
-import qbreader.asynchronous as Async
 import qbreader.synchronous as Sync
-from qbreader.types import Bonus, Category, Difficulty, Subcategory, Tossup
+from qbreader.asynchronous import Async
+from qbreader.types import (
+    AnswerJudgement,
+    Bonus,
+    Category,
+    Difficulty,
+    Directive,
+    Packet,
+    QueryResponse,
+    Subcategory,
+    Tossup,
+)
 
 __all__ = (
     "Async",
@@ -12,4 +22,8 @@ __all__ = (
     "Category",
     "Subcategory",
     "Difficulty",
+    "QueryResponse",
+    "Directive",
+    "AnswerJudgement",
+    "Packet",
 )

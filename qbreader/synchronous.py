@@ -138,6 +138,7 @@ def query(
         "tossupPagination": tossupPagination,
         "bonusPagination": bonusPagination,
     }
+    data = api_utils.prune_none(data)
 
     response: requests.Response = requests.get(url, params=data)
 
@@ -206,6 +207,7 @@ def random_tossup(
         "min_year": min_year,
         "max_year": max_year,
     }
+    data = api_utils.prune_none(data)
 
     response: requests.Response = requests.get(url, params=data)
 
@@ -280,6 +282,7 @@ def random_bonus(
         "min_year": min_year,
         "max_year": max_year,
     }
+    data = api_utils.prune_none(data)
 
     response: requests.Response = requests.get(url, params=data)
 
@@ -345,6 +348,7 @@ def packet(setName: str, packetNumber: int) -> Packet:
     url = BASE_URL + "/packet"
 
     data = {"setName": setName, "packetNumber": packetNumber}
+    data = api_utils.prune_none(data)
 
     response = requests.get(url, params=data)
 
@@ -389,6 +393,7 @@ def packet_tossups(setName: str, packetNumber: int) -> tuple[Tossup, ...]:
     url = BASE_URL + "/packet-tossups"
 
     data = {"setName": setName, "packetNumber": packetNumber}
+    data = api_utils.prune_none(data)
 
     response = requests.get(url, params=data)
 
@@ -433,6 +438,7 @@ def packet_bonuses(setName: str, packetNumber: int) -> tuple[Bonus, ...]:
     url = BASE_URL + "/packet-bonuses"
 
     data = {"setName": setName, "packetNumber": packetNumber}
+    data = api_utils.prune_none(data)
 
     response = requests.get(url, params=data)
 
@@ -458,6 +464,7 @@ def num_packets(setName: str) -> int:
         The number of packets in the set.
     """
     url = BASE_URL + "/num-packets"
+
     data = {
         "setName": setName,
     }
