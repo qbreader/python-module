@@ -1,0 +1,44 @@
+[tool.poetry]
+name = "qbreader"
+version = "1.0.0-beta.1"
+description = "The official qbreader API python wrapper"
+authors = ["Sky \"g3ner1c\" Hong <g3ner1c-sky@pm.me>", "Rohan Arni", "Geoffrey Wu <<geoffreywu1000@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/qbreader/python-module"
+repository = "https://github.com/qbreader/python-module"
+documentation = "https://github.com/qbreader/python-module#readme"
+keywords = ["quizbowl", "quiz bowl"]
+classifiers=[
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Operating System :: Unix",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: Microsoft :: Windows",
+]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+requests = "^2.31.0"
+aiohttp = "^3.8.4"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.3.0"
+isort = "^5.12.0"
+flake8 = "^6.0.0"
+pydocstyle = "^6.3.0"
+
+[tool.black]
+line-length = 88
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.pydocstyle]
+convention = "numpy"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
