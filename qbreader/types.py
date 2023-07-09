@@ -3,17 +3,8 @@
 from __future__ import annotations
 
 import enum
-from typing import (
-    Any,
-    Iterable,
-    Literal,
-    Optional,
-    Self,
-    Sequence,
-    Type,
-    TypeAlias,
-    Union,
-)
+from collections.abc import Iterable, Sequence
+from typing import Any, Literal, Optional, Self, Type, TypeAlias, Union
 
 import requests
 
@@ -215,6 +206,21 @@ class Tossup:
     def check_answer_sync(self, givenAnswer: str) -> AnswerJudgement:
         return AnswerJudgement.check_answer_sync(self.formatted_answer, givenAnswer)
 
+    def __eq__(self, other: Tossup) -> bool:
+        """Return whether two tossups are equal."""
+        return (
+            self.question == other.question
+            and self.formatted_answer == other.formatted_answer
+            and self.answer == other.answer
+            and self.category == other.category
+            and self.subcategory == other.subcategory
+            and self.set == other.set
+            and self.year == other.year
+            and self.packet_number == other.packet_number
+            and self.question_number == other.question_number
+            and self.difficulty == other.difficulty
+        )
+
     def __str__(self) -> str:
         """Return the question."""
         return self.question
@@ -276,9 +282,122 @@ class Bonus:
             self.formatted_answers[part], givenAnswer
         )
 
+    def __eq__(self, other: Bonus) -> bool:
+        """Return whether two bonuses are equal."""
+        return (
+            self.leadin == other.leadin
+            and self.parts == other.parts
+            and self.formatted_answers == other.formatted_answers
+            and self.answers == other.answers
+            and self.category == other.category
+            and self.subcategory == other.subcategory
+            and self.set == other.set
+            and self.year == other.year
+            and self.packet_number == other.packet_number
+            and self.question_number == other.question_number
+            and self.difficulty == other.difficulty
+        )
+
     def __str__(self) -> str:
         """Return the parts of the bonus."""
         return "\n".join(self.parts)
+
+
+class QueryResponse:
+    """Class for responses to `api/query` requests."""
+
+    def __init__(
+        self: Self,
+        tossups: Sequence[Tossup],
+        bonuses: Sequence[Bonus],
+        tossups_found: int,
+        bonuses_found: int,
+        query_string: str,
+    ):
+        self.tossups: tuple[Tossup, ...] = tuple(tossups)
+        self.bonuses: tuple[Bonus, ...] = tuple(bonuses)
+        self.tossups_found: int = tossups_found
+        self.bonuses_found: int = bonuses_found
+        self.query_string: str = query_string
+
+    @staticmethod
+    def from_json(json: dict[str, Any]) -> QueryResponse:
+        """Create a QueryResponse from a JSON object.
+
+        See https://www.qbreader.org/api-docs/query#returns for schema.
+        """
+        return QueryResponse(
+            tossups=[
+                Tossup.from_json(tossup) for tossup in json["tossups"]["questionArray"]
+            ],
+            bonuses=[
+                Bonus.from_json(bonus) for bonus in json["bonuses"]["questionArray"]
+            ],
+            tossups_found=json["tossups"]["count"],
+            bonuses_found=json["bonuses"]["count"],
+            query_string=json["queryString"],
+        )
+
+    def __str__(self) -> str:
+        return (
+            "\n\n".join([str(tossup) for tossup in self.tossups])
+            + "\n\n\n"
+            + "\n\n".join([str(bonus) for bonus in self.bonuses])
+        )
+
+
+class Packet:
+    """Class for packets in sets."""
+
+    def __init__(
+        self: Self,
+        tossups: Sequence[Tossup],
+        bonuses: Sequence[Bonus],
+        number: Optional[int] = None,
+        name: Optional[str] = None,
+        year: Optional[int] = None,
+    ):
+        self.tossups: tuple[Tossup, ...] = tuple(tossups)
+        self.bonuses: tuple[Bonus, ...] = tuple(bonuses)
+        self.number: Optional[int] = number
+        self.name: Optional[str] = name if name else self.tossups[0].set
+        self.year: Optional[int] = year if year else self.tossups[0].year
+
+    @staticmethod
+    def from_json(json: dict[str, Any], number: Optional[int] = None) -> Packet:
+        """Create a Packet from a JSON object.
+
+        See https://www.qbreader.org/api-docs/packet#returns for schema.
+        """
+        return Packet(
+            tossups=[Tossup.from_json(tossup) for tossup in json["tossups"]],
+            bonuses=[Bonus.from_json(bonus) for bonus in json["bonuses"]],
+            number=number,
+        )
+
+    def paired_questions(self) -> zip[tuple[Tossup, Bonus]]:
+        """Yield pairs of tossups and bonuses."""
+        return zip(self.tossups, self.bonuses)
+
+    def __iter__(self) -> zip[tuple[Tossup, Bonus]]:
+        return self.paired_questions()
+
+    def __eq__(self, other: Packet) -> bool:
+        """Return whether two packets are equal."""
+        return (
+            self.tossups == other.tossups
+            and self.bonuses == other.bonuses
+            and self.number == other.number
+            and self.name == other.name
+            and self.year == other.year
+        )
+
+    def __str__(self) -> str:
+        return (
+            "\n\n".join([str(tossup) for tossup in self.tossups])
+            + "\n\n\n"
+            + "\n\n".join([str(bonus) for bonus in self.bonuses])
+        )
 
 
 QuestionType: TypeAlias = Union[
@@ -319,46 +438,3 @@ UnnormalizedCategory: TypeAlias = Optional[
 UnnormalizedSubcategory: TypeAlias = Optional[
     Union[Subcategory, str, Iterable[Union[Subcategory, str]]]
 ]
-
-
-class QueryResponse:
-    """Class for responses to `api/query` requests."""
-
-    def __init__(
-        self: Self,
-        tossups: list[Tossup],
-        bonuses: list[Bonus],
-        tossups_found: int,
-        bonuses_found: int,
-        query_string: str,
-    ):
-        self.tossups: list[Tossup] = tossups
-        self.bonuses: list[Bonus] = bonuses
-        self.tossups_found: int = tossups_found
-        self.bonuses_found: int = bonuses_found
-        self.query_string: str = query_string
-
-    @staticmethod
-    def from_json(json: dict[str, Any]) -> QueryResponse:
-        """Create a QueryResponse from a JSON object.
-
-        See https://www.qbreader.org/api-docs/query#returns for schema.
-        """
-        return QueryResponse(
-            tossups=[
-                Tossup.from_json(tossup) for tossup in json["tossups"]["questionArray"]
-            ],
-            bonuses=[
-                Bonus.from_json(bonus) for bonus in json["bonuses"]["questionArray"]
-            ],
-            tossups_found=json["tossups"]["count"],
-            bonuses_found=json["bonuses"]["count"],
-            query_string=json["queryString"],
-        )
-
-    def __str__(self) -> str:
-        return (
-            "\n\n".join([str(tossup) for tossup in self.tossups])
-            + "\n\n\n"
-            + "\n\n".join([str(bonus) for bonus in self.bonuses])
-        )

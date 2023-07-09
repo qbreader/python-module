@@ -9,12 +9,10 @@ from qbreader.consts import BASE_URL
 from qbreader.types import (
     AnswerJudgement,
     Bonus,
-    Category,
-    Difficulty,
+    Packet,
     QueryResponse,
     QuestionType,
     SearchType,
-    Subcategory,
     Tossup,
     UnnormalizedCategory,
     UnnormalizedDifficulty,
@@ -185,7 +183,6 @@ def random_tossup(
     ----------
     tuple[Tossup, ...]
         A tuple of `Tossup` objects.
-
     """
     # normalize and type check parameters
     for name, param in tuple(
@@ -254,7 +251,6 @@ def random_bonus(
     -------
     tuple[Bonus, ...]
         A tuple of `Bonus` objects.
-
     """
     # normalize and type check parameters
     for name, param in tuple(
@@ -314,101 +310,142 @@ def random_name() -> str:
     return response.json()["randomName"]
 
 
-def packet(setName: str, packetNumber: int) -> dict:
-    """
-    Get a packet from the QBreader database.
+def packet(setName: str, packetNumber: int) -> Packet:
+    """Get a specific packet from a set.
 
-    This function gets questions from a packet from the QBreader database.
+    Original API doc at https://www.qbreader.org/api-docs/packet.
 
     Parameters
     ----------
     setName : str
-        The name of the set to search. Can be obtained from set_list().
+        The name of the set. See `set_list()` for a list of valid set names.
     packetNumber : int
-        The number of the packet to search for.
+        The number of the packet in the set, starting from 1.
 
     Returns
     ----------
-    dict
-        A dictionary containing the results of the search.
+    Packet
+        A `Packet` object containing the packet's tossups and bonuses.
     """
+    # normalize and type check parameters
+    if not isinstance(setName, str):
+        raise TypeError(f"setName must be a string, not {type(setName).__name__}.")
+
+    if not isinstance(packetNumber, int):
+        raise TypeError(
+            f"packetNumber must be an integer, not {type(packetNumber).__name__}."
+        )
+
+    if packetNumber < 1 or packetNumber > num_packets(setName):
+        raise ValueError(
+            f"packetNumber must be between 1 and {num_packets(setName)} inclusive for "
+            + f"{setName}."
+        )
+
     url = BASE_URL + "/packet"
+
     data = {"setName": setName, "packetNumber": packetNumber}
 
     response = requests.get(url, params=data)
 
-    if response.status_code == 200:
-        return response.json()
-    else:
+    if response.status_code != 200:
         raise Exception(str(response.status_code) + " bad request")
 
+    return Packet.from_json(json=response.json(), number=packetNumber)
 
-def packet_tossups(setName: str, packetNumber: int) -> dict:
-    """
-    Get a packet's tossups from the QBreader database.
 
-    This function gets a packet's tossups from the QBreader database. Twice as fast as using packet().
+def packet_tossups(setName: str, packetNumber: int) -> tuple[Tossup, ...]:
+    """Get only tossups from a packet.
+
+    Original API doc at https://www.qbreader.org/api-docs/packet-tossups.
 
     Parameters
     ----------
     setName : str
-        The name of the set to search. Can be obtained from set_list().
+        The name of the set. See `set_list()` for a list of valid set names.
     packetNumber : int
-        The number of the packet to search for.
+        The number of the packet in the set, starting from 1.
 
     Returns
     ----------
-    dict
-        A dictionary containing the results of the search.
-
+    tuple[Tossup, ...]
+        A tuple of `Tossup` objects.
     """
+    # normalize and type check parameters
+    if not isinstance(setName, str):
+        raise TypeError(f"setName must be a string, not {type(setName).__name__}.")
+
+    if not isinstance(packetNumber, int):
+        raise TypeError(
+            f"packetNumber must be an integer, not {type(packetNumber).__name__}."
+        )
+
+    if packetNumber < 1 or packetNumber > num_packets(setName):
+        raise ValueError(
+            f"packetNumber must be between 1 and {num_packets(setName)} inclusive for "
+            + f"{setName}."
+        )
 
     url = BASE_URL + "/packet-tossups"
+
     data = {"setName": setName, "packetNumber": packetNumber}
 
     response = requests.get(url, params=data)
 
-    if response.status_code == 200:
-        return response.json()
-    else:
+    if response.status_code != 200:
         raise Exception(str(response.status_code) + " bad request")
 
+    return tuple(Tossup.from_json(tu) for tu in response.json()["tossups"])
 
-def packet_bonuses(setName: str, packetNumber: int) -> dict:
-    """
-    Get a packet's bonuses from the QBreader database.
 
-    This function gets a packet's bonuses from the QBreader database. Twice as fast as using packet().
+def packet_bonuses(setName: str, packetNumber: int) -> tuple[Bonus, ...]:
+    """Get only bonuses from a packet.
+
+    Original API doc at https://www.qbreader.org/api-docs/packet-bonuses.
 
     Parameters
     ----------
     setName : str
-        The name of the set to search. Can be obtained from set_list().
+        The name of the set. See `set_list()` for a list of valid set names.
     packetNumber : int
-        The number of the packet to search for.
+        The number of the packet in the set, starting from 1.
 
     Returns
     ----------
-    dict
-        A dictionary containing the results of the search.
-
+    tuple[Bonus, ...]
+        A tuple of `Bonus` objects.
     """
+    # normalize and type check parameters
+    if not isinstance(setName, str):
+        raise TypeError(f"setName must be a string, not {type(setName).__name__}.")
+
+    if not isinstance(packetNumber, int):
+        raise TypeError(
+            f"packetNumber must be an integer, not {type(packetNumber).__name__}."
+        )
+
+    if packetNumber < 1 or packetNumber > num_packets(setName):
+        raise ValueError(
+            f"packetNumber must be between 1 and {num_packets(setName)} inclusive for "
+            + f"{setName}."
+        )
+
     url = BASE_URL + "/packet-bonuses"
+
     data = {"setName": setName, "packetNumber": packetNumber}
 
     response = requests.get(url, params=data)
 
-    if response.status_code == 200:
-        return response.json()
-    else:
+    if response.status_code != 200:
         raise Exception(str(response.status_code) + " bad request")
 
+    return tuple(Bonus.from_json(b) for b in response.json()["bonuses"])
 
-def num_packets(setName: str) -> dict:
-    """
-    Get the number of packets in a set from the QBreader database.
 
-    This function gets the number of packets in a set from the QBreader database.
+def num_packets(setName: str) -> int:
+    """Get the number of packets in a set.
+
+    Original API doc at https://www.qbreader.org/api-docs/num-packets.
 
     Parameters
     ----------
@@ -417,8 +454,8 @@ def num_packets(setName: str) -> dict:
 
     Returns
     ----------
-    dict
-        A dictionary containing the results of the search.
+    int
+        The number of packets in the set.
     """
     url = BASE_URL + "/num-packets"
     data = {
@@ -427,10 +464,12 @@ def num_packets(setName: str) -> dict:
 
     response = requests.get(url, params=data)
 
-    if response.status_code == 200:
-        return response.json()
-    else:
+    if response.status_code != 200:
+        if response.status_code == 404:
+            raise ValueError(f"Requested set, {setName}, not found.")
         raise Exception(str(response.status_code) + " bad request")
+
+    return response.json()["numPackets"]
 
 
 def set_list() -> tuple[str, ...]:
@@ -454,25 +493,24 @@ def set_list() -> tuple[str, ...]:
     return response.json()["setList"]
 
 
-def room_list() -> dict:
-    """
-    Get a list of rooms from the QBreader database.
+def room_list() -> tuple[dict, ...]:
+    """Get a list of public rooms.
 
-    This function gets a list of rooms from the QBreader database.
-
-    Takes no parameters.
+    Original API doc at https://www.qbreader.org/api-docs/multiplayer/room-list.
 
     Returns
-    ----------
-    dict
-        A dictionary containing the results of the search.
+    -------
+    tuple[dict, ...]
+        A tuple containing the room data for all the public rooms.
     """
     url = BASE_URL + "/multiplayer/room-list"
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.json()
-    else:
+
+    response: requests.Response = requests.get(url)
+
+    if response.status_code != 200:
         raise Exception(str(response.status_code) + " bad request")
+
+    return response.json()["roomList"]
 
 
 def check_answer(answerline: str, givenAnswer: str) -> AnswerJudgement:
