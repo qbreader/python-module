@@ -9,13 +9,10 @@ from qbreader.consts import BASE_URL
 from qbreader.types import (
     AnswerJudgement,
     Bonus,
-    Category,
-    Difficulty,
     Packet,
     QueryResponse,
     QuestionType,
     SearchType,
-    Subcategory,
     Tossup,
     UnnormalizedCategory,
     UnnormalizedDifficulty,
@@ -67,8 +64,8 @@ class Async:
         Parameters
         ----------
         questionType : qbreader.types.QuestionType
-            The type of question to search for. Can be either a string or a question class
-            type.
+            The type of question to search for. Can be either a string or a question
+            class type.
         searchType : qbreader.types.SearchType
             Where to search for the query string. Can only be a string.
         queryString : str, optional
@@ -87,12 +84,12 @@ class Async:
             The difficulties to search for. Can be a single or an array of `Difficulty`
             enums, strings, or integers.
         categories : qbreader.types.UnnormalizedCategory, optional
-            The categories to search for. Can be a single or an array of `Category` enums or
-            strings.
+            The categories to search for. Can be a single or an array of `Category`
+            enums or strings.
         subcategories : qbreader.types.UnnormalizedSubcategory, optional
-            The subcategories to search for. Can be a single or an array of `Subcategory`
-            enums or strings. The API does not check for consistency between categories and
-            subcategories.
+            The subcategories to search for. Can be a single or an array of
+            `Subcategory` enums or strings. The API does not check for consistency
+            between categories and subcategories.
         maxReturnLength : int, default = 25
             The maximum number of questions to return.
         tossupPagination : int, default = 1
@@ -196,12 +193,12 @@ class Async:
             The difficulties to search for. Can be a single or an array of `Difficulty`
             enums, strings, or integers.
         categories : qbreader.types.UnnormalizedCategory, optional
-            The categories to search for. Can be a single or an array of `Category` enums or
-            strings.
+            The categories to search for. Can be a single or an array of `Category`
+            enums or strings.
         subcategories : qbreader.types.UnnormalizedSubcategory, optional
-            The subcategories to search for. Can be a single or an array of `Subcategory`
-            enums or strings. The API does not check for consistency between categories and
-            subcategories.
+            The subcategories to search for. Can be a single or an array of
+            `Subcategory` enums or strings. The API does not check for consistency
+            between categories and subcategories.
         number : int, default = 1
             The number of tossups to return.
         min_year : int, default = 2010
@@ -267,12 +264,12 @@ class Async:
             The difficulties to search for. Can be a single or an array of `Difficulty`
             enums, strings, or integers.
         categories : qbreader.types.UnnormalizedCategory, optional
-            The categories to search for. Can be a single or an array of `Category` enums or
-            strings.
+            The categories to search for. Can be a single or an array of `Category`
+            enums or strings.
         subcategories : qbreader.types.UnnormalizedSubcategory, optional
-            The subcategories to search for. Can be a single or an array of `Subcategory`
-            enums or strings. The API does not check for consistency between categories and
-            subcategories.
+            The subcategories to search for. Can be a single or an array of
+            `Subcategory` enums or strings. The API does not check for consistency
+            between categories and subcategories.
         number : int, default = 1
             The number of bonuses to return.
         min_year : int, default = 2010
@@ -372,8 +369,8 @@ class Async:
 
         if packetNumber < 1 or packetNumber > await self.num_packets(setName):
             raise ValueError(
-                f"packetNumber must be between 1 and {await self.num_packets(setName)} inclusive for "
-                + f"{setName}."
+                f"packetNumber must be between 1 and {await self.num_packets(setName)} "
+                + f"inclusive for {setName}."
             )
 
         url = BASE_URL + "/packet"
@@ -418,8 +415,8 @@ class Async:
 
         if packetNumber < 1 or packetNumber > await self.num_packets(setName):
             raise ValueError(
-                f"packetNumber must be between 1 and {await self.num_packets(setName)} inclusive for "
-                + f"{setName}."
+                f"packetNumber must be between 1 and {await self.num_packets(setName)} "
+                + f"inclusive for {setName}."
             )
 
         url = BASE_URL + "/packet-tossups"
@@ -464,8 +461,8 @@ class Async:
 
         if packetNumber < 1 or packetNumber > await self.num_packets(setName):
             raise ValueError(
-                f"packetNumber must be between 1 and {await self.num_packets(setName)} inclusive for "
-                + f"{setName}."
+                f"packetNumber must be between 1 and {await self.num_packets(setName)} "
+                + f"inclusive for {setName}."
             )
 
         url = BASE_URL + "/packet-bonuses"
@@ -517,8 +514,8 @@ class Async:
         Returns
         -------
         tuple[str, ...]
-            A tuple containing the names of all the sets in the database, sorted in reverse
-            alphanumeric order.
+            A tuple containing the names of all the sets in the database, sorted in
+            reverse alphanumeric order.
         """
         url = BASE_URL + "/set-list"
 
@@ -559,8 +556,8 @@ class Async:
         Parameters
         ----------
         answerline : str
-            The answerline to check against. Preferably including the HTML tags <b> and <u>,
-            if they are present.
+            The answerline to check against. Preferably including the HTML tags <b> and
+            <u>, if they are present.
         givenAnswer : str
             The answer to check.
 
