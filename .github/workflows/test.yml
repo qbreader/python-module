@@ -20,7 +20,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install Poetry
-        run: python -m pipx install poetry
+        run: pipx install poetry --python $(which python)
 
       - name: Install project
         run: poetry install
@@ -45,7 +45,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install Poetry
-        run: python -m pipx install poetry
+        run: pipx install poetry --python $(which python)
 
       - name: Check pyproject.toml
         run: poetry check
