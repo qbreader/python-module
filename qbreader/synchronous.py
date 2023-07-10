@@ -109,7 +109,7 @@ def query(
     if setName is not None and not isinstance(setName, str):
         raise TypeError(f"setName must be a string, not {type(setName).__name__}.")
 
-    for name, param in tuple(
+    for name, param in tuple(  # type: ignore
         zip(
             ("maxReturnLength", "tossupPagination", "bonusPagination"),
             (maxReturnLength, tossupPagination, bonusPagination),
@@ -120,7 +120,7 @@ def query(
         elif param < 1:
             raise ValueError(f"{name} must be at least 1.")
 
-    url: str = BASE_URL + "/query"
+    url = BASE_URL + "/query"
 
     data = {
         "questionType": questionType,
@@ -180,7 +180,7 @@ def random_tossup(
         The most recent year to search for.
 
     Returns
-    ----------
+    -------
     tuple[Tossup, ...]
         A tuple of `Tossup` objects.
     """
@@ -292,7 +292,7 @@ def random_bonus(
 
 
 def random_name() -> str:
-    """Get a random adjective-noun pair that can be used as a name
+    """Get a random adjective-noun pair that can be used as a name.
 
     Original API doc at https://www.qbreader.org/api-docs/random-name.
 
@@ -325,7 +325,7 @@ def packet(setName: str, packetNumber: int) -> Packet:
         The number of the packet in the set, starting from 1.
 
     Returns
-    ----------
+    -------
     Packet
         A `Packet` object containing the packet's tossups and bonuses.
     """
@@ -346,7 +346,7 @@ def packet(setName: str, packetNumber: int) -> Packet:
 
     url = BASE_URL + "/packet"
 
-    data = {"setName": setName, "packetNumber": packetNumber}
+    data: dict[str, str | int] = {"setName": setName, "packetNumber": packetNumber}
     data = api_utils.prune_none(data)
 
     response = requests.get(url, params=data)
@@ -370,7 +370,7 @@ def packet_tossups(setName: str, packetNumber: int) -> tuple[Tossup, ...]:
         The number of the packet in the set, starting from 1.
 
     Returns
-    ----------
+    -------
     tuple[Tossup, ...]
         A tuple of `Tossup` objects.
     """
@@ -391,7 +391,7 @@ def packet_tossups(setName: str, packetNumber: int) -> tuple[Tossup, ...]:
 
     url = BASE_URL + "/packet-tossups"
 
-    data = {"setName": setName, "packetNumber": packetNumber}
+    data: dict[str, str | int] = {"setName": setName, "packetNumber": packetNumber}
     data = api_utils.prune_none(data)
 
     response = requests.get(url, params=data)
@@ -415,7 +415,7 @@ def packet_bonuses(setName: str, packetNumber: int) -> tuple[Bonus, ...]:
         The number of the packet in the set, starting from 1.
 
     Returns
-    ----------
+    -------
     tuple[Bonus, ...]
         A tuple of `Bonus` objects.
     """
@@ -436,7 +436,7 @@ def packet_bonuses(setName: str, packetNumber: int) -> tuple[Bonus, ...]:
 
     url = BASE_URL + "/packet-bonuses"
 
-    data = {"setName": setName, "packetNumber": packetNumber}
+    data: dict[str, str | int] = {"setName": setName, "packetNumber": packetNumber}
     data = api_utils.prune_none(data)
 
     response = requests.get(url, params=data)
@@ -458,7 +458,7 @@ def num_packets(setName: str) -> int:
         The name of the set to search. Can be obtained from set_list().
 
     Returns
-    ----------
+    -------
     int
         The number of packets in the set.
     """
@@ -520,8 +520,7 @@ def room_list() -> tuple[dict, ...]:
 
 
 def check_answer(answerline: str, givenAnswer: str) -> AnswerJudgement:
-    """Judge an answer to be correct, incorrect, or prompt. Directed prompts are
-    supported.
+    """Judge an answer to be correct, incorrect, or prompt (can be directed).
 
     Original API doc at https://www.qbreader.org/api-docs/check-answer.
 
@@ -534,7 +533,7 @@ def check_answer(answerline: str, givenAnswer: str) -> AnswerJudgement:
         The answer to check.
 
     Returns
-    ----------
+    -------
     AnswerJudgement
         A `AnswerJudgement` object containing the response.
     """

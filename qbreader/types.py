@@ -6,8 +6,8 @@ import enum
 from collections.abc import Iterable, Sequence
 from typing import Any, Literal, Optional, Self, Type, TypeAlias, Union
 
-import requests
 import aiohttp
+import requests
 
 from qbreader.consts import BASE_URL
 
@@ -103,9 +103,11 @@ class AnswerJudgement:
         self.directed_prompt: Optional[str] = directed_prompt
 
     def __bool__(self: Self) -> bool:
+        """Return whether the answer was correct."""
         return self.directive == Directive.ACCEPT
 
     def __str__(self: Self) -> str:
+        """Return a string representation of the judgement."""
         return self.directive.value + (
             f" ({self.directed_prompt})" if self.directed_prompt else ""
         )
@@ -123,7 +125,7 @@ class AnswerJudgement:
 
     @staticmethod
     def check_answer_sync(answerline: str, givenAnswer: str) -> AnswerJudgement:
-        """Create an AnswerJudgement given an answerline and a given answer.
+        """Create an AnswerJudgement given an answerline and an answer.
 
         Original API doc at https://www.qbreader.org/api-docs/check-answer.
 
@@ -161,8 +163,7 @@ class AnswerJudgement:
     async def check_answer_async(
         answerline: str, givenAnswer: str, session: aiohttp.ClientSession
     ) -> AnswerJudgement:
-        """Asynchronouslyc create an AnswerJudgement given an answerline and a given
-        answer.
+        """Asynchronously create an AnswerJudgement given an answerline and an answer.
 
         Original API doc at https://www.qbreader.org/api-docs/check-answer.
 
@@ -246,10 +247,22 @@ class Tossup:
         )
 
     def check_answer_sync(self, givenAnswer: str) -> AnswerJudgement:
+        """Check whether an answer is correct."""
         return AnswerJudgement.check_answer_sync(self.formatted_answer, givenAnswer)
 
-    def __eq__(self, other: Tossup) -> bool:
+    async def check_answer_async(
+        self, givenAnswer: str, session: aiohttp.ClientSession
+    ) -> AnswerJudgement:
+        """Asynchronously check whether an answer is correct."""
+        return await AnswerJudgement.check_answer_async(
+            self.formatted_answer, givenAnswer, session
+        )
+
+    def __eq__(self, other: object) -> bool:
         """Return whether two tossups are equal."""
+        if not isinstance(other, Tossup):
+            return NotImplemented
+
         return (
             self.question == other.question
             and self.formatted_answer == other.formatted_answer
@@ -320,12 +333,24 @@ class Bonus:
         )
 
     def check_answer_sync(self, part: int, givenAnswer: str) -> AnswerJudgement:
+        """Check whether an answer is correct."""
         return AnswerJudgement.check_answer_sync(
             self.formatted_answers[part], givenAnswer
         )
 
-    def __eq__(self, other: Bonus) -> bool:
+    async def check_answer_async(
+        self, part: int, givenAnswer: str, session: aiohttp.ClientSession
+    ) -> AnswerJudgement:
+        """Asynchronously check whether an answer is correct."""
+        return await AnswerJudgement.check_answer_async(
+            self.formatted_answers[part], givenAnswer, session
+        )
+
+    def __eq__(self, other: object) -> bool:
         """Return whether two bonuses are equal."""
+        if not isinstance(other, Bonus):
+            return NotImplemented
+
         return (
             self.leadin == other.leadin
             and self.parts == other.parts
@@ -381,6 +406,7 @@ class QueryResponse:
         )
 
     def __str__(self) -> str:
+        """Return the queried tossups and bonuses."""
         return (
             "\n\n".join([str(tossup) for tossup in self.tossups])
             + "\n\n\n"
@@ -422,10 +448,14 @@ class Packet:
         return zip(self.tossups, self.bonuses)
 
     def __iter__(self) -> zip[tuple[Tossup, Bonus]]:
+        """Alias to `paired_questions()`."""
         return self.paired_questions()
 
-    def __eq__(self, other: Packet) -> bool:
+    def __eq__(self, other: object) -> bool:
         """Return whether two packets are equal."""
+        if not isinstance(other, Packet):
+            return NotImplemented
+
         return (
             self.tossups == other.tossups
             and self.bonuses == other.bonuses
@@ -435,6 +465,7 @@ class Packet:
         )
 
     def __str__(self) -> str:
+        """Return the tossups and bonuses in the packet."""
         return (
             "\n\n".join([str(tossup) for tossup in self.tossups])
             + "\n\n\n"

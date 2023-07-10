@@ -31,8 +31,7 @@ def normalize_enumlike(
     unnormalized: Optional[Union[Enum, str, int, Iterable[Union[Enum, str, int]]]],
     enum_type: EnumType,
 ) -> Optional[str]:
-    """Normalize a single or list of enum and enum-like values into a comma separated
-    string."""
+    """Normalize a single or list of enum-like values into a comma separated string."""
 
     def valid_enumlike(item: Union[Enum, str, int]) -> bool:
         """Check if an item is a valid enum-like value."""
@@ -92,6 +91,6 @@ def normalize_subcat(unnormalized_subcats: UnnormalizedSubcategory):
     return normalize_enumlike(unnormalized_subcats, Subcategory)
 
 
-def prune_none(params: dict[str, Optional[str]]) -> dict[str, str]:
+def prune_none(params: dict) -> dict:
     """Remove all None values from a dictionary."""
     return {key: value for key, value in params.items() if value is not None}
