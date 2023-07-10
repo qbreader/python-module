@@ -6,8 +6,8 @@ import enum
 from collections.abc import Iterable, Sequence
 from typing import Any, Literal, Optional, Self, Type, TypeAlias, Union
 
-import aiohttp
 import requests
+import aiohttp
 
 from qbreader.consts import BASE_URL
 

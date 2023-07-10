@@ -145,8 +145,7 @@ def query(
     if response.status_code != 200:
         raise Exception(str(response.status_code) + " bad request")
 
-    return QueryResponse.from_json(response.json())  # type: ignore
-    # requests devs didn't type this correctly
+    return QueryResponse.from_json(response.json())
 
 
 def random_tossup(
