@@ -23,6 +23,7 @@ python = "^3.11"
 requests = "^2.31.0"
 aiohttp = "^3.8.4"
 
+
 [tool.poetry.group.dev.dependencies]
 black = "^23.3.0"
 isort = "^5.12.0"
@@ -31,6 +32,8 @@ pydocstyle = "^6.3.0"
 mypy = "^1.4.1"
 types-requests = "^2.31.0.1"
 tox = "^4.6.4"
+pytest = "^7.4.0"
+pytest-cov = "^4.1.0"
 
 [tool.black]
 line-length = 88
@@ -41,6 +44,10 @@ line_length = 88
 
 [tool.pydocstyle]
 convention = "numpy"
+
+[tool.pytest.ini_options]
+addopts = "--cov=qbreader --cov-report=term-missing --cov-report=xml --cov-report=html"
+testpaths = "tests"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
