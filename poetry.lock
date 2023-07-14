@@ -840,6 +840,17 @@ pluggy = ">=0.12,<2.0"
 testing = ["argcomplete", "attrs (>=19.2.0)", "hypothesis (>=3.56)", "mock", "nose", "pygments (>=2.7.2)", "requests", "setuptools", "xmlschema"]
 
 [[package]]
+name = "pytest-async"
+version = "0.1.1"
+description = "pytest-async - Run your coroutine in event loop without decorator"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "pytest_async-0.1.1-py3-none-any.whl", hash = "sha256:11cc41eef82592951d56c2bb9b0e6ab21b2f0f00663e78d95694a80d965be930"},
+    {file = "pytest_async-0.1.1.tar.gz", hash = "sha256:0d6ffd3ebac2f3aa47d606dbae1984750268a89dc8caf4a908ba61c60299cdfd"},
+]
+
+[[package]]
 name = "pytest-cov"
 version = "4.1.0"
 description = "Pytest plugin for measuring coverage."
@@ -1078,4 +1089,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "a7f8a78ccbfbd205434d12d2a065d932682f4cef8577c44c758e36f650b4961a"
+content-hash = "fa7ab1f87fc7300b87e918ea5eb90e3711a680732e0fe177a91ca14c42d33019"

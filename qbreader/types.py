@@ -112,19 +112,23 @@ class AnswerJudgement:
             f" ({self.directed_prompt})" if self.directed_prompt else ""
         )
 
-    @staticmethod
-    def from_json(json: dict[str, Any]) -> AnswerJudgement:
+    def correct(self: Self) -> bool:
+        """Return whether the answer was correct."""
+        return self.__bool__()
+
+    @classmethod
+    def from_json(cls: Type[Self], json: dict[str, Any]) -> Self:
         """Create an AnswerJudgement from a JSON object.
 
         See https://www.qbreader.org/api-docs/check-answer#returns for schema.
         """
-        return AnswerJudgement(
+        return cls(
             directive=Directive(json["directive"]),
             directed_prompt=json.get("directedPrompt", None),
         )
 
-    @staticmethod
-    def check_answer_sync(answerline: str, givenAnswer: str) -> AnswerJudgement:
+    @classmethod
+    def check_answer_sync(cls: Type[Self], answerline: str, givenAnswer: str) -> Self:
         """Create an AnswerJudgement given an answerline and an answer.
 
         Original API doc at https://www.qbreader.org/api-docs/check-answer.
@@ -157,12 +161,15 @@ class AnswerJudgement:
         if response.status_code != 200:
             raise Exception(str(response.status_code) + " bad request")
 
-        return AnswerJudgement.from_json(response.json())
+        return cls.from_json(response.json())
 
-    @staticmethod
+    @classmethod
     async def check_answer_async(
-        answerline: str, givenAnswer: str, session: aiohttp.ClientSession
-    ) -> AnswerJudgement:
+        cls: Type[Self],
+        answerline: str,
+        givenAnswer: str,
+        session: aiohttp.ClientSession,
+    ) -> Self:
         """Asynchronously create an AnswerJudgement given an answerline and an answer.
 
         Original API doc at https://www.qbreader.org/api-docs/check-answer.
@@ -197,7 +204,7 @@ class AnswerJudgement:
                 raise Exception(str(response.status) + " bad request")
 
             json = await response.json()
-            return AnswerJudgement.from_json(json)
+            return cls.from_json(json)
 
 
 class Tossup:
@@ -227,13 +234,13 @@ class Tossup:
         self.question_number: int = question_number
         self.difficulty: Difficulty = difficulty
 
-    @staticmethod
-    def from_json(json: dict[str, Any]) -> Tossup:
+    @classmethod
+    def from_json(cls: Type[Self], json: dict[str, Any]) -> Self:
         """Create a Tossup from a JSON object.
 
         See https://www.qbreader.org/api-docs/schemas#tossups for schema.
         """
-        return Tossup(
+        return cls(
             question=json["question"],
             formatted_answer=json.get("formatted_answer", json["answer"]),
             answer=json["answer"],
@@ -312,13 +319,13 @@ class Bonus:
         self.question_number: int = question_number
         self.difficulty: Difficulty = difficulty
 
-    @staticmethod
-    def from_json(json: dict[str, Any]) -> Bonus:
+    @classmethod
+    def from_json(cls: Type[Self], json: dict[str, Any]) -> Self:
         """Create a Bonus from a JSON object.
 
         See https://www.qbreader.org/api-docs/schemas#bonus for schema.
         """
-        return Bonus(
+        return cls(
             leadin=json["leadin"],
             parts=json["parts"],
             formatted_answers=json.get("formatted_answers", json["answers"]),
@@ -387,13 +394,13 @@ class QueryResponse:
         self.bonuses_found: int = bonuses_found
         self.query_string: str = query_string
 
-    @staticmethod
-    def from_json(json: dict[str, Any]) -> QueryResponse:
+    @classmethod
+    def from_json(cls: Type[Self], json: dict[str, Any]) -> Self:
         """Create a QueryResponse from a JSON object.
 
         See https://www.qbreader.org/api-docs/query#returns for schema.
         """
-        return QueryResponse(
+        return cls(
             tossups=[
                 Tossup.from_json(tossup) for tossup in json["tossups"]["questionArray"]
             ],
@@ -431,13 +438,15 @@ class Packet:
         self.name: Optional[str] = name if name else self.tossups[0].set
         self.year: Optional[int] = year if year else self.tossups[0].year
 
-    @staticmethod
-    def from_json(json: dict[str, Any], number: Optional[int] = None) -> Packet:
+    @classmethod
+    def from_json(
+        cls: Type[Self], json: dict[str, Any], number: Optional[int] = None
+    ) -> Self:
         """Create a Packet from a JSON object.
 
         See https://www.qbreader.org/api-docs/packet#returns for schema.
         """
-        return Packet(
+        return cls(
             tossups=[Tossup.from_json(tossup) for tossup in json["tossups"]],
             bonuses=[Bonus.from_json(bonus) for bonus in json["bonuses"]],
             number=number,

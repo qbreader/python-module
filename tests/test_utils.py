@@ -23,7 +23,7 @@ class TestNormalization:
     @pytest.mark.parametrize(
         "boolean, exception", [(None, TypeError), (1, TypeError), ("1", ValueError)]
     )
-    def test_normalize_bool_ecxception(self, boolean, exception):
+    def test_normalize_bool_exception(self, boolean, exception):
         assert_exception(api_utils.normalize_bool, exception, boolean)
 
     @pytest.mark.parametrize(
