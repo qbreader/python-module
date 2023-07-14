@@ -1,12 +1,14 @@
 """Test the synchronous API functions. This module specifically tests API interaction,
 not the underlying data structures. See tests/test_types.py for that."""
 
-from qbreader import Sync as qb
-import qbreader as qbr
 from typing import Any
-from tests import check_internet_connection, assert_exception
+
 import pytest
 import requests
+
+import qbreader as qbr
+from qbreader import Sync as qb
+from tests import assert_exception, check_internet_connection
 
 
 class TestSync:
