@@ -247,6 +247,8 @@ def random_bonus(
         The oldest year to search for.
     max_year : int, default = 2023
         The most recent year to search for.
+    three_part_bonuses : bool, default = False
+        Whether to only return bonuses with 3 parts.
 
     Returns
     -------
@@ -349,8 +351,7 @@ def packet(setName: str, packetNumber: int) -> Packet:
     data: dict[str, str | int] = {"setName": setName, "packetNumber": packetNumber}
     data = api_utils.prune_none(data)
 
-    response = requests.get(url, params=data)
-
+    response: requests.Response = requests.get(url, params=data)
     if response.status_code != 200:
         raise Exception(str(response.status_code) + " bad request")
 

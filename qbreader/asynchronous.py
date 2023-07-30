@@ -278,6 +278,8 @@ class Async:
             The oldest year to search for.
         max_year : int, default = 2023
             The most recent year to search for.
+        three_part_bonuses : bool, default = False
+            Whether to only return bonuses with 3 parts.
 
         Returns
         -------
