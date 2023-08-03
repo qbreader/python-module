@@ -45,7 +45,13 @@ class TestAsync:
                 def __init__(self):
                     self.status = mock_status_code
 
-                def json(self):
+                async def __aenter__(self):
+                    return self
+
+                async def __aexit__(self, exc_type, exc_val, exc_tb):
+                    pass
+
+                async def json(self):
                     return mock_json
 
             monkeypatch.setattr(
@@ -289,8 +295,12 @@ class TestAsync:
     @pytest.mark.asyncio
     async def test_packet_bad_response(self, qb, monkeypatch, mock_get):
         mock_get(mock_status_code=404)
+
+        async def mock_num_packets(x):
+            return 21
+
         monkeypatch.setattr(
-            qb, "num_packets", lambda x: 21
+            qb, "num_packets", mock_num_packets
         )  # mocking get requests breaks num_packets
         await async_assert_exception(
             qb.packet, Exception, setName="2023 PACE NSC", packetNumber=1
@@ -362,8 +372,12 @@ class TestAsync:
     @pytest.mark.asyncio
     async def test_packet_tossups_bad_response(self, qb, monkeypatch, mock_get):
         mock_get(mock_status_code=404)
+
+        async def mock_num_packets(x):
+            return 21
+
         monkeypatch.setattr(
-            qb, "num_packets", lambda x: 21
+            qb, "num_packets", mock_num_packets
         )  # mocking get requests breaks num_packets
         await async_assert_exception(
             qb.packet_tossups, Exception, setName="2023 PACE NSC", packetNumber=1
@@ -435,8 +449,12 @@ class TestAsync:
     @pytest.mark.asyncio
     async def test_packet_bonuses_bad_response(self, qb, monkeypatch, mock_get):
         mock_get(mock_status_code=404)
+
+        async def mock_num_packets(x):
+            return 21
+
         monkeypatch.setattr(
-            qb, "num_packets", lambda x: 21
+            qb, "num_packets", mock_num_packets
         )  # mocking get requests breaks num_packets
         await async_assert_exception(
             qb.packet_bonuses, Exception, setName="2023 PACE NSC", packetNumber=1
@@ -490,4 +508,11 @@ class TestAsync:
     @pytest.mark.asyncio
     async def test_close(self, qb):
         await qb.close()
+        assert qb.session.closed
+
+    @pytest.mark.asyncio
+    async def test_async_with(self):
+        qb = await Async.create()
+        async with qb:
+            assert qb.session
         assert qb.session.closed

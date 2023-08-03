@@ -54,7 +54,7 @@ class Async:
         """Enter an async context."""
         return self
 
-    async def __aexit__(self: Self) -> None:
+    async def __aexit__(self: Self, exc_type, exc_val, exc_tb) -> None:
         """Exit an async context."""
         await self.close()
 
