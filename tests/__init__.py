@@ -28,6 +28,17 @@ def assert_exception(
         func(*args, **kwargs)
 
 
+async def async_assert_exception(
+    func: Callable,
+    exception,
+    *args,
+    **kwargs,
+):
+    """Assert that an async function raises an exception."""
+    with pytest.raises(exception):
+        await func(*args, **kwargs)
+
+
 def assert_warning(
     func: Callable,
     warning,
@@ -37,3 +48,14 @@ def assert_warning(
     """Assert that a function raises a warning."""
     with pytest.warns(warning):
         return func(*args, **kwargs)
+
+
+async def async_assert_warning(
+    func: Callable,
+    warning,
+    *args,
+    **kwargs,
+):
+    """Assert that an async function raises a warning."""
+    with pytest.warns(warning):
+        return await func(*args, **kwargs)

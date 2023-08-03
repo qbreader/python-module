@@ -1,6 +1,6 @@
 """Directly access the qbreader API asynchronously."""
 
-from typing import Optional, Self
+from typing import Optional, Self, Type
 
 import aiohttp
 
@@ -23,16 +23,32 @@ from qbreader.types import (
 class Async:
     """The asynchronous qbreader API wrapper."""
 
-    def __init__(self, session: Optional[aiohttp.ClientSession] = None):
-        """Initialize a new Async instance.
+    session: aiohttp.ClientSession
+
+    @classmethod
+    async def create(
+        cls: Type[Self], session: Optional[aiohttp.ClientSession] = None
+    ) -> Self:
+        """Create a new Async instance. `__init__()` is not async, so this is necessary.
 
         Parameters
         ----------
         session : aiohttp.ClientSession, optional
             The aiohttp session to use for requests. If none is provided, a new session
             will be created.
+
+        Returns
+        -------
+        Async
+            The new Async instance.
         """
+        self = cls()
         self.session = session or aiohttp.ClientSession()
+        return self
+
+    async def close(self: Self) -> None:
+        """Close the aiohttp session."""
+        await self.session.close()
 
     async def __aenter__(self: Self) -> Self:
         """Enter an async context."""
@@ -40,7 +56,7 @@ class Async:
 
     async def __aexit__(self: Self) -> None:
         """Exit an async context."""
-        await self.session.close()
+        await self.close()
 
     async def query(
         self: Self,
@@ -323,7 +339,7 @@ class Async:
                 raise Exception(str(response.status) + " bad request")
 
             json = await response.json()
-            return tuple(Bonus.from_json(b) for b in await json["bonuses"])
+            return tuple(Bonus.from_json(b) for b in json["bonuses"])
 
     async def random_name(self: Self) -> str:
         """Get a random adjective-noun pair that can be used as a name.

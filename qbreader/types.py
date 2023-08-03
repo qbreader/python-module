@@ -168,7 +168,7 @@ class AnswerJudgement:
         cls: Type[Self],
         answerline: str,
         givenAnswer: str,
-        session: aiohttp.ClientSession,
+        session: aiohttp.ClientSession | None = None,
     ) -> Self:
         """Asynchronously create an AnswerJudgement given an answerline and an answer.
 
@@ -198,6 +198,15 @@ class AnswerJudgement:
         url = BASE_URL + "/check-answer"
 
         data = {"answerline": answerline, "givenAnswer": givenAnswer}
+
+        if session is None:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url, params=data) as response:
+                    if response.status != 200:
+                        raise Exception(str(response.status) + " bad request")
+
+                    json = await response.json()
+                    return cls.from_json(json)
 
         async with session.get(url, params=data) as response:
             if response.status != 200:
@@ -258,7 +267,7 @@ class Tossup:
         return AnswerJudgement.check_answer_sync(self.formatted_answer, givenAnswer)
 
     async def check_answer_async(
-        self, givenAnswer: str, session: aiohttp.ClientSession
+        self, givenAnswer: str, session: aiohttp.ClientSession | None = None
     ) -> AnswerJudgement:
         """Asynchronously check whether an answer is correct."""
         return await AnswerJudgement.check_answer_async(

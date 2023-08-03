@@ -2,14 +2,18 @@
 name = "qbreader"
 version = "1.0.0-beta.1"
 description = "The official qbreader API python wrapper"
-authors = ["Sky \"g3ner1c\" Hong <g3ner1c-sky@pm.me>", "Rohan Arni", "Geoffrey Wu <geoffreywu1000@gmail.com>"]
+authors = [
+    "Sky \"g3ner1c\" Hong <g3ner1c-sky@pm.me>",
+    "Rohan Arni",
+    "Geoffrey Wu <geoffreywu1000@gmail.com>",
+]
 license = "MIT"
 readme = "README.md"
 homepage = "https://github.com/qbreader/python-module"
 repository = "https://github.com/qbreader/python-module"
 documentation = "https://github.com/qbreader/python-module#readme"
 keywords = ["quizbowl", "quiz bowl"]
-classifiers=[
+classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Programming Language :: Python :: 3",
@@ -34,7 +38,7 @@ types-requests = "^2.31.0.1"
 tox = "^4.6.4"
 pytest = "^7.4.0"
 pytest-cov = "^4.1.0"
-pytest-async = "^0.1.1"
+pytest-asyncio = "^0.21.1"
 
 [tool.black]
 line-length = 88
@@ -49,6 +53,7 @@ convention = "numpy"
 [tool.pytest.ini_options]
 addopts = "-v --cov=qbreader --cov-report=term-missing --cov-report=xml --cov-report=html"
 testpaths = "tests"
+asyncio_mode = "strict"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
