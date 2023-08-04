@@ -199,20 +199,18 @@ class AnswerJudgement:
 
         data = {"answerline": answerline, "givenAnswer": givenAnswer}
 
+        temp_session: bool = False
         if session is None:
-            async with aiohttp.ClientSession() as session:
-                async with session.get(url, params=data) as response:
-                    if response.status != 200:
-                        raise Exception(str(response.status) + " bad request")
-
-                    json = await response.json()
-                    return cls.from_json(json)
+            temp_session = True
+            session = aiohttp.ClientSession()
 
         async with session.get(url, params=data) as response:
             if response.status != 200:
                 raise Exception(str(response.status) + " bad request")
 
             json = await response.json()
+            if temp_session:
+                await session.close()
             return cls.from_json(json)
 
 

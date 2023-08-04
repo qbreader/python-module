@@ -406,3 +406,24 @@ class TestSync:
     )
     def test_check_answer(self, answerline: str, givenAnswer: str):
         assert qb.check_answer(answerline=answerline, givenAnswer=givenAnswer).correct()
+
+    @pytest.mark.parametrize(
+        "answerline, givenAnswer, exception",
+        [
+            ("Rubik's cubes [prompt on cubes and speedcubing]", 1, TypeError),
+            (1, "Rubik's cubes", TypeError),
+        ],
+    )
+    def test_check_answer_exception(
+        self, answerline: str, givenAnswer: str, exception: Exception
+    ):
+        assert_exception(qb.check_answer, exception, answerline, givenAnswer)
+
+    def test_check_answer_bad_response(self, mock_get):
+        mock_get(mock_status_code=404)
+        assert_exception(
+            qb.check_answer,
+            Exception,
+            answerline="Rubik's cubes",
+            givenAnswer="Rubik's cubes",
+        )

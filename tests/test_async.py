@@ -504,6 +504,38 @@ class TestAsync:
             answerline=answerline, givenAnswer=givenAnswer
         )
         assert judgement.correct()
+        judgement = await qbr.AnswerJudgement.check_answer_async(
+            answerline=answerline, givenAnswer=givenAnswer
+        )  # testing no session provided
+        assert judgement.correct()
+
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize(
+        "answerline, givenAnswer, exception",
+        [
+            ("Rubik's cubes [prompt on cubes and speedcubing]", 1, TypeError),
+            (1, "Rubik's cubes", TypeError),
+        ],
+    )
+    async def test_check_answer_exception(
+        self, qb, answerline: str, givenAnswer: str, exception: Exception
+    ):
+        await async_assert_exception(
+            qb.check_answer, exception, answerline, givenAnswer
+        )
+        await async_assert_exception(
+            qbr.AnswerJudgement.check_answer_async, exception, answerline, givenAnswer
+        )
+
+    @pytest.mark.asyncio
+    async def test_check_answer_bad_response(self, qb, mock_get):
+        mock_get(mock_status_code=404)
+        await async_assert_exception(
+            qb.check_answer,
+            Exception,
+            answerline="Rubik's cubes",
+            givenAnswer="Rubik's cubes",
+        )
 
     @pytest.mark.asyncio
     async def test_close(self, qb):

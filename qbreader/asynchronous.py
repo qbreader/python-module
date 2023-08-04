@@ -190,6 +190,7 @@ class Async:
                 raise Exception(str(response.status) + " bad request")
 
             json = await response.json()
+            print(json)
             return QueryResponse.from_json(json)
 
     async def random_tossup(
