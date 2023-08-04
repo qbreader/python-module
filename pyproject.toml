@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "qbreader"
-version = "1.0.0-beta.1"
+version = "1.0.0-beta.2"
 description = "The official qbreader API python wrapper"
 authors = [
     "Sky \"g3ner1c\" Hong <g3ner1c-sky@pm.me>",
