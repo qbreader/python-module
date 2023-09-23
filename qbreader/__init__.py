@@ -1,5 +1,7 @@
 """The official qbreader API python wrapper."""
 
+import importlib.metadata
+
 import qbreader.synchronous as Sync
 from qbreader.asynchronous import Async
 from qbreader.types import (
@@ -14,6 +16,7 @@ from qbreader.types import (
     Tossup,
 )
 
+__version__ = importlib.metadata.version("qbreader")
 __all__ = (
     "Async",
     "Sync",
@@ -27,3 +30,5 @@ __all__ = (
     "AnswerJudgement",
     "Packet",
 )
+
+del importlib
