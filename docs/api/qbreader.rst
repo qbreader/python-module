@@ -9,7 +9,6 @@ Submodules
 
    qbreader.api_utils
    qbreader.asynchronous
-   qbreader.consts
    qbreader.synchronous
    qbreader.types
 

@@ -5,7 +5,7 @@ from typing import Optional
 import requests
 
 import qbreader.api_utils as api_utils
-from qbreader.consts import BASE_URL
+from qbreader._consts import BASE_URL
 from qbreader.types import (
     AnswerJudgement,
     Bonus,

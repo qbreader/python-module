@@ -9,7 +9,7 @@ from typing import Any, Literal, Optional, Self, Type, TypeAlias, Union
 import aiohttp
 import requests
 
-from qbreader.consts import BASE_URL
+from qbreader._consts import BASE_URL
 
 
 class Category(enum.StrEnum):
