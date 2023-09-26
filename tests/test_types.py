@@ -1,7 +1,7 @@
 """Test the types, classes, and structures used by the qbreader library."""
 
 
-import qbreader as qbr
+import qbreader as qb
 from qbreader.types import Bonus, Tossup
 
 
@@ -102,7 +102,7 @@ class TestBonus:
 class TestPacket:
     """Test the Packet class."""
 
-    packet = qbr.Sync.packet("2023 MRNA", 5)
+    packet = qb.Sync().packet("2023 MRNA", 5)
 
     def test_eq(self):
         """Test the __eq__ method."""
@@ -124,7 +124,7 @@ class TestPacket:
 class TestQueryResponse:
     """Test the QueryResponse class."""
 
-    query = qbr.Sync.query(queryString="spacecraft", maxReturnLength=1)
+    query = qb.Sync().query(queryString="spacecraft", maxReturnLength=1)
 
     def test_str(self):
         """Test the __str__ method."""
@@ -134,7 +134,7 @@ class TestQueryResponse:
 class TestAnswerJudgement:
     """Test the AnswerJudgement class."""
 
-    judgement = qbr.Sync.check_answer("spacecraft", "spacecraft")
+    judgement = qb.Sync().check_answer("spacecraft", "spacecraft")
 
     def test_str(self):
         """Test the __str__ method."""

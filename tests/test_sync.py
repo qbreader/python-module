@@ -6,11 +6,11 @@ from typing import Any
 import pytest
 import requests
 
-import qbreader as qbr
+import qbreader as qb
 from qbreader import Sync
 from tests import assert_exception, check_internet_connection
 
-qb = Sync()
+qbr = Sync()
 
 
 class TestSync:
@@ -49,7 +49,7 @@ class TestSync:
             ),
             (
                 {
-                    "questionType": qbr.Tossup,
+                    "questionType": qb.Tossup,
                     "setName": "2023 PACE NSC",
                     "queryString": "hashes",
                 },
@@ -65,7 +65,7 @@ class TestSync:
             ),
             (
                 {
-                    "questionType": qbr.Bonus,
+                    "questionType": qb.Bonus,
                     "setName": "2023 PACE NSC",
                     "queryString": "bell labs",
                 },
@@ -74,7 +74,7 @@ class TestSync:
         ],
     )
     def test_query(self, params: dict[str, Any], expected_answer: str):
-        query: qbr.QueryResponse = qb.query(**params)
+        query: qb.QueryResponse = qbr.query(**params)
         if params["questionType"] == "tossup":
             assert query.tossups[0].check_answer_sync(expected_answer).correct()
         elif params["questionType"] == "bonus":
@@ -128,30 +128,30 @@ class TestSync:
         ],
     )
     def test_query_exception(self, params: dict[str, Any], exception: Exception):
-        assert_exception(qb.query, exception, **params)
+        assert_exception(qbr.query, exception, **params)
 
     def test_query_bad_response(self, mock_get):
         mock_get(mock_status_code=404)
-        assert_exception(qb.query, Exception)
+        assert_exception(qbr.query, Exception)
 
     @pytest.mark.parametrize("number", [1, 20, 50, 100])
     def test_random_tossup(self, number: int):
-        assert len(qb.random_tossup(number=number)) == number
+        assert len(qbr.random_tossup(number=number)) == number
 
     @pytest.mark.parametrize(
         "number, exception",
         [(0, ValueError), (-1, ValueError), ("1", TypeError), (1.0, TypeError)],
     )
     def test_random_tossup_exception(self, number: int, exception: Exception):
-        assert_exception(qb.random_tossup, exception, number=number)
+        assert_exception(qbr.random_tossup, exception, number=number)
 
     def test_random_tossup_bad_response(self, mock_get):
         mock_get(mock_status_code=404)
-        assert_exception(qb.random_tossup, Exception)
+        assert_exception(qbr.random_tossup, Exception)
 
     @pytest.mark.parametrize("number", [1, 20, 50, 100])
     def test_random_bonus(self, number: int):
-        assert len(qb.random_bonus(number=number)) == number
+        assert len(qbr.random_bonus(number=number)) == number
 
     @pytest.mark.parametrize(
         "number, three_part, exception",
@@ -167,19 +167,19 @@ class TestSync:
         self, number: int, three_part: bool, exception: Exception
     ):
         assert_exception(
-            qb.random_bonus, exception, number=number, three_part_bonuses=three_part
+            qbr.random_bonus, exception, number=number, three_part_bonuses=three_part
         )
 
     def test_random_bonus_bad_response(self, mock_get):
         mock_get(mock_status_code=404)
-        assert_exception(qb.random_bonus, Exception)
+        assert_exception(qbr.random_bonus, Exception)
 
     def test_random_name(self):
-        assert qb.random_name()
+        assert qbr.random_name()
 
     def test_random_name_bad_response(self, mock_get):
         mock_get(mock_status_code=404)
-        assert_exception(qb.random_name, Exception)
+        assert_exception(qbr.random_name, Exception)
 
     @pytest.mark.parametrize(
         "params, question, expected_answer",
@@ -203,7 +203,7 @@ class TestSync:
         ],
     )
     def test_packet(self, params: dict[str, Any], question: int, expected_answer: str):
-        packet: qbr.Packet = qb.packet(**params)
+        packet: qb.Packet = qbr.packet(**params)
         assert packet.tossups[question - 1].check_answer_sync(expected_answer).correct()
 
     @pytest.mark.parametrize(
@@ -233,14 +233,14 @@ class TestSync:
         ],
     )
     def test_packet_exception(self, params: dict[str, Any], exception: Exception):
-        assert_exception(qb.packet, exception, **params)
+        assert_exception(qbr.packet, exception, **params)
 
     def test_packet_bad_response(self, monkeypatch, mock_get):
         mock_get(mock_status_code=404)
         monkeypatch.setattr(
-            qb, "num_packets", lambda x: 21
+            qbr, "num_packets", lambda x: 21
         )  # mocking get requests breaks num_packets
-        assert_exception(qb.packet, Exception, setName="2023 PACE NSC", packetNumber=1)
+        assert_exception(qbr.packet, Exception, setName="2023 PACE NSC", packetNumber=1)
 
     @pytest.mark.parametrize(
         "params, question, expected_answer",
@@ -266,7 +266,7 @@ class TestSync:
     def test_packet_tossups(
         self, params: dict[str, Any], question: int, expected_answer: str
     ):
-        tus = qb.packet_tossups(**params)
+        tus = qbr.packet_tossups(**params)
         assert tus[question - 1].check_answer_sync(expected_answer).correct()
 
     @pytest.mark.parametrize(
@@ -298,15 +298,15 @@ class TestSync:
     def test_packet_tossups_exception(
         self, params: dict[str, Any], exception: Exception
     ):
-        assert_exception(qb.packet_tossups, exception, **params)
+        assert_exception(qbr.packet_tossups, exception, **params)
 
     def test_packet_tossups_bad_response(self, monkeypatch, mock_get):
         mock_get(mock_status_code=404)
         monkeypatch.setattr(
-            qb, "num_packets", lambda x: 21
+            qbr, "num_packets", lambda x: 21
         )  # mocking get requests breaks num_packets
         assert_exception(
-            qb.packet_tossups, Exception, setName="2023 PACE NSC", packetNumber=1
+            qbr.packet_tossups, Exception, setName="2023 PACE NSC", packetNumber=1
         )
 
     @pytest.mark.parametrize(
@@ -333,7 +333,7 @@ class TestSync:
     def test_packet_bonuses(
         self, params: dict[str, Any], question: int, expected_answer: str
     ):
-        bs = qb.packet_bonuses(**params)
+        bs = qbr.packet_bonuses(**params)
         assert bs[question - 1].check_answer_sync(0, expected_answer).correct()
 
     @pytest.mark.parametrize(
@@ -365,15 +365,15 @@ class TestSync:
     def test_packet_bonuses_exception(
         self, params: dict[str, Any], exception: Exception
     ):
-        assert_exception(qb.packet_bonuses, exception, **params)
+        assert_exception(qbr.packet_bonuses, exception, **params)
 
     def test_packet_bonuses_bad_response(self, monkeypatch, mock_get):
         mock_get(mock_status_code=404)
         monkeypatch.setattr(
-            qb, "num_packets", lambda x: 21
+            qbr, "num_packets", lambda x: 21
         )  # mocking get requests breaks num_packets
         assert_exception(
-            qb.packet_bonuses, Exception, setName="2023 PACE NSC", packetNumber=1
+            qbr.packet_bonuses, Exception, setName="2023 PACE NSC", packetNumber=1
         )
 
     @pytest.mark.parametrize(
@@ -381,33 +381,35 @@ class TestSync:
         [("2023 PACE NSC", 21), ("2022 SHOW-ME", 15)],
     )
     def test_num_packets(self, setName: str, expected: int):
-        assert qb.num_packets(setName) == expected
+        assert qbr.num_packets(setName) == expected
 
     def test_num_packets_bad_response(self, mock_get):
-        assert_exception(qb.num_packets, ValueError, setName="not a set name")
+        assert_exception(qbr.num_packets, ValueError, setName="not a set name")
         mock_get(mock_status_code=400)
-        assert_exception(qb.num_packets, Exception, setName="2023 PACE NSC")
+        assert_exception(qbr.num_packets, Exception, setName="2023 PACE NSC")
 
     def test_set_list(self):
-        assert qb.set_list()
+        assert qbr.set_list()
 
     def test_set_list_bad_response(self, mock_get):
         mock_get(mock_status_code=404)
-        assert_exception(qb.set_list, Exception)
+        assert_exception(qbr.set_list, Exception)
 
     def test_room_list(self):
-        assert qb.room_list()
+        assert qbr.room_list()
 
     def test_room_list_bad_response(self, mock_get):
         mock_get(mock_status_code=404)
-        assert_exception(qb.room_list, Exception)
+        assert_exception(qbr.room_list, Exception)
 
     @pytest.mark.parametrize(
         "answerline, givenAnswer",
         [("Rubik's cubes [prompt on cubes and speedcubing]", "Rubik's cubes")],
     )
     def test_check_answer(self, answerline: str, givenAnswer: str):
-        assert qb.check_answer(answerline=answerline, givenAnswer=givenAnswer).correct()
+        assert qbr.check_answer(
+            answerline=answerline, givenAnswer=givenAnswer
+        ).correct()
 
     @pytest.mark.parametrize(
         "answerline, givenAnswer, exception",
@@ -419,12 +421,12 @@ class TestSync:
     def test_check_answer_exception(
         self, answerline: str, givenAnswer: str, exception: Exception
     ):
-        assert_exception(qb.check_answer, exception, answerline, givenAnswer)
+        assert_exception(qbr.check_answer, exception, answerline, givenAnswer)
 
     def test_check_answer_bad_response(self, mock_get):
         mock_get(mock_status_code=404)
         assert_exception(
-            qb.check_answer,
+            qbr.check_answer,
             Exception,
             answerline="Rubik's cubes",
             givenAnswer="Rubik's cubes",

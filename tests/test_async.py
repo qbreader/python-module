@@ -8,7 +8,7 @@ from typing import Any
 import pytest
 import pytest_asyncio
 
-import qbreader as qbr
+import qbreader as qb
 from qbreader import Async
 from tests import async_assert_exception, check_internet_connection
 
@@ -32,12 +32,12 @@ class TestAsync:
     """Test asynchronous API functions."""
 
     @pytest_asyncio.fixture(scope="class")
-    async def qb(self):
+    async def qbr(self):
         """Create an Async instance shared by all tests."""
         return await Async.create()
 
     @pytest.fixture()
-    def mock_get(self, monkeypatch, qb):
+    def mock_get(self, monkeypatch, qbr):
         """Mock aiohttp.ClientSession.get for Async.session"""
 
         def _set_get(mock_status_code: int = 200, mock_json=None, *args, **kwargs):
@@ -55,7 +55,7 @@ class TestAsync:
                     return mock_json
 
             monkeypatch.setattr(
-                qb.session, "get", lambda *args, **kwargs: MockResponse()
+                qbr.session, "get", lambda *args, **kwargs: MockResponse()
             )
 
         return _set_get
@@ -78,7 +78,7 @@ class TestAsync:
             ),
             (
                 {
-                    "questionType": qbr.Tossup,
+                    "questionType": qb.Tossup,
                     "setName": "2023 PACE NSC",
                     "queryString": "hashes",
                 },
@@ -94,7 +94,7 @@ class TestAsync:
             ),
             (
                 {
-                    "questionType": qbr.Bonus,
+                    "questionType": qb.Bonus,
                     "setName": "2023 PACE NSC",
                     "queryString": "bell labs",
                 },
@@ -102,17 +102,17 @@ class TestAsync:
             ),
         ],
     )
-    async def test_query(self, qb, params: dict[str, Any], expected_answer: str):
-        query: qbr.QueryResponse = await qb.query(**params)
+    async def test_query(self, qbr, params: dict[str, Any], expected_answer: str):
+        query: qbr.QueryResponse = await qbr.query(**params)
         judgement: qbr.AnswerJudgement
         if params["questionType"] == "tossup":
             judgement = await query.tossups[0].check_answer_async(
-                expected_answer, session=qb.session
+                expected_answer, session=qbr.session
             )
             assert judgement.correct()
         elif params["questionType"] == "bonus":
             judgement = await query.bonuses[0].check_answer_async(
-                0, expected_answer, session=qb.session
+                0, expected_answer, session=qbr.session
             )
             assert judgement.correct()
 
@@ -165,37 +165,39 @@ class TestAsync:
         ],
     )
     async def test_query_exception(
-        self, qb, params: dict[str, Any], exception: Exception
+        self, qbr, params: dict[str, Any], exception: Exception
     ):
-        await async_assert_exception(qb.query, exception, **params)
+        await async_assert_exception(qbr.query, exception, **params)
 
     @pytest.mark.asyncio
-    async def test_query_bad_response(self, qb, mock_get):
+    async def test_query_bad_response(self, qbr, mock_get):
         mock_get(mock_status_code=404)
-        await async_assert_exception(qb.query, Exception)
+        await async_assert_exception(qbr.query, Exception)
 
     @pytest.mark.asyncio
     @pytest.mark.parametrize("number", [1, 20, 50, 100])
-    async def test_random_tossup(self, qb, number: int):
-        assert len(await qb.random_tossup(number=number)) == number
+    async def test_random_tossup(self, qbr, number: int):
+        assert len(await qbr.random_tossup(number=number)) == number
 
     @pytest.mark.asyncio
     @pytest.mark.parametrize(
         "number, exception",
         [(0, ValueError), (-1, ValueError), ("1", TypeError), (1.0, TypeError)],
     )
-    async def test_random_tossup_exception(self, qb, number: int, exception: Exception):
-        await async_assert_exception(qb.random_tossup, exception, number=number)
+    async def test_random_tossup_exception(
+        self, qbr, number: int, exception: Exception
+    ):
+        await async_assert_exception(qbr.random_tossup, exception, number=number)
 
     @pytest.mark.asyncio
-    async def test_random_tossup_bad_response(self, qb, mock_get):
+    async def test_random_tossup_bad_response(self, qbr, mock_get):
         mock_get(mock_status_code=404)
-        await async_assert_exception(qb.random_tossup, Exception)
+        await async_assert_exception(qbr.random_tossup, Exception)
 
     @pytest.mark.asyncio
     @pytest.mark.parametrize("number", [1, 20, 50, 100])
-    async def test_random_bonus(self, qb, number: int):
-        assert len(await qb.random_bonus(number=number)) == number
+    async def test_random_bonus(self, qbr, number: int):
+        assert len(await qbr.random_bonus(number=number)) == number
 
     @pytest.mark.asyncio
     @pytest.mark.parametrize(
@@ -209,25 +211,25 @@ class TestAsync:
         ],
     )
     async def test_random_bonus_exception(
-        self, qb, number: int, three_part: bool, exception: Exception
+        self, qbr, number: int, three_part: bool, exception: Exception
     ):
         await async_assert_exception(
-            qb.random_bonus, exception, number=number, three_part_bonuses=three_part
+            qbr.random_bonus, exception, number=number, three_part_bonuses=three_part
         )
 
     @pytest.mark.asyncio
-    async def test_random_bonus_bad_response(self, qb, mock_get):
+    async def test_random_bonus_bad_response(self, qbr, mock_get):
         mock_get(mock_status_code=404)
-        await async_assert_exception(qb.random_bonus, Exception)
+        await async_assert_exception(qbr.random_bonus, Exception)
 
     @pytest.mark.asyncio
-    async def test_random_name(self, qb):
-        assert await qb.random_name()
+    async def test_random_name(self, qbr):
+        assert await qbr.random_name()
 
     @pytest.mark.asyncio
-    async def test_random_name_bad_response(self, qb, mock_get):
+    async def test_random_name_bad_response(self, qbr, mock_get):
         mock_get(mock_status_code=404)
-        await async_assert_exception(qb.random_name, Exception)
+        await async_assert_exception(qbr.random_name, Exception)
 
     @pytest.mark.asyncio
     @pytest.mark.parametrize(
@@ -252,12 +254,12 @@ class TestAsync:
         ],
     )
     async def test_packet(
-        self, qb, params: dict[str, Any], question: int, expected_answer: str
+        self, qbr, params: dict[str, Any], question: int, expected_answer: str
     ):
-        packet: qbr.Packet = await qb.packet(**params)
+        packet: qbr.Packet = await qbr.packet(**params)
         judgement: qbr.AnswerJudgement = await packet.tossups[
             question - 1
-        ].check_answer_async(expected_answer, session=qb.session)
+        ].check_answer_async(expected_answer, session=qbr.session)
         assert judgement.correct()
 
     @pytest.mark.asyncio
@@ -288,22 +290,22 @@ class TestAsync:
         ],
     )
     async def test_packet_exception(
-        self, qb, params: dict[str, Any], exception: Exception
+        self, qbr, params: dict[str, Any], exception: Exception
     ):
-        await async_assert_exception(qb.packet, exception, **params)
+        await async_assert_exception(qbr.packet, exception, **params)
 
     @pytest.mark.asyncio
-    async def test_packet_bad_response(self, qb, monkeypatch, mock_get):
+    async def test_packet_bad_response(self, qbr, monkeypatch, mock_get):
         mock_get(mock_status_code=404)
 
         async def mock_num_packets(x):
             return 21
 
         monkeypatch.setattr(
-            qb, "num_packets", mock_num_packets
+            qbr, "num_packets", mock_num_packets
         )  # mocking get requests breaks num_packets
         await async_assert_exception(
-            qb.packet, Exception, setName="2023 PACE NSC", packetNumber=1
+            qbr.packet, Exception, setName="2023 PACE NSC", packetNumber=1
         )
 
     @pytest.mark.asyncio
@@ -329,11 +331,11 @@ class TestAsync:
         ],
     )
     async def test_packet_tossups(
-        self, qb, params: dict[str, Any], question: int, expected_answer: str
+        self, qbr, params: dict[str, Any], question: int, expected_answer: str
     ):
-        tus = await qb.packet_tossups(**params)
+        tus = await qbr.packet_tossups(**params)
         judgement: qbr.AnswerJudgement = await tus[question - 1].check_answer_async(
-            expected_answer, session=qb.session
+            expected_answer, session=qbr.session
         )
         assert judgement.correct()
 
@@ -365,22 +367,22 @@ class TestAsync:
         ],
     )
     async def test_packet_tossups_exception(
-        self, qb, params: dict[str, Any], exception: Exception
+        self, qbr, params: dict[str, Any], exception: Exception
     ):
-        await async_assert_exception(qb.packet_tossups, exception, **params)
+        await async_assert_exception(qbr.packet_tossups, exception, **params)
 
     @pytest.mark.asyncio
-    async def test_packet_tossups_bad_response(self, qb, monkeypatch, mock_get):
+    async def test_packet_tossups_bad_response(self, qbr, monkeypatch, mock_get):
         mock_get(mock_status_code=404)
 
         async def mock_num_packets(x):
             return 21
 
         monkeypatch.setattr(
-            qb, "num_packets", mock_num_packets
+            qbr, "num_packets", mock_num_packets
         )  # mocking get requests breaks num_packets
         await async_assert_exception(
-            qb.packet_tossups, Exception, setName="2023 PACE NSC", packetNumber=1
+            qbr.packet_tossups, Exception, setName="2023 PACE NSC", packetNumber=1
         )
 
     @pytest.mark.asyncio
@@ -406,11 +408,11 @@ class TestAsync:
         ],
     )
     async def test_packet_bonuses(
-        self, qb, params: dict[str, Any], question: int, expected_answer: str
+        self, qbr, params: dict[str, Any], question: int, expected_answer: str
     ):
-        bs = await qb.packet_bonuses(**params)
+        bs = await qbr.packet_bonuses(**params)
         judgement: qbr.AnswerJudgement = await bs[question - 1].check_answer_async(
-            0, expected_answer, session=qb.session
+            0, expected_answer, session=qbr.session
         )
         assert judgement.correct()
 
@@ -442,22 +444,22 @@ class TestAsync:
         ],
     )
     async def test_packet_bonuses_exception(
-        self, qb, params: dict[str, Any], exception: Exception
+        self, qbr, params: dict[str, Any], exception: Exception
     ):
-        await async_assert_exception(qb.packet_bonuses, exception, **params)
+        await async_assert_exception(qbr.packet_bonuses, exception, **params)
 
     @pytest.mark.asyncio
-    async def test_packet_bonuses_bad_response(self, qb, monkeypatch, mock_get):
+    async def test_packet_bonuses_bad_response(self, qbr, monkeypatch, mock_get):
         mock_get(mock_status_code=404)
 
         async def mock_num_packets(x):
             return 21
 
         monkeypatch.setattr(
-            qb, "num_packets", mock_num_packets
+            qbr, "num_packets", mock_num_packets
         )  # mocking get requests breaks num_packets
         await async_assert_exception(
-            qb.packet_bonuses, Exception, setName="2023 PACE NSC", packetNumber=1
+            qbr.packet_bonuses, Exception, setName="2023 PACE NSC", packetNumber=1
         )
 
     @pytest.mark.asyncio
@@ -465,46 +467,48 @@ class TestAsync:
         "setName, expected",
         [("2023 PACE NSC", 21), ("2022 SHOW-ME", 15)],
     )
-    async def test_num_packets(self, qb, setName: str, expected: int):
-        assert await qb.num_packets(setName) == expected
+    async def test_num_packets(self, qbr, setName: str, expected: int):
+        assert await qbr.num_packets(setName) == expected
 
     @pytest.mark.asyncio
-    async def test_num_packets_bad_response(self, qb, mock_get):
+    async def test_num_packets_bad_response(self, qbr, mock_get):
         await async_assert_exception(
-            qb.num_packets, ValueError, setName="not a set name"
+            qbr.num_packets, ValueError, setName="not a set name"
         )
         mock_get(mock_status_code=400)
-        await async_assert_exception(qb.num_packets, Exception, setName="2023 PACE NSC")
+        await async_assert_exception(
+            qbr.num_packets, Exception, setName="2023 PACE NSC"
+        )
 
     @pytest.mark.asyncio
-    async def test_set_list(self, qb):
-        assert await qb.set_list()
+    async def test_set_list(self, qbr):
+        assert await qbr.set_list()
 
     @pytest.mark.asyncio
-    async def test_set_list_bad_response(self, qb, mock_get):
+    async def test_set_list_bad_response(self, qbr, mock_get):
         mock_get(mock_status_code=404)
-        await async_assert_exception(qb.set_list, Exception)
+        await async_assert_exception(qbr.set_list, Exception)
 
     @pytest.mark.asyncio
-    async def test_room_list(self, qb):
-        assert await qb.room_list()
+    async def test_room_list(self, qbr):
+        assert await qbr.room_list()
 
     @pytest.mark.asyncio
-    async def test_room_list_bad_response(self, qb, mock_get):
+    async def test_room_list_bad_response(self, qbr, mock_get):
         mock_get(mock_status_code=404)
-        await async_assert_exception(qb.room_list, Exception)
+        await async_assert_exception(qbr.room_list, Exception)
 
     @pytest.mark.asyncio
     @pytest.mark.parametrize(
         "answerline, givenAnswer",
         [("Rubik's cubes [prompt on cubes and speedcubing]", "Rubik's cubes")],
     )
-    async def test_check_answer(self, qb, answerline: str, givenAnswer: str):
-        judgement: qbr.AnswerJudgement = await qb.check_answer(
+    async def test_check_answer(self, qbr, answerline: str, givenAnswer: str):
+        judgement: qb.AnswerJudgement = await qbr.check_answer(
             answerline=answerline, givenAnswer=givenAnswer
         )
         assert judgement.correct()
-        judgement = await qbr.AnswerJudgement.check_answer_async(
+        judgement = await qb.AnswerJudgement.check_answer_async(
             answerline=answerline, givenAnswer=givenAnswer
         )  # testing no session provided
         assert judgement.correct()
@@ -518,33 +522,33 @@ class TestAsync:
         ],
     )
     async def test_check_answer_exception(
-        self, qb, answerline: str, givenAnswer: str, exception: Exception
+        self, qbr, answerline: str, givenAnswer: str, exception: Exception
     ):
         await async_assert_exception(
-            qb.check_answer, exception, answerline, givenAnswer
+            qbr.check_answer, exception, answerline, givenAnswer
         )
         await async_assert_exception(
-            qbr.AnswerJudgement.check_answer_async, exception, answerline, givenAnswer
+            qb.AnswerJudgement.check_answer_async, exception, answerline, givenAnswer
         )
 
     @pytest.mark.asyncio
-    async def test_check_answer_bad_response(self, qb, mock_get):
+    async def test_check_answer_bad_response(self, qbr, mock_get):
         mock_get(mock_status_code=404)
         await async_assert_exception(
-            qb.check_answer,
+            qbr.check_answer,
             Exception,
             answerline="Rubik's cubes",
             givenAnswer="Rubik's cubes",
         )
 
     @pytest.mark.asyncio
-    async def test_close(self, qb):
-        await qb.close()
-        assert qb.session.closed
+    async def test_close(self, qbr):
+        await qbr.close()
+        assert qbr.session.closed
 
     @pytest.mark.asyncio
     async def test_async_with(self):
-        qb = await Async.create()
-        async with qb:
-            assert qb.session
-        assert qb.session.closed
+        qbr = await Async.create()
+        async with qbr:
+            assert qbr.session
+        assert qbr.session.closed
