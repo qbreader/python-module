@@ -32,6 +32,22 @@ templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 default_role = "py:obj"
 
+highlight_language = "python3"
+
+autodoc_member_order = "bysource"
+autodoc_type_aliases = {
+    "Async": "qbreader.asynchronous.Async",
+    "Sync": "qbreader.synchronous.Sync",
+    "Tossup": "qbreader.types.Tossup",
+    "Bonus": "qbreader.types.Bonus",
+    "Category": "qbreader.types.Category",
+    "Subcategory": "qbreader.types.Subcategory",
+    "Difficulty": "qbreader.types.Difficulty",
+    "QueryResponse": "qbreader.types.QueryResponse",
+    "Directive": "qbreader.types.Directive",
+    "AnswerJudgement": "qbreader.types.AnswerJudgement",
+    "Packet": "qbreader.types.Packet",
+}
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output

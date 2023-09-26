@@ -7,7 +7,6 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
-   qbreader.api_utils
    qbreader.asynchronous
    qbreader.synchronous
    qbreader.types

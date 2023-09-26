@@ -1,6 +1,6 @@
 import pytest
 
-import qbreader.api_utils as api_utils
+import qbreader._api_utils as api_utils
 from qbreader.types import Category, Difficulty, Subcategory
 from tests import assert_exception, assert_warning
 

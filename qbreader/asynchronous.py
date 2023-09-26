@@ -4,7 +4,7 @@ from typing import Optional, Self, Type
 
 import aiohttp
 
-import qbreader.api_utils as api_utils
+import qbreader._api_utils as api_utils
 from qbreader._consts import BASE_URL
 from qbreader.types import (
     AnswerJudgement,

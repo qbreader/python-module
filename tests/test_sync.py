@@ -7,8 +7,10 @@ import pytest
 import requests
 
 import qbreader as qbr
-from qbreader import Sync as qb
+from qbreader import Sync
 from tests import assert_exception, check_internet_connection
+
+qb = Sync()
 
 
 class TestSync:
