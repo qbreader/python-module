@@ -1,5 +1,7 @@
 """Useful functions used by both the asynchronous and synchronous API wrappers."""
 
+from __future__ import annotations
+
 import warnings
 from enum import Enum, EnumType
 from typing import Iterable, Optional, Union

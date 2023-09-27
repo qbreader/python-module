@@ -36,17 +36,12 @@ highlight_language = "python3"
 
 autodoc_member_order = "bysource"
 autodoc_type_aliases = {
-    "Async": "qbreader.asynchronous.Async",
-    "Sync": "qbreader.synchronous.Sync",
-    "Tossup": "qbreader.types.Tossup",
-    "Bonus": "qbreader.types.Bonus",
-    "Category": "qbreader.types.Category",
-    "Subcategory": "qbreader.types.Subcategory",
-    "Difficulty": "qbreader.types.Difficulty",
-    "QueryResponse": "qbreader.types.QueryResponse",
-    "Directive": "qbreader.types.Directive",
-    "AnswerJudgement": "qbreader.types.AnswerJudgement",
-    "Packet": "qbreader.types.Packet",
+    "QuestionType": "qbreader.types.QuestionType",
+    "SearchType": "qbreader.types.SearchType",
+    "ValidDifficulties": "qbreader.types.ValidDifficulties",
+    "UnnormalizedDifficulty": "qbreader.types.UnnormalizedDifficulty",
+    "UnnormalizedCategory": "qbreader.types.UnnormalizedCategory",
+    "UnnormalizedSubcategory": "qbreader.types.UnnormalizedSubcategory",
 }
 
 # -- Options for HTML output -------------------------------------------------
@@ -58,5 +53,6 @@ html_logo = "_static/logo.png"
 html_static_path = ["_static"]
 
 intersphinx_mapping = {
-    "py": ("https://docs.python.org/3", None),
+    "python": ("https://docs.python.org/3", None),
+    "aiohttp": ("https://docs.aiohttp.org/en/stable/", None),
 }

@@ -1,5 +1,7 @@
 """Directly access the qbreader API asynchronously."""
 
+from __future__ import annotations
+
 from typing import Optional, Self, Type
 
 import aiohttp

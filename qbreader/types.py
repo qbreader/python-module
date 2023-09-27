@@ -492,7 +492,10 @@ class Packet:
 QuestionType: TypeAlias = Union[
     Literal["tossup", "bonus", "all"], Type[Tossup], Type[Bonus]
 ]
+"""Type alias for question types."""
+
 SearchType: TypeAlias = Literal["question", "answer", "all"]
+"""Type alias for query search types."""
 
 ValidDifficulties: TypeAlias = Literal[
     0,
@@ -518,12 +521,41 @@ ValidDifficulties: TypeAlias = Literal[
     "9",
     "10",
 ]
+"""Type alias for valid difficulties."""
+
 UnnormalizedDifficulty: TypeAlias = Optional[
     Union[Difficulty, ValidDifficulties, Iterable[Union[Difficulty, ValidDifficulties]]]
 ]
+"""Type alias for unnormalized difficulties. Union of `Difficulty`, `ValidDifficulties`,
+and `collections.abc.Iterable` containing either."""
+
 UnnormalizedCategory: TypeAlias = Optional[
     Union[Category, str, Iterable[Union[Category, str]]]
 ]
+"""Type alias for unnormalized categories. Union of `Category`, `str`, and
+`collections.abc.Iterable` containing either."""
+
 UnnormalizedSubcategory: TypeAlias = Optional[
     Union[Subcategory, str, Iterable[Union[Subcategory, str]]]
 ]
+"""Type alias for unnormalized subcategories. Union of `Subcategory`, `str`, and
+`collections.abc.Iterable` containing either."""
+
+
+__all__ = (
+    "Tossup",
+    "Bonus",
+    "Packet",
+    "QueryResponse",
+    "AnswerJudgement",
+    "Category",
+    "Subcategory",
+    "Difficulty",
+    "Directive",
+    "QuestionType",
+    "SearchType",
+    "ValidDifficulties",
+    "UnnormalizedDifficulty",
+    "UnnormalizedCategory",
+    "UnnormalizedSubcategory",
+)
