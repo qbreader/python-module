@@ -16,6 +16,7 @@ import qbreader.types as types
 from qbreader.asynchronous import Async
 from qbreader.synchronous import Sync
 from qbreader.types import *  # noqa: F401, F403
+
 __version__ = importlib.metadata.version("qbreader")
 __all__ = (
     "Async",
