@@ -2,8 +2,9 @@
 
 [![pypi](https://img.shields.io/pypi/v/qbreader?logo=pypi&logoColor=f0f0f0)](https://pypi.org/project/qbreader/)
 [![downloads](https://img.shields.io/pypi/dm/qbreader?logo=pypi&logoColor=f0f0f0)](https://pypi.org/project/qbreader/)
-[![python-versions](https://img.shields.io/pypi/pyversions/qbreader?logo=python&logoColor=f0f0f0)](https://pypi.org/project/qbreader/)
+[![python](https://img.shields.io/pypi/pyversions/qbreader?logo=python&logoColor=f0f0f0)](https://pypi.org/project/qbreader/)
 [![build](https://img.shields.io/github/actions/workflow/status/qbreader/python-module/test.yml?logo=github&logoColor=f0f0f0)](https://github.com/qbreader/python-module/actions/workflows/test.yml)
+[![docs](https://readthedocs.org/projects/python-qbreader/badge/?version=latest)](https://python-qbreader.readthedocs.io/en/latest/?badge=latest)
 
 ---
 
