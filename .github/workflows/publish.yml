@@ -1,0 +1,35 @@
+name: Package and publish
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: pypi
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install Poetry
+        run: pipx install poetry --python $(which python)
+
+      - name: Install project
+        run: poetry install
+
+      - name: Test with tox
+        run: poetry run tox
+
+      - name: Build package
+        run: poetry build
+
+      - name: Publish package
+        env:
+            PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+        run: poetry publish -u __token__ -p "$PYPI_API_TOKEN"

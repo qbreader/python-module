@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "qbreader"
 version = "1.0.0-rc.1"
-description = "The official qbreader API python wrapper"
+description = "Quizbowl library and Python wrapper for the qbreader API"
 authors = [
     "Sky \"g3ner1c\" Hong <g3ner1c-sky@pm.me>",
     "Rohan Arni",
@@ -11,8 +11,8 @@ license = "MIT"
 readme = "README.md"
 homepage = "https://github.com/qbreader/python-module"
 repository = "https://github.com/qbreader/python-module"
-documentation = "https://github.com/qbreader/python-module#readme"
-keywords = ["quizbowl", "quiz bowl"]
+documentation = "https://python-qbreader.readthedocs.io/"
+keywords = ["quizbowl", "quiz bowl", "qbreader"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
