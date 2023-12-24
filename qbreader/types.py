@@ -61,7 +61,6 @@ class Subcategory(enum.StrEnum):
     BIOLOGY = "Biology"
     CHEMISTRY = "Chemistry"
     PHYSICS = "Physics"
-    MATH = "Math"
     OTHER_SCIENCE = "Other Science"
 
     VISUAL_FINE_ARTS = "Visual Fine Arts"
