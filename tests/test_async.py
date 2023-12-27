@@ -542,6 +542,53 @@ class TestAsync:
         )
 
     @pytest.mark.asyncio
+    @pytest.mark.parametrize(
+        "id, expected_answer",
+        [
+            ("657fd7d7de6df0163bbe3b3d", "Sweden"),
+            ("657fd7d8de6df0163bbe3b43", "jQuery"),
+        ],
+    )
+    async def test_tossup_by_id(self, qbr, id: str, expected_answer: str):
+        tu: qb.Tossup = await qbr.tossup_by_id(id)
+        judgement: qb.AnswerJudgement = await tu.check_answer_async(
+            expected_answer, session=qbr.session
+        )
+        assert judgement.correct()
+
+    @pytest.mark.asyncio
+    async def test_tossup_by_id_bad_response(self, qbr, mock_get):
+        await async_assert_exception(qbr.tossup_by_id, ValueError, id="not a valid id")
+        mock_get(mock_status_code=404)
+        await async_assert_exception(
+            qbr.tossup_by_id, Exception, id="657fd7d7de6df0163bbe3b3d"
+        )
+
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize(
+        "id, expected_answers",
+        [
+            ("648938e130bd7ab56b095a42", ["volcano", "Magellan", "terra"]),
+            ("648938e130bd7ab56b095a60", ["pH", "NADPH", "perforin"]),
+        ],
+    )
+    async def test_bonus_by_id(self, qbr, id: str, expected_answers: list[str]):
+        b: qb.Bonus = await qbr.bonus_by_id(id)
+        for i, answer in enumerate(expected_answers):
+            judgement: qb.AnswerJudgement = await b.check_answer_async(
+                i, answer, session=qbr.session
+            )
+            assert judgement.correct()
+
+    @pytest.mark.asyncio
+    async def test_bonus_by_id_bad_response(self, qbr, mock_get):
+        await async_assert_exception(qbr.bonus_by_id, ValueError, id="not a valid id")
+        mock_get(mock_status_code=404)
+        await async_assert_exception(
+            qbr.bonus_by_id, Exception, id="648938e130bd7ab56b095a42"
+        )
+
+    @pytest.mark.asyncio
     async def test_close(self, qbr):
         await qbr.close()
         assert qbr.session.closed

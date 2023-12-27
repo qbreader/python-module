@@ -67,6 +67,7 @@ class Async:
         queryString: Optional[str] = "",
         exactPhrase: Optional[bool] = False,
         ignoreDiacritics: Optional[bool] = False,
+        ignoreWordOrder: Optional[bool] = False,
         regex: Optional[bool] = False,
         randomize: Optional[bool] = False,
         setName: Optional[str] = None,
@@ -94,6 +95,8 @@ class Async:
             Ensure that the query string is an exact phrase.
         ignoreDiacritics : bool, default = False
             Ignore or transliterate diacritical marks in `queryString`.
+        ignoreWordOrder : bool, default = False
+            Treat `queryString` as a set of keywords that can appear in any order.
         regex : bool, default = False
             Treat `queryString` as a regular expression.
         randomize : bool, default = False
@@ -142,8 +145,14 @@ class Async:
 
         for name, param in tuple(
             zip(
-                ("exactPhrase", "ignoreDiacritics", "regex", "randomize"),
-                (exactPhrase, ignoreDiacritics, regex, randomize),
+                (
+                    "exactPhrase",
+                    "ignoreDiacritics",
+                    "ignoreWordOrder",
+                    "regex",
+                    "randomize",
+                ),
+                (exactPhrase, ignoreDiacritics, ignoreWordOrder, regex, randomize),
             )
         ):
             if not isinstance(param, bool):
@@ -175,6 +184,7 @@ class Async:
             "queryString": queryString,
             "exactPhrase": api_utils.normalize_bool(exactPhrase),
             "ignoreDiacritics": api_utils.normalize_bool(ignoreDiacritics),
+            "ignoreWordOrder": api_utils.normalize_bool(ignoreWordOrder),
             "regex": api_utils.normalize_bool(regex),
             "randomize": api_utils.normalize_bool(randomize),
             "setName": setName,
@@ -590,3 +600,63 @@ class Async:
         return await AnswerJudgement.check_answer_async(
             answerline, givenAnswer, self.session
         )
+
+    async def tossup_by_id(self: Self, id: str) -> Tossup:
+        """Get a tossup by its ID.
+
+        Original API doc at https://www.qbreader.org/api-docs/tossup-by-id.
+
+        Parameters
+        ----------
+        id : str
+            The ID of the tossup to get.
+
+        Returns
+        -------
+        Tossup
+            A `Tossup` object.
+        """
+        url = BASE_URL + "/tossup-by-id"
+
+        data = {
+            "id": id,
+        }
+
+        async with self.session.get(url, params=data) as response:
+            if response.status != 200:
+                if response.status == 400:
+                    raise ValueError(f"Invalid tossup ID: {id}")
+                raise Exception(str(response.status) + " bad request")
+
+            json = await response.json()
+            return Tossup.from_json(json["tossup"])
+
+    async def bonus_by_id(self: Self, id: str) -> Bonus:
+        """Get a bonus by its ID.
+
+        Original API doc at https://www.qbreader.org/api-docs/bonus-by-id.
+
+        Parameters
+        ----------
+        id : str
+            The ID of the bonus to get.
+
+        Returns
+        -------
+        Bonus
+            A `Bonus` object.
+        """
+        url = BASE_URL + "/bonus-by-id"
+
+        data = {
+            "id": id,
+        }
+
+        async with self.session.get(url, params=data) as response:
+            if response.status != 200:
+                if response.status == 400:
+                    raise ValueError(f"Invalid bonus ID: {id}")
+                raise Exception(str(response.status) + " bad request")
+
+            json = await response.json()
+            return Bonus.from_json(json["bonus"])

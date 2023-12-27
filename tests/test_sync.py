@@ -431,3 +431,38 @@ class TestSync:
             answerline="Rubik's cubes",
             givenAnswer="Rubik's cubes",
         )
+
+    @pytest.mark.parametrize(
+        "id, expected_answer",
+        [
+            ("657fd7d7de6df0163bbe3b3d", "Sweden"),
+            ("657fd7d8de6df0163bbe3b43", "jQuery"),
+        ],
+    )
+    def test_tossup_by_id(self, id: str, expected_answer: str):
+        tu: qb.Tossup = qbr.tossup_by_id(id)
+        judgement: qb.AnswerJudgement = tu.check_answer_sync(expected_answer)
+        assert judgement.correct()
+
+    def test_tossup_by_id_bad_response(self, mock_get):
+        assert_exception(qbr.tossup_by_id, ValueError, id="not a valid id")
+        mock_get(mock_status_code=404)
+        assert_exception(qbr.tossup_by_id, Exception, id="657fd7d7de6df0163bbe3b3d")
+
+    @pytest.mark.parametrize(
+        "id, expected_answers",
+        [
+            ("648938e130bd7ab56b095a42", ["volcano", "Magellan", "terra"]),
+            ("648938e130bd7ab56b095a60", ["pH", "NADPH", "perforin"]),
+        ],
+    )
+    def test_bonus_by_id(self, id: str, expected_answers: list[str]):
+        b: qb.Bonus = qbr.bonus_by_id(id)
+        for i, answer in enumerate(expected_answers):
+            judgement: qb.AnswerJudgement = b.check_answer_sync(i, answer)
+            assert judgement.correct()
+
+    def test_bonus_by_id_bad_response(self, mock_get):
+        assert_exception(qbr.bonus_by_id, ValueError, id="not a valid id")
+        mock_get(mock_status_code=404)
+        assert_exception(qbr.bonus_by_id, Exception, id="648938e130bd7ab56b095a42")
