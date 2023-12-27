@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "qbreader"
-version = "1.0.0-rc.1"
+version = "1.0.0-rc.2"
 description = "Quizbowl library and Python wrapper for the qbreader API"
 authors = [
     "Sky \"g3ner1c\" Hong <g3ner1c-sky@pm.me>",
