@@ -15,7 +15,8 @@ both asynchronous and synchronous interfaces to the API along with functionality
 
 ```py
 >>> from qbreader import Sync as qbr # synchronous interface
->>> tossup = qbr.random_tossup()[0]
+>>> sync_client = qbr()
+>>> tossup = sync_client.random_tossup()[0]
 >>> tossup.question
 'Tim Peters wrote 19 “guiding principles” of this programming language, which include the maxim “Complex is better than complicated.” The “pandas” library was written for this language. Unicode string values had to be defined with a “u” in version 2 of this language. Libraries in this language include Tkinter, Tensorflow, (*) NumPy (“numb pie”) and SciPy (“sigh pie”). The framework Django was written in this language. This language uses “duck typing.” Variables in this language are often named “spam” and “eggs.” Guido van Rossum invented, for 10 points, what programming language named for a British comedy troupe?'
 >>> tossup.answer
