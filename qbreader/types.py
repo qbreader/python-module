@@ -252,10 +252,10 @@ class Tossup:
             answer=json["answer"],
             category=Category(json["category"]),
             subcategory=Subcategory(json["subcategory"]),
-            set=json["setName"],
-            year=json["setYear"],
-            packet_number=json["packetNumber"],
-            question_number=json["questionNumber"],
+            set=json["set"]["name"],
+            year=json["set"]["year"],
+            packet_number=json["packet"]["name"],
+            question_number=json["packet"]["number"],
             difficulty=Difficulty(str(json["difficulty"])),
         )
 
@@ -338,10 +338,10 @@ class Bonus:
             answers=json["answers"],
             category=Category(json["category"]),
             subcategory=Subcategory(json["subcategory"]),
-            set=json["setName"],
-            year=json["setYear"],
-            packet_number=json["packetNumber"],
-            question_number=json["questionNumber"],
+            set=json["set"]["name"],
+            year=json["set"]["year"],
+            packet_number=json["packet"]["name"],
+            question_number=json["packet"]["number"],
             difficulty=Difficulty(str(json["difficulty"])),
         )
 
