@@ -19,6 +19,7 @@ from qbreader.types import (
     UnnormalizedCategory,
     UnnormalizedDifficulty,
     UnnormalizedSubcategory,
+    Year,
 )
 
 
@@ -175,8 +176,8 @@ class Sync:
         categories: UnnormalizedCategory = None,
         subcategories: UnnormalizedSubcategory = None,
         number: int = 1,
-        min_year: int = 2010,
-        max_year: int = 2023,
+        min_year: int = Year.MIN_YEAR,
+        max_year: int = Year.CURRENT_YEAR,
     ) -> tuple[Tossup, ...]:
         """Get random tossups from the database.
 
@@ -196,9 +197,9 @@ class Sync:
             between categories and subcategories.
         number : int, default = 1
             The number of tossups to return.
-        min_year : int, default = 2010
+        min_year : int, default = Year.MIN_YEAR
             The oldest year to search for.
-        max_year : int, default = 2023
+        max_year : int, default = Year.CURRENT_YEAR
             The most recent year to search for.
 
         Returns
@@ -234,6 +235,8 @@ class Sync:
 
         response: requests.Response = requests.get(url, params=data)
 
+        print(response.json())
+
         if response.status_code != 200:
             raise Exception(str(response.status_code) + " bad request")
 
@@ -245,8 +248,8 @@ class Sync:
         categories: UnnormalizedCategory = None,
         subcategories: UnnormalizedSubcategory = None,
         number: int = 1,
-        min_year: int = 2010,
-        max_year: int = 2023,
+        min_year: int = Year.MIN_YEAR,
+        max_year: int = Year.CURRENT_YEAR,
         three_part_bonuses: bool = False,
     ) -> tuple[Bonus, ...]:
         """Get random bonuses from the database.
@@ -267,9 +270,9 @@ class Sync:
             between categories and subcategories.
         number : int, default = 1
             The number of bonuses to return.
-        min_year : int, default = 2010
+        min_year : int, default = Year.MIN_YEAR
             The oldest year to search for.
-        max_year : int, default = 2023
+        max_year : int, default = Year.CURRENT_YEAR
             The most recent year to search for.
         three_part_bonuses : bool, default = False
             Whether to only return bonuses with 3 parts.

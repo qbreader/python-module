@@ -92,6 +92,13 @@ class Directive(enum.StrEnum):
     PROMPT = "prompt"
 
 
+class Year(enum.IntEnum):
+    """Min/max year enum"""
+
+    MIN_YEAR = 2010
+    CURRENT_YEAR = 2024
+
+
 class AnswerJudgement:
     """A judgement given by `api/check-answer`."""
 
