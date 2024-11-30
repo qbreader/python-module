@@ -235,8 +235,6 @@ class Sync:
 
         response: requests.Response = requests.get(url, params=data)
 
-        print(response.json())
-
         if response.status_code != 200:
             raise Exception(str(response.status_code) + " bad request")
 

@@ -10,6 +10,8 @@ def check_internet_connection():
         urlopen("https://www.qbreader.org")
         return True
     except Exception:
+        # you may want to check if you've installed SSL certificates
+        # https://stackoverflow.com/questions/44649449/brew-installation-of-python-3-6-1-ssl-certificate-verify-failed-certificate
         return
 
 

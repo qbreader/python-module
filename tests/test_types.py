@@ -1,31 +1,31 @@
 """Test the types, classes, and structures used by the qbreader library."""
 
-
 import qbreader as qb
-from qbreader.types import Bonus, Tossup
+from qbreader.types import Bonus, Tossup, PacketMetadata, SetMetadata
 
 
 class TestTossup:
     """Test the Tossup class."""
 
     tu_json = {
-        "_id": "64a0ccb31634f2d5eb7df02a",
-        "question": "This general class of devices could move between hypothetical castles via up and down escalators in a cycler. These devices can transfer their angular momentum to two “yo-yo” masses attached with cords in order to decrease their rotation rate. The Oberth effect describes how these devices gain kinetic energy more efficiently while at (*) periapsis. Hohmann transfers and bi-elliptic transfers are used to adjust the altitude of these devices. The trajectory-dependent delta-v budget of one of these devices can be reduced by using a slingshot maneuver. Station-keeping can help these objects remain geosynchronous. For 10 points, name this general class of devices used to collect astronomical data, such as Voyager 1.",  # noqa: E501
-        "formatted_answer": "<b><u>spacecraft</u></b> [or <b><u>spaceship</u></b>s; accept <b><u>space probe</u></b>s, <b><u>satellite</u></b>s, or <b><u>space station</u></b>s, or <b><u>space vehicle</u></b>s; prompt with <u>rocket</u>s or <u>thruster</u>s with, “To what devices are rockets attached?”] (The first clue describes the Aldrin cycle, proposed by Buzz Aldrin.)",  # noqa: E501
-        "answer": "spacecraft [or spaceships; accept space probes, satellites, or space stations, or space vehicles; prompt with rockets or thrusters with, “To what devices are rockets attached?”] (The first clue describes the Aldrin cycle, proposed by Buzz Aldrin.)",  # noqa: E501
+        "_id": "64046cc6de59b8af97422da5",
+        "question": "<b>Radiative power is inversely proportional to this quantity cubed, times 6-pi-epsilon, according to the Larmor formula. This quantity is in the numerator in the formula for the index of refraction. When a charged particle exceeds this quantity while in a medium, it produces Cherenkov radiation. This </b>(*) quantity is equal to one divided by the square root of the product of the vacuum permittivity and permeability. This quantity is constant in all inertial reference frames. For 10 points, name this value symbolized <i>c</i>, that is about 30 million meters per second.",
+        "answer": "<b><u>Speed of Light</u></b>",
         "category": "Science",
-        "subcategory": "Other Science",
-        "packet": "64a0ccb31634f2d5eb7df01e",
-        "set": "64a0ccb31634f2d5eb7deed5",
-        "setName": "2023 MRNA",
-        "setYear": 2023,
-        "type": "tossup",
-        "packetNumber": 9,
-        "packetName": "09",
-        "questionNumber": 12,
-        "createdAt": "2023-07-02T01:02:43.628Z",
-        "updatedAt": "2023-07-02T01:03:31.712Z",
-        "difficulty": 7,
+        "subcategory": "Physics",
+        "packet": {"_id": "64046cc6de59b8af97422da2", "name": "03", "number": 3},
+        "set": {
+            "_id": "64046cc6de59b8af97422d4f",
+            "name": "2017 WHAQ",
+            "year": 2017,
+            "standard": True,
+        },
+        "createdAt": "2023-03-05T10:19:50.469Z",
+        "updatedAt": "2024-11-24T22:47:40.013Z",
+        "difficulty": 3,
+        "number": 3,
+        "answer_sanitized": "Speed of Light",
+        "question_sanitized": "Radiative power is inversely proportional to this quantity cubed, times 6-pi-epsilon, according to the Larmor formula. This quantity is in the numerator in the formula for the index of refraction. When a charged particle exceeds this quantity while in a medium, it produces Cherenkov radiation. This (*) quantity is equal to one divided by the square root of the product of the vacuum permittivity and permeability. This quantity is constant in all inertial reference frames. For 10 points, name this value symbolized c, that is about 30 million meters per second.",
     }
 
     def test_from_json(self):
@@ -49,37 +49,49 @@ class TestBonus:
     """Test the Bonus class."""
 
     b_json = {
-        "_id": "644932c99f0045ff841d6792",
-        "leadin": "Using this metal as a charge carrier avoids both cross-contamination and electrodeposition because it has four stable oxidation states: plus-two, plus-three, plus-four, and plus-five. For 10 points each:",  # noqa: E501
+        "_id": "673ec00f90236da031c2cedb",
+        "leadin": "With George Jean Nathan, H. L. Mencken co-founded a newspaper called<i> The</i> [this adjective]<i> Mercury</i>, which eventually fell under far-right leadership. For 10 points each:",
+        "leadin_sanitized": "With George Jean Nathan, H. L. Mencken co-founded a newspaper called The [this adjective] Mercury, which eventually fell under far-right leadership. For 10 points each:",
         "parts": [
-            "Name this transition metal used as the charge carrier in the most common redox flow battery for electric grids.",  # noqa: E501
-            "To balance charge between the pipes, redox flow batteries rely on one of these semipermeable barriers made of Nafion. They also separate the compartments of fuel cells.",  # noqa: E501
-            "The electrolyte of a vanadium redox flow battery is a solution of this compound. This “acid” in a lead-acid battery is prepared using a vanadium catalyst in the contact process.",  # noqa: E501
+            "Name this adjective in the title of a Mencken book that pays homage to Noah Webster. That book claims that the sentence “who are you talking to” is “doubly” this adjective since it forgoes “whom” and puts a preposition at the end of a sentence.",
+            "<i> The Baltimore Sun</i> sent Mencken to cover one of these events in Dayton, Tennessee, where he gave it a famous nickname. That event of this type was fictionalized in the play<i> Inherit the Wind</i>.",
+            "At the end of<i> Inherit the Wind</i>, Henry Drummond picks up a book by Darwin in one hand and this book with the other. Mencken claimed to have coined the term for a “Belt” in the Southern United States named for this text.",
         ],
-        "values": [],
+        "parts_sanitized": [
+            'Name this adjective in the title of a Mencken book that pays homage to Noah Webster. That book claims that the sentence "who are you talking to" is "doubly" this adjective since it forgoes "whom" and puts a preposition at the end of a sentence.',
+            "The Baltimore Sun sent Mencken to cover one of these events in Dayton, Tennessee, where he gave it a famous nickname. That event of this type was fictionalized in the play Inherit the Wind.",
+            'At the end of Inherit the Wind, Henry Drummond picks up a book by Darwin in one hand and this book with the other. Mencken claimed to have coined the term for a "Belt" in the Southern United States named for this text.',
+        ],
         "answers": [
-            "vanadium [or V]",
-            "proton-exchange membranes [or PEMs; or polymer-electrolyte membranes; prompt on membranes orion-exchange membranes]",  # noqa: E501
-            "sulfuric acid [or H2SO4]",
+            "<b><u>American</u></b> [accept<i> The</i> <i><b><u>American</u></b> Mercury</i> or<i> The</i> <i><b><u>American</u></b> Language</i>]",
+            "<b><u>trial</u></b> [accept Scopes <b><u>trial</u></b> or Scopes Monkey <b><u>trial</u></b>]",
+            "the <b><u>Bible</u> </b>",
         ],
-        "formatted_answers": [
-            "<b><u>vanadium</u></b> [or <b><u>V</u></b>]",
-            "<b><u>proton-exchange membrane</u></b>s [or <b><u>PEM</u></b>s; or polymer-<b><u>electrolyte membrane</u></b>s; prompt on <u>membrane</u>s orion-exchange <u>membrane</u>s]",  # noqa: E501
-            "<b><u>sulfuric</u></b> acid [or <b><u>H2SO4</u></b>]",
+        "answers_sanitized": [
+            "American [accept The American Mercury or The American Language]",
+            "trial [accept Scopes trial or Scopes Monkey trial]",
+            "the Bible",
         ],
-        "category": "Science",
-        "subcategory": "Chemistry",
-        "packet": "644932c99f0045ff841d6777",
-        "set": "644932c99f0045ff841d66fb",
-        "setName": "2023 ACF Nationals",
-        "setYear": 2023,
-        "type": "bonus",
-        "packetNumber": 4,
-        "packetName": "Finals 2. Editors 12",
-        "questionNumber": 7,
-        "createdAt": "2023-04-26T14:18:49.683Z",
-        "updatedAt": "2023-04-26T14:19:23.999Z",
-        "difficulty": 9,
+        "updatedAt": "2024-11-21T05:07:27.318Z",
+        "category": "Literature",
+        "subcategory": "American Literature",
+        "alternate_subcategory": "Misc Literature",
+        "values": [10, 10, 10],
+        "difficultyModifiers": ["h", "m", "e"],
+        "number": 1,
+        "createdAt": "2024-11-21T05:07:27.318Z",
+        "difficulty": 7,
+        "packet": {
+            "_id": "673ec00f90236da031c2cec6",
+            "name": "A - Claremont A, Edinburgh A, Haverford A, Georgia Tech B, Illinois C, Michigan B",
+            "number": 1,
+        },
+        "set": {
+            "_id": "673ec00f90236da031c2cec5",
+            "name": "2024 ACF Winter",
+            "year": 2024,
+            "standard": True,
+        },
     }
 
     def test_from_json(self):
@@ -119,6 +131,38 @@ class TestPacket:
         for i, (tu, b) in enumerate(self.packet):
             assert tu == self.packet.tossups[i]
             assert b == self.packet.bonuses[i]
+
+
+class TestPacketMetadata:
+    """Test the PacketMetadata class."""
+
+    packetMetadata = PacketMetadata.from_json(TestTossup.tu_json["packet"])
+
+    def test_eq(self):
+        """Test the __eq__ method."""
+        p1 = p2 = self.packetMetadata
+        assert p1 == p2
+        assert p1 != "not packet metadata"
+
+    def test_str(self):
+        """Test the __str__ method."""
+        assert str(self.packetMetadata)
+
+
+class TestSetMetadata:
+    """Test the SetMetadata class."""
+
+    setMetadata = SetMetadata.from_json(TestTossup.tu_json["set"])
+
+    def test_eq(self):
+        """Test the __eq__ method."""
+        s1 = s2 = self.setMetadata
+        assert s1 == s2
+        assert s1 != "not set metadata"
+
+    def test_str(self):
+        """Test the __str__ method."""
+        assert str(self.setMetadata)
 
 
 class TestQueryResponse:
