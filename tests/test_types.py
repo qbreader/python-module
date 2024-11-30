@@ -9,7 +9,7 @@ class TestTossup:
 
     tu_json = {
         "_id": "64046cc6de59b8af97422da5",
-        "question": "<b>Radiative power is inversely proportional to this quantity cubed, times 6-pi-epsilon, according to the Larmor formula. This quantity is in the numerator in the formula for the index of refraction. When a charged particle exceeds this quantity while in a medium, it produces Cherenkov radiation. This </b>(*) quantity is equal to one divided by the square root of the product of the vacuum permittivity and permeability. This quantity is constant in all inertial reference frames. For 10 points, name this value symbolized <i>c</i>, that is about 30 million meters per second.",
+        "question": "<b>Radiative power is inversely proportional to this quantity cubed, times 6-pi-epsilon, according to the Larmor formula. This quantity is in the numerator in the formula for the index of refraction. When a charged particle exceeds this quantity while in a medium, it produces Cherenkov radiation. This </b>(*) quantity is equal to one divided by the square root of the product of the vacuum permittivity and permeability. This quantity is constant in all inertial reference frames. For 10 points, name this value symbolized <i>c</i>, that is about 30 million meters per second.",  # noqa: E501
         "answer": "<b><u>Speed of Light</u></b>",
         "category": "Science",
         "subcategory": "Physics",
@@ -25,7 +25,7 @@ class TestTossup:
         "difficulty": 3,
         "number": 3,
         "answer_sanitized": "Speed of Light",
-        "question_sanitized": "Radiative power is inversely proportional to this quantity cubed, times 6-pi-epsilon, according to the Larmor formula. This quantity is in the numerator in the formula for the index of refraction. When a charged particle exceeds this quantity while in a medium, it produces Cherenkov radiation. This (*) quantity is equal to one divided by the square root of the product of the vacuum permittivity and permeability. This quantity is constant in all inertial reference frames. For 10 points, name this value symbolized c, that is about 30 million meters per second.",
+        "question_sanitized": "Radiative power is inversely proportional to this quantity cubed, times 6-pi-epsilon, according to the Larmor formula. This quantity is in the numerator in the formula for the index of refraction. When a charged particle exceeds this quantity while in a medium, it produces Cherenkov radiation. This (*) quantity is equal to one divided by the square root of the product of the vacuum permittivity and permeability. This quantity is constant in all inertial reference frames. For 10 points, name this value symbolized c, that is about 30 million meters per second.",  # noqa: E501
     }
 
     def test_from_json(self):
@@ -50,21 +50,21 @@ class TestBonus:
 
     b_json = {
         "_id": "673ec00f90236da031c2cedb",
-        "leadin": "With George Jean Nathan, H. L. Mencken co-founded a newspaper called<i> The</i> [this adjective]<i> Mercury</i>, which eventually fell under far-right leadership. For 10 points each:",
-        "leadin_sanitized": "With George Jean Nathan, H. L. Mencken co-founded a newspaper called The [this adjective] Mercury, which eventually fell under far-right leadership. For 10 points each:",
+        "leadin": "With George Jean Nathan, H. L. Mencken co-founded a newspaper called<i> The</i> [this adjective]<i> Mercury</i>, which eventually fell under far-right leadership. For 10 points each:",  # noqa: E501
+        "leadin_sanitized": "With George Jean Nathan, H. L. Mencken co-founded a newspaper called The [this adjective] Mercury, which eventually fell under far-right leadership. For 10 points each:",  # noqa: E501
         "parts": [
-            "Name this adjective in the title of a Mencken book that pays homage to Noah Webster. That book claims that the sentence “who are you talking to” is “doubly” this adjective since it forgoes “whom” and puts a preposition at the end of a sentence.",
-            "<i> The Baltimore Sun</i> sent Mencken to cover one of these events in Dayton, Tennessee, where he gave it a famous nickname. That event of this type was fictionalized in the play<i> Inherit the Wind</i>.",
-            "At the end of<i> Inherit the Wind</i>, Henry Drummond picks up a book by Darwin in one hand and this book with the other. Mencken claimed to have coined the term for a “Belt” in the Southern United States named for this text.",
+            "Name this adjective in the title of a Mencken book that pays homage to Noah Webster. That book claims that the sentence “who are you talking to” is “doubly” this adjective since it forgoes “whom” and puts a preposition at the end of a sentence.",  # noqa: E501
+            "<i> The Baltimore Sun</i> sent Mencken to cover one of these events in Dayton, Tennessee, where he gave it a famous nickname. That event of this type was fictionalized in the play<i> Inherit the Wind</i>.",  # noqa: E501
+            "At the end of<i> Inherit the Wind</i>, Henry Drummond picks up a book by Darwin in one hand and this book with the other. Mencken claimed to have coined the term for a “Belt” in the Southern United States named for this text.",  # noqa: E501
         ],
         "parts_sanitized": [
-            'Name this adjective in the title of a Mencken book that pays homage to Noah Webster. That book claims that the sentence "who are you talking to" is "doubly" this adjective since it forgoes "whom" and puts a preposition at the end of a sentence.',
-            "The Baltimore Sun sent Mencken to cover one of these events in Dayton, Tennessee, where he gave it a famous nickname. That event of this type was fictionalized in the play Inherit the Wind.",
-            'At the end of Inherit the Wind, Henry Drummond picks up a book by Darwin in one hand and this book with the other. Mencken claimed to have coined the term for a "Belt" in the Southern United States named for this text.',
+            'Name this adjective in the title of a Mencken book that pays homage to Noah Webster. That book claims that the sentence "who are you talking to" is "doubly" this adjective since it forgoes "whom" and puts a preposition at the end of a sentence.',  # noqa: E501
+            "The Baltimore Sun sent Mencken to cover one of these events in Dayton, Tennessee, where he gave it a famous nickname. That event of this type was fictionalized in the play Inherit the Wind.",  # noqa: E501
+            'At the end of Inherit the Wind, Henry Drummond picks up a book by Darwin in one hand and this book with the other. Mencken claimed to have coined the term for a "Belt" in the Southern United States named for this text.',  # noqa: E501
         ],
         "answers": [
-            "<b><u>American</u></b> [accept<i> The</i> <i><b><u>American</u></b> Mercury</i> or<i> The</i> <i><b><u>American</u></b> Language</i>]",
-            "<b><u>trial</u></b> [accept Scopes <b><u>trial</u></b> or Scopes Monkey <b><u>trial</u></b>]",
+            "<b><u>American</u></b> [accept<i> The</i> <i><b><u>American</u></b> Mercury</i> or<i> The</i> <i><b><u>American</u></b> Language</i>]",  # noqa: E501
+            "<b><u>trial</u></b> [accept Scopes <b><u>trial</u></b> or Scopes Monkey <b><u>trial</u></b>]",  # noqa: E501
             "the <b><u>Bible</u> </b>",
         ],
         "answers_sanitized": [
@@ -83,7 +83,7 @@ class TestBonus:
         "difficulty": 7,
         "packet": {
             "_id": "673ec00f90236da031c2cec6",
-            "name": "A - Claremont A, Edinburgh A, Haverford A, Georgia Tech B, Illinois C, Michigan B",
+            "name": "A - Claremont A, Edinburgh A, Haverford A, Georgia Tech B, Illinois C, Michigan B",  # noqa: E501
             "number": 1,
         },
         "set": {
