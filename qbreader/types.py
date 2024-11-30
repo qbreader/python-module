@@ -84,12 +84,27 @@ class Difficulty(enum.StrEnum):
     OPEN = "10"
 
 
+class DifficultyModifier(enum.StrEnum):
+    """Difficulty modifier enum."""
+
+    EASY = "e"
+    MEDIUM = "m"
+    HARD = "h"
+
+
 class Directive(enum.StrEnum):
     """Directives given by `api/check-answer`."""
 
     ACCEPT = "accept"
     REJECT = "reject"
     PROMPT = "prompt"
+
+
+class Year(enum.IntEnum):
+    """Min/max year enum"""
+
+    MIN_YEAR = 2010
+    CURRENT_YEAR = 2024
 
 
 class AnswerJudgement:
@@ -219,26 +234,26 @@ class Tossup:
     def __init__(
         self: Self,
         question: str,
-        formatted_answer: Optional[str],
+        question_sanitized: str,
         answer: str,
+        answer_sanitized: str,
+        difficulty: Difficulty,
         category: Category,
         subcategory: Subcategory,
-        set: str,
-        year: int,
-        packet_number: int,
-        question_number: int,
-        difficulty: Difficulty,
+        packet: PacketMetadata,
+        set: SetMetadata,
+        number: int,
     ):
         self.question: str = question
-        self.formatted_answer: str = formatted_answer if formatted_answer else answer
+        self.question_sanitized: str = question_sanitized
         self.answer: str = answer
+        self.answer_sanitized: str = answer_sanitized
+        self.difficulty: Difficulty = difficulty
         self.category: Category = category
         self.subcategory: Subcategory = subcategory
-        self.set: str = set
-        self.year: int = year
-        self.packet_number: int = packet_number
-        self.question_number: int = question_number
-        self.difficulty: Difficulty = difficulty
+        self.packet: PacketMetadata = packet
+        self.set: SetMetadata = set
+        self.number: int = number
 
     @classmethod
     def from_json(cls: Type[Self], json: dict[str, Any]) -> Self:
@@ -248,27 +263,27 @@ class Tossup:
         """
         return cls(
             question=json["question"],
-            formatted_answer=json.get("formatted_answer", json["answer"]),
+            question_sanitized=json["question_sanitized"],
             answer=json["answer"],
+            answer_sanitized=json["answer_sanitized"],
+            difficulty=Difficulty(str(json["difficulty"])),
             category=Category(json["category"]),
             subcategory=Subcategory(json["subcategory"]),
-            set=json["setName"],
-            year=json["setYear"],
-            packet_number=json["packetNumber"],
-            question_number=json["questionNumber"],
-            difficulty=Difficulty(str(json["difficulty"])),
+            packet=PacketMetadata.from_json(json["packet"]),
+            set=SetMetadata.from_json(json["set"]),
+            number=json["number"],
         )
 
     def check_answer_sync(self, givenAnswer: str) -> AnswerJudgement:
         """Check whether an answer is correct."""
-        return AnswerJudgement.check_answer_sync(self.formatted_answer, givenAnswer)
+        return AnswerJudgement.check_answer_sync(self.answer, givenAnswer)
 
     async def check_answer_async(
         self, givenAnswer: str, session: aiohttp.ClientSession | None = None
     ) -> AnswerJudgement:
         """Asynchronously check whether an answer is correct."""
         return await AnswerJudgement.check_answer_async(
-            self.formatted_answer, givenAnswer, session
+            self.answer, givenAnswer, session
         )
 
     def __eq__(self, other: object) -> bool:
@@ -278,15 +293,15 @@ class Tossup:
 
         return (
             self.question == other.question
-            and self.formatted_answer == other.formatted_answer
+            and self.question_sanitized == other.question_sanitized
             and self.answer == other.answer
+            and self.answer_sanitized == other.answer_sanitized
+            and self.difficulty == other.difficulty
             and self.category == other.category
             and self.subcategory == other.subcategory
+            and self.packet == other.packet
             and self.set == other.set
-            and self.year == other.year
-            and self.packet_number == other.packet_number
-            and self.question_number == other.question_number
-            and self.difficulty == other.difficulty
+            and self.number == other.number
         )
 
     def __str__(self) -> str:
@@ -300,30 +315,36 @@ class Bonus:
     def __init__(
         self: Self,
         leadin: str,
+        leadin_sanitized: str,
         parts: Sequence[str],
-        formatted_answers: Optional[Sequence[str]],
+        parts_sanitized: Sequence[str],
         answers: Sequence[str],
+        answers_sanitized: Sequence[str],
+        difficulty: Difficulty,
         category: Category,
         subcategory: Subcategory,
-        set: str,
-        year: int,
-        packet_number: int,
-        question_number: int,
-        difficulty: Difficulty,
+        set: SetMetadata,
+        packet: PacketMetadata,
+        number: int,
+        values: Optional[Sequence[int]] = None,
+        difficultyModifiers: Optional[Sequence[DifficultyModifier]] = None,
     ):
         self.leadin: str = leadin
+        self.leadin_sanitized: str = leadin_sanitized
         self.parts: tuple[str, ...] = tuple(parts)
-        self.formatted_answers: tuple[str, ...] = tuple(
-            formatted_answers if formatted_answers else answers
-        )
+        self.parts_sanitized: tuple[str, ...] = tuple(parts_sanitized)
         self.answers: tuple[str, ...] = tuple(answers)
+        self.answers_sanitized: tuple[str, ...] = tuple(answers_sanitized)
+        self.difficulty: Difficulty = difficulty
         self.category: Category = category
         self.subcategory: Subcategory = subcategory
-        self.set: str = set
-        self.year: int = year
-        self.packet_number: int = packet_number
-        self.question_number: int = question_number
-        self.difficulty: Difficulty = difficulty
+        self.set: SetMetadata = set
+        self.packet: PacketMetadata = packet
+        self.number: int = number
+        self.values: Optional[tuple[int, ...]] = tuple(values) if values else None
+        self.difficultyModifiers: Optional[tuple[DifficultyModifier, ...]] = (
+            tuple(difficultyModifiers) if difficultyModifiers else None
+        )
 
     @classmethod
     def from_json(cls: Type[Self], json: dict[str, Any]) -> Self:
@@ -333,30 +354,31 @@ class Bonus:
         """
         return cls(
             leadin=json["leadin"],
+            leadin_sanitized=json["leadin_sanitized"],
             parts=json["parts"],
-            formatted_answers=json.get("formatted_answers", json["answers"]),
+            parts_sanitized=json["parts_sanitized"],
             answers=json["answers"],
+            answers_sanitized=json["answers_sanitized"],
+            difficulty=Difficulty(str(json["difficulty"])),
             category=Category(json["category"]),
             subcategory=Subcategory(json["subcategory"]),
-            set=json["setName"],
-            year=json["setYear"],
-            packet_number=json["packetNumber"],
-            question_number=json["questionNumber"],
-            difficulty=Difficulty(str(json["difficulty"])),
+            set=SetMetadata.from_json(json["set"]),
+            packet=PacketMetadata.from_json(json["packet"]),
+            number=json["number"],
+            values=json.get("values", None),
+            difficultyModifiers=json.get("difficultyModifiers", None),
         )
 
     def check_answer_sync(self, part: int, givenAnswer: str) -> AnswerJudgement:
         """Check whether an answer is correct."""
-        return AnswerJudgement.check_answer_sync(
-            self.formatted_answers[part], givenAnswer
-        )
+        return AnswerJudgement.check_answer_sync(self.answers[part], givenAnswer)
 
     async def check_answer_async(
         self, part: int, givenAnswer: str, session: aiohttp.ClientSession
     ) -> AnswerJudgement:
         """Asynchronously check whether an answer is correct."""
         return await AnswerJudgement.check_answer_async(
-            self.formatted_answers[part], givenAnswer, session
+            self.answers[part], givenAnswer, session
         )
 
     def __eq__(self, other: object) -> bool:
@@ -366,16 +388,19 @@ class Bonus:
 
         return (
             self.leadin == other.leadin
+            and self.leadin_sanitized == other.leadin_sanitized
             and self.parts == other.parts
-            and self.formatted_answers == other.formatted_answers
+            and self.parts_sanitized == other.parts_sanitized
             and self.answers == other.answers
+            and self.answers_sanitized == other.answers_sanitized
+            and self.difficulty == other.difficulty
             and self.category == other.category
             and self.subcategory == other.subcategory
             and self.set == other.set
-            and self.year == other.year
-            and self.packet_number == other.packet_number
-            and self.question_number == other.question_number
-            and self.difficulty == other.difficulty
+            and self.packet == other.packet
+            and self.number == other.number
+            and self.values == other.values
+            and self.difficultyModifiers == other.difficultyModifiers
         )
 
     def __str__(self) -> str:
@@ -440,9 +465,9 @@ class Packet:
     ):
         self.tossups: tuple[Tossup, ...] = tuple(tossups)
         self.bonuses: tuple[Bonus, ...] = tuple(bonuses)
-        self.number: Optional[int] = number
-        self.name: Optional[str] = name if name else self.tossups[0].set
-        self.year: Optional[int] = year if year else self.tossups[0].year
+        self.number: Optional[int] = number if number else self.tossups[0].packet.number
+        self.name: Optional[str] = name if name else self.tossups[0].set.name
+        self.year: Optional[int] = year if year else self.tossups[0].set.year
 
     @classmethod
     def from_json(
@@ -486,6 +511,76 @@ class Packet:
             + "\n\n\n"
             + "\n\n".join([str(bonus) for bonus in self.bonuses])
         )
+
+
+class PacketMetadata:
+    def __init__(
+        self: Self,
+        _id: str,
+        name: str,
+        number: int,
+    ):
+        self._id: str = _id
+        self.name: str = name
+        self.number: int = number
+
+    @classmethod
+    def from_json(cls: Type[Self], json: dict[str, Any]) -> Self:
+        return cls(
+            _id=json["_id"],
+            name=json["name"],
+            number=json["number"],
+        )
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, PacketMetadata):
+            return NotImplemented
+
+        return (
+            self._id == other._id
+            and self.name == other.name
+            and self.number == other.number
+        )
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class SetMetadata:
+    def __init__(
+        self: Self,
+        _id: str,
+        name: str,
+        year: int,
+        standard: bool,
+    ):
+        self._id: str = _id
+        self.name: str = name
+        self.year: int = year
+        self.standard: bool = standard
+
+    @classmethod
+    def from_json(cls: Type[Self], json: dict[str, Any]) -> Self:
+        return cls(
+            _id=json["_id"],
+            name=json["name"],
+            year=json["year"],
+            standard=json["standard"],
+        )
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, SetMetadata):
+            return NotImplemented
+
+        return (
+            self._id == other._id
+            and self.name == other.name
+            and self.year == other.year
+            and self.standard == other.standard
+        )
+
+    def __str__(self) -> str:
+        return self.name
 
 
 QuestionType: TypeAlias = Union[
