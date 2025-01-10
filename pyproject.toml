@@ -3,7 +3,7 @@ name = "qbreader"
 version = "1.0.0"
 description = "Quizbowl library and Python wrapper for the qbreader API"
 authors = [
-    "Sky \"skysomoprhic\" Hong <skysomorphic@pm.me>",
+    "Sky \"skysomorphic\" Hong <skysomorphic@pm.me>",
     "Rohan Arni",
     "Geoffrey Wu <geoffreywu1000@gmail.com>",
 ]
