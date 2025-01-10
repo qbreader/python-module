@@ -14,7 +14,7 @@ import qbreader
 sys.path.insert(0, path.abspath(".."))
 
 project = "python-qbreader"
-copyright = "2023, Sky Hong, Rohan Arni, Geoffrey Wu"
+copyright = "2024, Sky Hong, Rohan Arni, Geoffrey Wu"
 author = "Sky Hong, Rohan Arni, Geoffrey Wu"
 release = qbreader.__version__
 
