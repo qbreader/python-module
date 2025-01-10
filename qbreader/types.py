@@ -101,7 +101,7 @@ class Directive(enum.StrEnum):
 
 
 class Year(enum.IntEnum):
-    """Min/max year enum"""
+    """Min/max year enum."""
 
     MIN_YEAR = 2010
     CURRENT_YEAR = 2024

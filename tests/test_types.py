@@ -1,7 +1,7 @@
 """Test the types, classes, and structures used by the qbreader library."""
 
 import qbreader as qb
-from qbreader.types import Bonus, Tossup, PacketMetadata, SetMetadata
+from qbreader.types import Bonus, PacketMetadata, SetMetadata, Tossup
 
 
 class TestTossup:
@@ -136,7 +136,9 @@ class TestPacket:
 class TestPacketMetadata:
     """Test the PacketMetadata class."""
 
-    packetMetadata = PacketMetadata.from_json(TestTossup.tu_json["packet"])
+    packetMetadata = PacketMetadata.from_json(
+        TestTossup.tu_json["packet"]  # type: ignore
+    )
 
     def test_eq(self):
         """Test the __eq__ method."""
@@ -152,7 +154,7 @@ class TestPacketMetadata:
 class TestSetMetadata:
     """Test the SetMetadata class."""
 
-    setMetadata = SetMetadata.from_json(TestTossup.tu_json["set"])
+    setMetadata = SetMetadata.from_json(TestTossup.tu_json["set"])  # type: ignore
 
     def test_eq(self):
         """Test the __eq__ method."""
