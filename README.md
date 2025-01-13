@@ -13,7 +13,26 @@
 `qbreader` is a Python wrapper to the qbreader API as well as a general quizbowl library. It provides
 both asynchronous and synchronous interfaces to the API along with functionality for representing questions.
 
-## Tossup Example
+Documentation for this package is available at <https://python-qbreader.readthedocs.io/>.
+
+## Installation
+
+### PyPI
+
+```sh
+$ pip install qbreader
+# or whatever environment/dependency management system you use
+```
+
+### Git
+
+Alternatively, you may install the most recent, but potentially unstable, development version directly from this repository.
+
+```sh
+$ pip install git+https://github.com/qbreader/python-module.git
+```
+
+## A quick glance
 
 ```py
 >>> from qbreader import Sync as qbr # synchronous interface
@@ -37,11 +56,6 @@ both asynchronous and synchronous interfaces to the API along with functionality
 '2022 Prison Bowl'
 >>> (tossup.packet.number, tossup.number)
 (4, 20)
-```
-
-## Bonus Example
-
-```py
 >>> bonus = sync_client.random_bonus()[0]
 >>> bonus.leadin
 'The Curry–Howard isomorphism states that computer programs are directly equivalent to these mathematical constructs, which can be automated using the languages Lean or Rocq (“rock”). For 10 points each:'
