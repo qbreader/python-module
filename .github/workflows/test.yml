@@ -69,8 +69,7 @@ jobs:
       - name: Install Poetry
         run: pipx install poetry --python $(which python)
 
-      - name: Check pyproject.toml
-        run: poetry check
-
-      - name: Check if lockfile is updated
-        run: poetry lock --check
+      - name: Check pyproject.toml and lockfile
+        run: |
+            poetry check
+            poetry check --lock
