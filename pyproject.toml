@@ -69,5 +69,5 @@ testpaths = "tests"
 asyncio_mode = "strict"
 
 [build-system]
-requires = ["poetry-core>=2.0."]
+requires = ["poetry-core>=2.0"]
 build-backend = "poetry.core.masonry.api"
