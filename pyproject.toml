@@ -1,10 +1,10 @@
 [project]
 name = "qbreader"
-version = "1.0.0"
+version = "1.0.1"
 requires-python = ">=3.11"
 description = "Quizbowl library and Python wrapper for the qbreader API"
 authors = [
-    { name = "Sky \"skysomorphic\" Hong", email = "skysomoprhic@pm.me" },
+    { name = "Sky \"skysomorphic\" Hong", email = "skysomorphic@pm.me" },
     { name = "Rohan Arni" },
     { name = "Geoffrey Wu", email = "geoffreywu1000@gmail.com" },
 ]

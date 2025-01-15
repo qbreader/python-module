@@ -39,8 +39,11 @@ jobs:
           with:
               python-version: "3.13" # use latest Python version
 
-        - name: Install tox
-          run: pipx install --python $(which python) tox
+        - name: Install Poetry
+          run: pipx install poetry --python $(which python)
+
+        - name: Install project
+          run: poetry install
 
         - name: Generate docs
           run: poetry run tox -e docs
