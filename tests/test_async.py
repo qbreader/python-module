@@ -24,8 +24,8 @@ def event_loop():
 
 @pytest_asyncio.fixture(autouse=True)
 async def async_code_is_too_fast_lol():
-    """Sleep for up to 0.1 seconds during each test to avoid getting rate limited."""
-    await asyncio.sleep(random() / 10)
+    """Sleep for up to 0.2 seconds during each test to avoid getting rate limited."""
+    await asyncio.sleep(random() / 5)
 
 
 class TestAsync:

@@ -43,7 +43,7 @@ jobs:
           run: pipx install --python $(which python) tox
 
         - name: Generate docs
-          run: poetry tox -e docs
+          run: poetry run tox -e docs
 
         - name: Check if repo docs are up to date
           run: |

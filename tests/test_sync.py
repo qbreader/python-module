@@ -1,6 +1,7 @@
 """Test the synchronous API functions. This module specifically tests API interaction,
 not the underlying data structures. See tests/test_types.py for that."""
 
+from time import sleep
 from typing import Any
 
 import pytest
@@ -11,6 +12,13 @@ from qbreader import Sync
 from tests import assert_exception, check_internet_connection
 
 qbr = Sync()
+
+
+@pytest.fixture(autouse=True)
+def anti_rate_limiting():
+    """Sleep for a short time to avoid getting rate limited. Apparently the sync code is
+    still too fast."""
+    sleep(0.07)
 
 
 class TestSync:
