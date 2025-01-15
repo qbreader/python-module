@@ -8,7 +8,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latestt]
+        os: [ubuntu-latest]
         python-version: [3.11, 3.12, 3.13]
 
     steps:
@@ -34,7 +34,7 @@ jobs:
     steps:
         - uses: actions/checkout@v4.2.2
 
-        - name: Setup Python
+        - name: Setup Python 3.13
           uses: actions/setup-python@v5.3.0
           with:
               python-version: "3.13" # use latest Python version
@@ -43,7 +43,7 @@ jobs:
           run: pipx install --python $(which python) tox
 
         - name: Generate docs
-          run: tox -e docs
+          run: poetry tox -e docs
 
         - name: Check if repo docs are up to date
           run: |
