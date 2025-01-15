@@ -29,6 +29,26 @@ jobs:
       - name: Test with tox
         run: poetry run tox
 
+  test-docs:
+    runs-on: ubuntu-latest
+    steps:
+        - uses: actions/checkout@v4.2.2
+
+        - name: Setup Python
+          uses: actions/setup-python@v5.3.0
+          with:
+              python-version: "3.13" # use latest Python version
+
+        - name: Install tox
+          run: pipx install --python $(which python) tox
+
+        - name: Generate docs
+          run: tox -e docs
+
+        - name: Check if repo docs are up to date
+          run: |
+              git diff --exit-code HEAD
+
   test-deps:
 
     runs-on: ${{ matrix.os }}
