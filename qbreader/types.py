@@ -303,7 +303,7 @@ class Tossup:
             difficulty=Difficulty(str(json["difficulty"])),
             category=Category(json["category"]),
             subcategory=Subcategory(json["subcategory"]),
-            alternate_subcategory=AlternateSubcategory(json.get("alternate_subcategory", "None")),
+            alternate_subcategory=AlternateSubcategory(json["alternate_subcategory"]),
             packet=PacketMetadata.from_json(json["packet"]),
             set=SetMetadata.from_json(json["set"]),
             number=json["number"],
