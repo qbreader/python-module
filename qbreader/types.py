@@ -68,6 +68,41 @@ class Subcategory(enum.StrEnum):
     OTHER_FINE_ARTS = "Other Fine Arts"
 
 
+class AlternateSubcategory(enum.StrEnum):
+    """Question alternate subcategory enum."""
+
+    DRAMA = "Drama"
+    LONG_FICTION = "Long Fiction"
+    POETRY = "Poetry"
+    SHORT_FICTION = "Short Fiction"
+    MISC_LITERATURE = "Misc Literature"
+
+    MATH = "Math"
+    ASTRONOMY = "Astronomy"
+    COMPUTER_SCIENCE = "Computer Science"
+    EARTH_SCIENCE = "Earth Science"
+    ENGINEERING = "Engineering"
+    MISC_SCIENCE = "Misc Science"
+
+    ARCHITECTURE = "Architecture"
+    DANCE = "Dance"
+    FILM = "Film"
+    JAZZ = "Jazz"
+    OPERA = "Opera"
+    PHOTOGRAPHY = "Photography"
+    MISC_ARTS = "Misc Arts"
+
+    ANTHROPOLOGY = "Anthropology"
+    ECONOMICS = "Economics"
+    LINGUISTICS = "Linguistics"
+    PSYCHOLOGY = "Psychology"
+    SOCIOLOGY = "Sociology"
+    OTHER_SOCIAL_SCIENCE = "Other Social Science"
+
+    BELIEFS = "Beliefs"
+    PRACTICES = "Practices"
+
+
 class Difficulty(enum.StrEnum):
     """Question difficulty enum."""
 
@@ -243,6 +278,7 @@ class Tossup:
         packet: PacketMetadata,
         set: SetMetadata,
         number: int,
+        alternate_subcategory: Optional[AlternateSubcategory] = None,
     ):
         self.question: str = question
         self.question_sanitized: str = question_sanitized
@@ -254,6 +290,7 @@ class Tossup:
         self.packet: PacketMetadata = packet
         self.set: SetMetadata = set
         self.number: int = number
+        self.alternate_subcategory: AlternateSubcategory = alternate_subcategory
 
     @classmethod
     def from_json(cls: Type[Self], json: dict[str, Any]) -> Self:
@@ -261,6 +298,7 @@ class Tossup:
 
         See https://www.qbreader.org/api-docs/schemas#tossups for schema.
         """
+        alternate_subcategory = json.get("alternate_subcategory", None)
         return cls(
             question=json["question"],
             question_sanitized=json["question_sanitized"],
@@ -272,6 +310,9 @@ class Tossup:
             packet=PacketMetadata.from_json(json["packet"]),
             set=SetMetadata.from_json(json["set"]),
             number=json["number"],
+            alternate_subcategory=AlternateSubcategory(alternate_subcategory)
+            if alternate_subcategory
+            else None,
         )
 
     def check_answer_sync(self, givenAnswer: str) -> AnswerJudgement:
@@ -299,6 +340,7 @@ class Tossup:
             and self.difficulty == other.difficulty
             and self.category == other.category
             and self.subcategory == other.subcategory
+            and self.alternate_subcategory == other.alternate_subcategory
             and self.packet == other.packet
             and self.set == other.set
             and self.number == other.number
@@ -326,6 +368,7 @@ class Bonus:
         set: SetMetadata,
         packet: PacketMetadata,
         number: int,
+        alternate_subcategory: Optional[AlternateSubcategory] = None,
         values: Optional[Sequence[int]] = None,
         difficultyModifiers: Optional[Sequence[DifficultyModifier]] = None,
     ):
@@ -341,6 +384,7 @@ class Bonus:
         self.set: SetMetadata = set
         self.packet: PacketMetadata = packet
         self.number: int = number
+        self.alternate_subcategory: AlternateSubcategory = alternate_subcategory
         self.values: Optional[tuple[int, ...]] = tuple(values) if values else None
         self.difficultyModifiers: Optional[tuple[DifficultyModifier, ...]] = (
             tuple(difficultyModifiers) if difficultyModifiers else None
@@ -352,6 +396,7 @@ class Bonus:
 
         See https://www.qbreader.org/api-docs/schemas#bonus for schema.
         """
+        alternate_subcategory = json.get("alternate_subcategory", None)
         return cls(
             leadin=json["leadin"],
             leadin_sanitized=json["leadin_sanitized"],
@@ -365,6 +410,9 @@ class Bonus:
             set=SetMetadata.from_json(json["set"]),
             packet=PacketMetadata.from_json(json["packet"]),
             number=json["number"],
+            alternate_subcategory=AlternateSubcategory(alternate_subcategory)
+            if alternate_subcategory
+            else None,
             values=json.get("values", None),
             difficultyModifiers=json.get("difficultyModifiers", None),
         )
@@ -396,6 +444,7 @@ class Bonus:
             and self.difficulty == other.difficulty
             and self.category == other.category
             and self.subcategory == other.subcategory
+            and self.alternate_subcategory == other.alternate_subcategory
             and self.set == other.set
             and self.packet == other.packet
             and self.number == other.number
@@ -635,6 +684,12 @@ UnnormalizedSubcategory: TypeAlias = Optional[
 """Type alias for unnormalized subcategories. Union of `Subcategory`, `str`, and
 `collections.abc.Iterable` containing either."""
 
+UnnormalizedAlternateSubcategory: TypeAlias = Optional[
+    Union[AlternateSubcategory, str, Iterable[Union[AlternateSubcategory, str]]]
+]
+"""Type alias for unnormalized alternate subcategories. Union of `AlternateSubcategory`, `str`, and
+`collections.abc.Iterable` containing either."""
+
 
 __all__ = (
     "Tossup",
@@ -644,6 +699,7 @@ __all__ = (
     "AnswerJudgement",
     "Category",
     "Subcategory",
+    "AlternateSubcategory",
     "Difficulty",
     "Directive",
     "QuestionType",
@@ -652,4 +708,5 @@ __all__ = (
     "UnnormalizedDifficulty",
     "UnnormalizedCategory",
     "UnnormalizedSubcategory",
+    "UnnormalizedAlternateSubcategory",
 )
