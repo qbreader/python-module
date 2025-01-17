@@ -98,8 +98,6 @@ class AlternateSubcategory(enum.StrEnum):
     SOCIOLOGY = "Sociology"
     OTHER_SOCIAL_SCIENCE = "Other Social Science"
 
-    NONE = "None"
-
 class Difficulty(enum.StrEnum):
     """Question difficulty enum."""
 
