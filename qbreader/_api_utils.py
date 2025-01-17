@@ -4,15 +4,17 @@ from __future__ import annotations
 
 import warnings
 from enum import Enum, EnumType
-from typing import Iterable, Optional, Union
+from typing import Iterable, Optional, Union, Tuple
 
 from qbreader.types import (
-    Category,
     Difficulty,
+    Category,
     Subcategory,
+    AlternateSubcategory,
     UnnormalizedCategory,
     UnnormalizedDifficulty,
     UnnormalizedSubcategory,
+    UnnormalizedAlternateSubcategory,
 )
 
 
@@ -97,9 +99,70 @@ def normalize_cat(unnormalized_cats: UnnormalizedCategory):
     return normalize_enumlike(unnormalized_cats, Category)
 
 
-def normalize_subcat(unnormalized_subcats: UnnormalizedSubcategory):
+def subcategory_correspondence(typed_alt_subcat: AlternateSubcategory) -> Subcategory:
+
+    if typed_alt_subcat in [
+        AlternateSubcategory.ASTRONOMY,
+        AlternateSubcategory.COMPUTER_SCIENCE,
+        AlternateSubcategory.MATH,
+        AlternateSubcategory.EARTH_SCIENCE,
+        AlternateSubcategory.ENGINEERING,
+        AlternateSubcategory.MISC_SCIENCE
+    ]:
+        return Subcategory.OTHER_SCIENCE
+    
+    if typed_alt_subcat in [
+        AlternateSubcategory.ARCHITECTURE,
+        AlternateSubcategory.DANCE,
+        AlternateSubcategory.FILM,
+        AlternateSubcategory.JAZZ,
+        AlternateSubcategory.OPERA,
+        AlternateSubcategory.PHOTOGRAPHY,
+        AlternateSubcategory.MISC_ARTS
+    ]:
+        return Subcategory.OTHER_FINE_ARTS
+
+    if typed_alt_subcat in [
+        AlternateSubcategory.DRAMA,
+        AlternateSubcategory.LONG_FICTION,
+        AlternateSubcategory.POETRY,
+        AlternateSubcategory.SHORT_FICTION,
+        AlternateSubcategory.MISC_LITERATURE
+    ]:
+        return Subcategory.OTHER_LITERATURE
+
+
+def normalize_subcats(
+    unnormalized_subcats: UnnormalizedSubcategory,
+    unnormalized_alt_subcats: UnnormalizedAlternateSubcategory
+) -> Tuple[Subcategory, AlternateSubcategory]:
     """Normalize a single or list of subcategories to a comma separated string."""
-    return normalize_enumlike(unnormalized_subcats, Subcategory)
+    
+    typed_alt_subcats: list[AlternateSubcategory] = []
+
+    if isinstance(unnormalized_alt_subcats, str):
+        typed_alt_subcats.append(AlternateSubcategory(unnormalized_alt_subcats))
+    elif isinstance(unnormalized_alt_subcats, Iterable):
+        for alt_subcat in unnormalized_alt_subcats:
+            typed_alt_subcats.append(AlternateSubcategory(alt_subcat))
+    
+
+    to_be_pushed_subcats: list[Subcategory] = []
+
+    for alt_subcat in typed_alt_subcats:
+        to_be_pushed_subcats.append(subcategory_correspondence(alt_subcat))
+        
+    final_subcats = []
+    if unnormalized_subcats is None:
+        final_subcats = to_be_pushed_subcats
+    elif isinstance(unnormalized_subcats, str):
+        final_subcats = [Subcategory(unnormalized_alt_subcats), *to_be_pushed_subcats]
+    elif isinstance(unnormalized_subcats, Iterable):
+        for alt_subcat in unnormalized_subcats:
+            final_subcats.append(Subcategory(alt_subcat))
+        final_subcats.append(*to_be_pushed_subcats)
+        
+    return (normalize_enumlike(final_subcats, Subcategory), normalize_enumlike(typed_alt_subcats, AlternateSubcategory))
 
 
 def prune_none(params: dict) -> dict:

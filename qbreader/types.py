@@ -67,6 +67,38 @@ class Subcategory(enum.StrEnum):
     AUDITORY_FINE_ARTS = "Auditory Fine Arts"
     OTHER_FINE_ARTS = "Other Fine Arts"
 
+class AlternateSubcategory(enum.StrEnum):
+    """Question alternate subcategory enum."""
+
+    DRAMA = "Drama"
+    LONG_FICTION = "Long Fiction"
+    POETRY = "Poetry"
+    SHORT_FICTION = "Short Fiction"
+    MISC_LITERATURE = "Misc Literature"
+
+    MATH = "Math"
+    ASTRONOMY = "Astronomy"
+    COMPUTER_SCIENCE = "Computer Science"
+    EARTH_SCIENCE = "Earth Science"
+    ENGINEERING = "Engineering"
+    MISC_SCIENCE = "Misc Science"
+
+    ARCHITECTURE = "Architecture"
+    DANCE = "Dance"
+    FILM = "Film"
+    JAZZ = "Jazz"
+    OPERA = "Opera"
+    PHOTOGRAPHY = "Photography"
+    MISC_ARTS = "Misc Arts"
+
+    ANTHROPOLOGY = "Anthropology"
+    ECONOMICS = "Economics"
+    LINGUISTICS = "Linguistics"
+    PSYCHOLOGY = "Psychology"
+    SOCIOLOGY = "Sociology"
+    OTHER_SOCIAL_SCIENCE = "Other Social Science"
+
+    NONE = "None"
 
 class Difficulty(enum.StrEnum):
     """Question difficulty enum."""
@@ -240,6 +272,7 @@ class Tossup:
         difficulty: Difficulty,
         category: Category,
         subcategory: Subcategory,
+        alternate_subcategory: AlternateSubcategory,
         packet: PacketMetadata,
         set: SetMetadata,
         number: int,
@@ -251,6 +284,7 @@ class Tossup:
         self.difficulty: Difficulty = difficulty
         self.category: Category = category
         self.subcategory: Subcategory = subcategory
+        self.alternate_subcategory: AlternateSubcategory = alternate_subcategory
         self.packet: PacketMetadata = packet
         self.set: SetMetadata = set
         self.number: int = number
@@ -269,6 +303,7 @@ class Tossup:
             difficulty=Difficulty(str(json["difficulty"])),
             category=Category(json["category"]),
             subcategory=Subcategory(json["subcategory"]),
+            alternate_subcategory=AlternateSubcategory(json.get("alternate_subcategory", "None")),
             packet=PacketMetadata.from_json(json["packet"]),
             set=SetMetadata.from_json(json["set"]),
             number=json["number"],
@@ -299,6 +334,7 @@ class Tossup:
             and self.difficulty == other.difficulty
             and self.category == other.category
             and self.subcategory == other.subcategory
+            and self.alternate_subcategory == other.alternate_subcategory
             and self.packet == other.packet
             and self.set == other.set
             and self.number == other.number
@@ -323,6 +359,7 @@ class Bonus:
         difficulty: Difficulty,
         category: Category,
         subcategory: Subcategory,
+        alternate_subcategory: AlternateSubcategory,
         set: SetMetadata,
         packet: PacketMetadata,
         number: int,
@@ -338,6 +375,7 @@ class Bonus:
         self.difficulty: Difficulty = difficulty
         self.category: Category = category
         self.subcategory: Subcategory = subcategory
+        self.alternate_subcategory: AlternateSubcategory = alternate_subcategory
         self.set: SetMetadata = set
         self.packet: PacketMetadata = packet
         self.number: int = number
@@ -362,6 +400,7 @@ class Bonus:
             difficulty=Difficulty(str(json["difficulty"])),
             category=Category(json["category"]),
             subcategory=Subcategory(json["subcategory"]),
+            alternate_subcategory=AlternateSubcategory(json["alternate_subcategory"]),
             set=SetMetadata.from_json(json["set"]),
             packet=PacketMetadata.from_json(json["packet"]),
             number=json["number"],
@@ -396,6 +435,7 @@ class Bonus:
             and self.difficulty == other.difficulty
             and self.category == other.category
             and self.subcategory == other.subcategory
+            and self.alternate_subcategory == other.alternate_subcategory
             and self.set == other.set
             and self.packet == other.packet
             and self.number == other.number
@@ -635,6 +675,12 @@ UnnormalizedSubcategory: TypeAlias = Optional[
 """Type alias for unnormalized subcategories. Union of `Subcategory`, `str`, and
 `collections.abc.Iterable` containing either."""
 
+UnnormalizedAlternateSubcategory: TypeAlias = Optional[
+    Union[AlternateSubcategory, str, Iterable[Union[AlternateSubcategory, str]]]
+]
+"""Type alias for unnormalized alternate subcategories. Union of `AlternateSubcategory`, `str`, and
+`collections.abc.Iterable` containing either."""
+
 
 __all__ = (
     "Tossup",
@@ -644,6 +690,7 @@ __all__ = (
     "AnswerJudgement",
     "Category",
     "Subcategory",
+    "AlternateSubcategory",
     "Difficulty",
     "Directive",
     "QuestionType",
@@ -652,4 +699,5 @@ __all__ = (
     "UnnormalizedDifficulty",
     "UnnormalizedCategory",
     "UnnormalizedSubcategory",
+    "UnnormalizedAlternateSubcategory"
 )
