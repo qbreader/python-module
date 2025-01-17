@@ -185,6 +185,8 @@ class Async:
 
         url = BASE_URL + "/query"
 
+        (normalized_categories, normalized_subcategories, normalized_alternate_subcategories) = api_utils.normalize_cats(categories, subcategories, alternate_subcategories)
+
         data = {
             "questionType": questionType,
             "searchType": searchType,
@@ -196,9 +198,9 @@ class Async:
             "randomize": api_utils.normalize_bool(randomize),
             "setName": setName,
             "difficulties": api_utils.normalize_diff(difficulties),
-            "categories": api_utils.normalize_cat(categories),
-            "subcategories": api_utils.normalize_subcat(subcategories),
-            "alternateSubcategories": api_utils.normalize_alt_subcat(alternate_subcategories),
+            "categories": normalized_categories,
+            "subcategories": normalized_subcategories,
+            "alternateSubcategories": normalized_alternate_subcategories,
             "maxReturnLength": maxReturnLength,
             "tossupPagination": tossupPagination,
             "bonusPagination": bonusPagination,
@@ -270,11 +272,11 @@ class Async:
 
         url = BASE_URL + "/random-tossup"
 
-        (normalized_subcategories, normalized_alternate_subcategories) = api_utils.normalize_subcats(subcategories, alternate_subcategories)
+        (normalized_categories, normalized_subcategories, normalized_alternate_subcategories) = api_utils.normalize_cats(categories, subcategories, alternate_subcategories)
 
         data = {
             "difficulties": api_utils.normalize_diff(difficulties),
-            "categories": api_utils.normalize_cat(categories),
+            "categories": normalized_categories,
             "subcategories": normalized_subcategories,
             "alternateSubcategories": normalized_alternate_subcategories,
             "number": number,
@@ -357,11 +359,11 @@ class Async:
 
         url = BASE_URL + "/random-bonus"
 
-        (normalized_subcategories, normalized_alternate_subcategories) = api_utils.normalize_subcats(subcategories, alternate_subcategories)
+        (normalized_categories, normalized_subcategories, normalized_alternate_subcategories) = api_utils.normalize_cats(categories, subcategories, alternate_subcategories)
 
         data = {
             "difficulties": api_utils.normalize_diff(difficulties),
-            "categories": api_utils.normalize_cat(categories),
+            "categories": normalized_categories,
             "subcategories": normalized_subcategories,
             "alternateSubcategories": normalized_alternate_subcategories,
             "number": number,

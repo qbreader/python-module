@@ -270,10 +270,10 @@ class Tossup:
         difficulty: Difficulty,
         category: Category,
         subcategory: Subcategory,
-        alternate_subcategory: AlternateSubcategory,
         packet: PacketMetadata,
         set: SetMetadata,
         number: int,
+        alternate_subcategory: Optional[AlternateSubcategory] = None,
     ):
         self.question: str = question
         self.question_sanitized: str = question_sanitized
@@ -282,10 +282,10 @@ class Tossup:
         self.difficulty: Difficulty = difficulty
         self.category: Category = category
         self.subcategory: Subcategory = subcategory
-        self.alternate_subcategory: AlternateSubcategory = alternate_subcategory
         self.packet: PacketMetadata = packet
         self.set: SetMetadata = set
         self.number: int = number
+        self.alternate_subcategory: AlternateSubcategory = alternate_subcategory
 
     @classmethod
     def from_json(cls: Type[Self], json: dict[str, Any]) -> Self:
@@ -293,6 +293,7 @@ class Tossup:
 
         See https://www.qbreader.org/api-docs/schemas#tossups for schema.
         """
+        alternate_subcategory = json.get("alternate_subcategory", None)
         return cls(
             question=json["question"],
             question_sanitized=json["question_sanitized"],
@@ -301,10 +302,10 @@ class Tossup:
             difficulty=Difficulty(str(json["difficulty"])),
             category=Category(json["category"]),
             subcategory=Subcategory(json["subcategory"]),
-            alternate_subcategory=AlternateSubcategory(json["alternate_subcategory"]),
             packet=PacketMetadata.from_json(json["packet"]),
             set=SetMetadata.from_json(json["set"]),
             number=json["number"],
+            alternate_subcategory=AlternateSubcategory(alternate_subcategory) if alternate_subcategory else None,
         )
 
     def check_answer_sync(self, givenAnswer: str) -> AnswerJudgement:
@@ -357,10 +358,10 @@ class Bonus:
         difficulty: Difficulty,
         category: Category,
         subcategory: Subcategory,
-        alternate_subcategory: AlternateSubcategory,
         set: SetMetadata,
         packet: PacketMetadata,
         number: int,
+        alternate_subcategory: Optional[AlternateSubcategory] = None,
         values: Optional[Sequence[int]] = None,
         difficultyModifiers: Optional[Sequence[DifficultyModifier]] = None,
     ):
@@ -373,10 +374,10 @@ class Bonus:
         self.difficulty: Difficulty = difficulty
         self.category: Category = category
         self.subcategory: Subcategory = subcategory
-        self.alternate_subcategory: AlternateSubcategory = alternate_subcategory
         self.set: SetMetadata = set
         self.packet: PacketMetadata = packet
         self.number: int = number
+        self.alternate_subcategory: AlternateSubcategory = alternate_subcategory
         self.values: Optional[tuple[int, ...]] = tuple(values) if values else None
         self.difficultyModifiers: Optional[tuple[DifficultyModifier, ...]] = (
             tuple(difficultyModifiers) if difficultyModifiers else None
@@ -388,6 +389,7 @@ class Bonus:
 
         See https://www.qbreader.org/api-docs/schemas#bonus for schema.
         """
+        alternate_subcategory = json.get("alternate_subcategory", None)
         return cls(
             leadin=json["leadin"],
             leadin_sanitized=json["leadin_sanitized"],
@@ -398,10 +400,10 @@ class Bonus:
             difficulty=Difficulty(str(json["difficulty"])),
             category=Category(json["category"]),
             subcategory=Subcategory(json["subcategory"]),
-            alternate_subcategory=AlternateSubcategory(json["alternate_subcategory"]),
             set=SetMetadata.from_json(json["set"]),
             packet=PacketMetadata.from_json(json["packet"]),
             number=json["number"],
+            alternate_subcategory=AlternateSubcategory(alternate_subcategory) if alternate_subcategory else None,
             values=json.get("values", None),
             difficultyModifiers=json.get("difficultyModifiers", None),
         )

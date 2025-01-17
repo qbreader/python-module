@@ -93,24 +93,29 @@ def normalize_diff(unnormalized_diffs: UnnormalizedDifficulty):
     """Normalize a single or list of difficulty values to a comma separated string."""
     return normalize_enumlike(unnormalized_diffs, Difficulty)
 
-
 def normalize_cat(unnormalized_cats: UnnormalizedCategory):
     """Normalize a single or list of categories to a comma separated string."""
     return normalize_enumlike(unnormalized_cats, Category)
 
 
-def subcategory_correspondence(typed_alt_subcat: AlternateSubcategory) -> Subcategory:
+def normalize_subcat(unnormalized_subcats: UnnormalizedCategory):
+    """Normalize a single or list of subcategories to a comma separated string."""
+    return normalize_enumlike(unnormalized_subcats, Category)
 
+
+def category_correspondence(
+    typed_alt_subcat: AlternateSubcategory,
+) -> Tuple[Category, Subcategory]:
     if typed_alt_subcat in [
         AlternateSubcategory.ASTRONOMY,
         AlternateSubcategory.COMPUTER_SCIENCE,
         AlternateSubcategory.MATH,
         AlternateSubcategory.EARTH_SCIENCE,
         AlternateSubcategory.ENGINEERING,
-        AlternateSubcategory.MISC_SCIENCE
+        AlternateSubcategory.MISC_SCIENCE,
     ]:
-        return Subcategory.OTHER_SCIENCE
-    
+        return (None, Subcategory.OTHER_SCIENCE)
+
     if typed_alt_subcat in [
         AlternateSubcategory.ARCHITECTURE,
         AlternateSubcategory.DANCE,
@@ -118,26 +123,31 @@ def subcategory_correspondence(typed_alt_subcat: AlternateSubcategory) -> Subcat
         AlternateSubcategory.JAZZ,
         AlternateSubcategory.OPERA,
         AlternateSubcategory.PHOTOGRAPHY,
-        AlternateSubcategory.MISC_ARTS
+        AlternateSubcategory.MISC_ARTS,
     ]:
-        return Subcategory.OTHER_FINE_ARTS
+        return (None, Subcategory.OTHER_FINE_ARTS)
 
     if typed_alt_subcat in [
         AlternateSubcategory.DRAMA,
         AlternateSubcategory.LONG_FICTION,
         AlternateSubcategory.POETRY,
         AlternateSubcategory.SHORT_FICTION,
-        AlternateSubcategory.MISC_LITERATURE
+        AlternateSubcategory.MISC_LITERATURE,
     ]:
-        return Subcategory.OTHER_LITERATURE
+        return (Category.LITERATURE, None)
 
 
-def normalize_subcats(
+def normalize_cats(
+    unnormalized_cats: UnnormalizedCategory,
     unnormalized_subcats: UnnormalizedSubcategory,
-    unnormalized_alt_subcats: UnnormalizedAlternateSubcategory
-) -> Tuple[Subcategory, AlternateSubcategory]:
-    """Normalize a single or list of subcategories to a comma separated string."""
-    
+    unnormalized_alt_subcats: UnnormalizedAlternateSubcategory,
+) -> Tuple[Category, Subcategory, AlternateSubcategory]:
+    """
+    Normalize a single or list of categories, subcategories, and alternate_subcategories
+    to their corresponding comma-separated strings, taking into account categories and
+    subcategories that must be added for the alternate_subcategories to work.
+    """
+
     typed_alt_subcats: list[AlternateSubcategory] = []
 
     if isinstance(unnormalized_alt_subcats, str):
@@ -145,24 +155,42 @@ def normalize_subcats(
     elif isinstance(unnormalized_alt_subcats, Iterable):
         for alt_subcat in unnormalized_alt_subcats:
             typed_alt_subcats.append(AlternateSubcategory(alt_subcat))
-    
 
+    to_be_pushed_cats: list[Category] = []
     to_be_pushed_subcats: list[Subcategory] = []
 
     for alt_subcat in typed_alt_subcats:
-        to_be_pushed_subcats.append(subcategory_correspondence(alt_subcat))
-        
+        cat, subcat = category_correspondence(alt_subcat)
+        if cat:
+            to_be_pushed_cats.append(cat)
+        if subcat:
+            to_be_pushed_subcats.append(subcat)
+
+    final_cats = []
+    if unnormalized_cats is None:
+        final_cats = to_be_pushed_cats
+    elif isinstance(unnormalized_cats, str):
+        final_cats = [Category(unnormalized_cats), *to_be_pushed_cats]
+    elif isinstance(unnormalized_cats, Iterable):
+        for subcat in unnormalized_cats:
+            final_cats.append(Subcategory(subcat))
+        final_cats.append(*to_be_pushed_cats)
+
     final_subcats = []
     if unnormalized_subcats is None:
         final_subcats = to_be_pushed_subcats
     elif isinstance(unnormalized_subcats, str):
-        final_subcats = [Subcategory(unnormalized_alt_subcats), *to_be_pushed_subcats]
+        final_subcats = [Subcategory(unnormalized_subcats), *to_be_pushed_subcats]
     elif isinstance(unnormalized_subcats, Iterable):
-        for alt_subcat in unnormalized_subcats:
-            final_subcats.append(Subcategory(alt_subcat))
+        for subcat in unnormalized_subcats:
+            final_subcats.append(Subcategory(subcat))
         final_subcats.append(*to_be_pushed_subcats)
-        
-    return (normalize_enumlike(final_subcats, Subcategory), normalize_enumlike(typed_alt_subcats, AlternateSubcategory))
+
+    return (
+        normalize_enumlike(final_cats, Category),
+        normalize_enumlike(final_subcats, Subcategory),
+        normalize_enumlike(typed_alt_subcats, AlternateSubcategory),
+    )
 
 
 def prune_none(params: dict) -> dict:
