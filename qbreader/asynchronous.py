@@ -19,6 +19,7 @@ from qbreader.types import (
     UnnormalizedCategory,
     UnnormalizedDifficulty,
     UnnormalizedSubcategory,
+    UnnormalizedAlternateSubcategory,
     Year,
 )
 
@@ -75,6 +76,7 @@ class Async:
         difficulties: UnnormalizedDifficulty = None,
         categories: UnnormalizedCategory = None,
         subcategories: UnnormalizedSubcategory = None,
+        alternate_subcategories: UnnormalizedAlternateSubcategory = None,
         maxReturnLength: Optional[int] = 25,
         tossupPagination: Optional[int] = 1,
         bonusPagination: Optional[int] = 1,
@@ -114,6 +116,10 @@ class Async:
             The subcategories to search for. Can be a single or an array of
             `Subcategory` enums or strings. The API does not check for consistency
             between categories and subcategories.
+        alternate_subcategories : qbreader.types.UnnormalizedAlternateSubcategory, optional
+            The alternate subcategories to search for. Can be a single or an array of
+            `AlternateSubcategory` enums or strings. The API does not check for
+            consistency between categories and subcategories
         maxReturnLength : int, default = 25
             The maximum number of questions to return.
         tossupPagination : int, default = 1
@@ -179,6 +185,12 @@ class Async:
 
         url = BASE_URL + "/query"
 
+        (
+            normalized_categories,
+            normalized_subcategories,
+            normalized_alternate_subcategories,
+        ) = api_utils.normalize_cats(categories, subcategories, alternate_subcategories)
+
         data = {
             "questionType": questionType,
             "searchType": searchType,
@@ -190,8 +202,9 @@ class Async:
             "randomize": api_utils.normalize_bool(randomize),
             "setName": setName,
             "difficulties": api_utils.normalize_diff(difficulties),
-            "categories": api_utils.normalize_cat(categories),
-            "subcategories": api_utils.normalize_subcat(subcategories),
+            "categories": normalized_categories,
+            "subcategories": normalized_subcategories,
+            "alternateSubcategories": normalized_alternate_subcategories,
             "maxReturnLength": maxReturnLength,
             "tossupPagination": tossupPagination,
             "bonusPagination": bonusPagination,
@@ -210,6 +223,7 @@ class Async:
         difficulties: UnnormalizedDifficulty = None,
         categories: UnnormalizedCategory = None,
         subcategories: UnnormalizedSubcategory = None,
+        alternate_subcategories: UnnormalizedAlternateSubcategory = None,
         number: int = 1,
         min_year: int = Year.MIN_YEAR,
         max_year: int = Year.CURRENT_YEAR,
@@ -230,6 +244,10 @@ class Async:
             The subcategories to search for. Can be a single or an array of
             `Subcategory` enums or strings. The API does not check for consistency
             between categories and subcategories.
+        alternate_subcategories : qbreader.types.UnnormalizedAlternateSubcategory, optional
+            The alternate subcategories to search for. Can be a single or an array of
+            `AlternateSubcategory` enums or strings. The API does not check for
+            consistency between categories and subcategories
         number : int, default = 1
             The number of tossups to return.
         min_year : int, default = Year.MIN_YEAR
@@ -258,13 +276,20 @@ class Async:
 
         url = BASE_URL + "/random-tossup"
 
+        (
+            normalized_categories,
+            normalized_subcategories,
+            normalized_alternate_subcategories,
+        ) = api_utils.normalize_cats(categories, subcategories, alternate_subcategories)
+
         data = {
             "difficulties": api_utils.normalize_diff(difficulties),
-            "categories": api_utils.normalize_cat(categories),
-            "subcategories": api_utils.normalize_subcat(subcategories),
+            "categories": normalized_categories,
+            "subcategories": normalized_subcategories,
+            "alternateSubcategories": normalized_alternate_subcategories,
             "number": number,
-            "min_year": min_year,
-            "max_year": max_year,
+            "minYear": min_year,
+            "maxYear": max_year,
         }
         data = api_utils.prune_none(data)
 
@@ -280,6 +305,7 @@ class Async:
         difficulties: UnnormalizedDifficulty = None,
         categories: UnnormalizedCategory = None,
         subcategories: UnnormalizedSubcategory = None,
+        alternate_subcategories: UnnormalizedAlternateSubcategory = None,
         number: int = 1,
         min_year: int = Year.MIN_YEAR,
         max_year: int = Year.CURRENT_YEAR,
@@ -301,6 +327,10 @@ class Async:
             The subcategories to search for. Can be a single or an array of
             `Subcategory` enums or strings. The API does not check for consistency
             between categories and subcategories.
+        alternate_subcategories: qbreaader.types.UnnormalizedAlternateSubcategory, optional
+            The alternates subcategories to search for. Can be a single or an array of
+            `AlternateSubcategory` enum variants or strings. The API does not check for consistency
+            between categories, subcategories, and alternate subcategories.
         number : int, default = 1
             The number of bonuses to return.
         min_year : int, default = Year.MIN_YEAR
@@ -337,13 +367,20 @@ class Async:
 
         url = BASE_URL + "/random-bonus"
 
+        (
+            normalized_categories,
+            normalized_subcategories,
+            normalized_alternate_subcategories,
+        ) = api_utils.normalize_cats(categories, subcategories, alternate_subcategories)
+
         data = {
             "difficulties": api_utils.normalize_diff(difficulties),
-            "categories": api_utils.normalize_cat(categories),
-            "subcategories": api_utils.normalize_subcat(subcategories),
+            "categories": normalized_categories,
+            "subcategories": normalized_subcategories,
+            "alternateSubcategories": normalized_alternate_subcategories,
             "number": number,
-            "min_year": min_year,
-            "max_year": max_year,
+            "minYear": min_year,
+            "maxYear": max_year,
         }
         data = api_utils.prune_none(data)
 
