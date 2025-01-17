@@ -73,13 +73,13 @@ class Sync:
             The name of the set to search in.
         difficulties : qbreader.types.UnnormalizedDifficulty, optional
             The difficulties to search for. Can be a single or an array of `Difficulty`
-            enum variants, strings, or integers.
+            enums, strings, or integers.
         categories : qbreader.types.UnnormalizedCategory, optional
             The categories to search for. Can be a single or an array of `Category`
-            enum variants or strings.
+            enums or strings.
         subcategories : qbreader.types.UnnormalizedSubcategory, optional
             The subcategories to search for. Can be a single or an array of
-            `Subcategory` enum variants or strings. The API does not check for consistency
+            `Subcategory` enums or strings. The API does not check for consistency
             between categories and subcategories.
         alternate_subcategories: qbreaader.types.UnnormalizedAlternateSubcategory, optional
             The alternates subcategories to search for. Can be a single or an array of
@@ -250,9 +250,7 @@ class Sync:
         }
         data = api_utils.prune_none(data)
 
-        print(data)
         response: requests.Response = requests.get(url, params=data)
-        print(response.url)
 
         if response.status_code != 200:
             raise Exception(str(response.status_code) + " bad request")
