@@ -73,13 +73,13 @@ class Sync:
             The name of the set to search in.
         difficulties : qbreader.types.UnnormalizedDifficulty, optional
             The difficulties to search for. Can be a single or an array of `Difficulty`
-            enums, strings, or integers.
+            enum variants, strings, or integers.
         categories : qbreader.types.UnnormalizedCategory, optional
             The categories to search for. Can be a single or an array of `Category`
-            enums or strings.
+            enum variants or strings.
         subcategories : qbreader.types.UnnormalizedSubcategory, optional
             The subcategories to search for. Can be a single or an array of
-            `Subcategory` enums or strings. The API does not check for consistency
+            `Subcategory` enum variants or strings. The API does not check for consistency
             between categories and subcategories.
         alternate_subcategories: qbreaader.types.UnnormalizedAlternateSubcategory, optional
             The alternates subcategories to search for. Can be a single or an array of
@@ -150,6 +150,8 @@ class Sync:
 
         url = BASE_URL + "/query"
 
+        (normalized_subcategories, normalized_alternate_subcategories) = api_utils.normalize_subcats(subcategories, alternate_subcategories)
+
         data = {
             "questionType": questionType,
             "searchType": searchType,
@@ -162,7 +164,8 @@ class Sync:
             "setName": setName,
             "difficulties": api_utils.normalize_diff(difficulties),
             "categories": api_utils.normalize_cat(categories),
-            "subcategories": api_utils.normalize_subcat(subcategories),
+            "subcategories": normalized_subcategories,
+            "alternateSubcategories": normalized_alternate_subcategories,
             "maxReturnLength": maxReturnLength,
             "tossupPagination": tossupPagination,
             "bonusPagination": bonusPagination,
@@ -202,6 +205,10 @@ class Sync:
             The subcategories to search for. Can be a single or an array of
             `Subcategory` enums or strings. The API does not check for consistency
             between categories and subcategories.
+        alternate_subcategories: qbreaader.types.UnnormalizedAlternateSubcategory, optional
+            The alternates subcategories to search for. Can be a single or an array of
+            `AlternateSubcategory` enum variants or strings. The API does not check for consistency
+            between categories, subcategories, and alternate subcategories.
         number : int, default = 1
             The number of tossups to return.
         min_year : int, default = Year.MIN_YEAR
@@ -241,10 +248,11 @@ class Sync:
             "minYear": min_year,
             "maxYear": max_year,
         }
-
         data = api_utils.prune_none(data)
 
+        print(data)
         response: requests.Response = requests.get(url, params=data)
+        print(response.url)
 
         if response.status_code != 200:
             raise Exception(str(response.status_code) + " bad request")
@@ -256,6 +264,7 @@ class Sync:
         difficulties: UnnormalizedDifficulty = None,
         categories: UnnormalizedCategory = None,
         subcategories: UnnormalizedSubcategory = None,
+        alternate_subcategories: UnnormalizedAlternateSubcategory = None,
         number: int = 1,
         min_year: int = Year.MIN_YEAR,
         max_year: int = Year.CURRENT_YEAR,
@@ -277,6 +286,10 @@ class Sync:
             The subcategories to search for. Can be a single or an array of
             `Subcategory` enums or strings. The API does not check for consistency
             between categories and subcategories.
+        alternate_subcategories: qbreaader.types.UnnormalizedAlternateSubcategory, optional
+            The alternates subcategories to search for. Can be a single or an array of
+            `AlternateSubcategory` enum variants or strings. The API does not check for consistency
+            between categories, subcategories, and alternate subcategories.
         number : int, default = 1
             The number of bonuses to return.
         min_year : int, default = Year.MIN_YEAR
@@ -313,13 +326,15 @@ class Sync:
 
         url = BASE_URL + "/random-bonus"
 
+        (normalized_subcategories, normalized_alternate_subcategories) = api_utils.normalize_subcats(subcategories, alternate_subcategories)
         data = {
             "difficulties": api_utils.normalize_diff(difficulties),
             "categories": api_utils.normalize_cat(categories),
-            "subcategories": api_utils.normalize_subcat(subcategories),
+            "subcategories": normalized_subcategories,
+            "alternateSubcategories": normalized_alternate_subcategories,
             "number": number,
-            "min_year": min_year,
-            "max_year": max_year,
+            "minYear": min_year,
+            "maxYear": max_year,
         }
         data = api_utils.prune_none(data)
 
