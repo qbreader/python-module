@@ -106,7 +106,7 @@ def normalize_subcat(unnormalized_subcats: UnnormalizedCategory):
 
 def category_correspondence(
     typed_alt_subcat: AlternateSubcategory,
-) -> Tuple[Category, Subcategory]:
+) -> Tuple[Category | None, Subcategory | None]:
     if typed_alt_subcat in [
         AlternateSubcategory.ASTRONOMY,
         AlternateSubcategory.COMPUTER_SCIENCE,
@@ -146,13 +146,16 @@ def category_correspondence(
         AlternateSubcategory.MISC_LITERATURE,
     ]:
         return (Category.LITERATURE, None)
+    
+    # Accounts for AlternateSubcategory.PRACTICES and AlternateSubcategory.BELIEFS
+    return (None, None)
 
 
 def normalize_cats(
     unnormalized_cats: UnnormalizedCategory,
     unnormalized_subcats: UnnormalizedSubcategory,
     unnormalized_alt_subcats: UnnormalizedAlternateSubcategory,
-) -> Tuple[Category, Subcategory, AlternateSubcategory]:
+) -> Tuple[str, str, str]:
     """
     Normalize a single or list of categories, subcategories, and alternate_subcategories
     to their corresponding comma-separated strings, taking into account categories and
@@ -183,8 +186,8 @@ def normalize_cats(
     elif isinstance(unnormalized_cats, str):
         final_cats = [Category(unnormalized_cats), *to_be_pushed_cats]
     elif isinstance(unnormalized_cats, Iterable):
-        for subcat in unnormalized_cats:
-            final_cats.append(Subcategory(subcat))
+        for cat in unnormalized_cats:
+            final_cats.append(Category(cat))
         final_cats.append(*to_be_pushed_cats)
 
     final_subcats = []

@@ -290,7 +290,7 @@ class Tossup:
         self.packet: PacketMetadata = packet
         self.set: SetMetadata = set
         self.number: int = number
-        self.alternate_subcategory: AlternateSubcategory = alternate_subcategory
+        self.alternate_subcategory: AlternateSubcategory | None = alternate_subcategory
 
     @classmethod
     def from_json(cls: Type[Self], json: dict[str, Any]) -> Self:
@@ -384,7 +384,7 @@ class Bonus:
         self.set: SetMetadata = set
         self.packet: PacketMetadata = packet
         self.number: int = number
-        self.alternate_subcategory: AlternateSubcategory = alternate_subcategory
+        self.alternate_subcategory: AlternateSubcategory | None = alternate_subcategory
         self.values: Optional[tuple[int, ...]] = tuple(values) if values else None
         self.difficultyModifiers: Optional[tuple[DifficultyModifier, ...]] = (
             tuple(difficultyModifiers) if difficultyModifiers else None
@@ -687,8 +687,8 @@ UnnormalizedSubcategory: TypeAlias = Optional[
 UnnormalizedAlternateSubcategory: TypeAlias = Optional[
     Union[AlternateSubcategory, str, Iterable[Union[AlternateSubcategory, str]]]
 ]
-"""Type alias for unnormalized alternate subcategories. Union of `AlternateSubcategory`, `str`, and
-`collections.abc.Iterable` containing either."""
+"""Type alias for unnormalized alternate subcategories. Union of `AlternateSubcategory`, 
+`str`, and `collections.abc.Iterable` containing either."""
 
 
 __all__ = (
