@@ -128,6 +128,16 @@ def category_correspondence(
         return (None, Subcategory.OTHER_FINE_ARTS)
 
     if typed_alt_subcat in [
+        AlternateSubcategory.ANTHROPOLOGY,
+        AlternateSubcategory.ECONOMICS,
+        AlternateSubcategory.LINGUISTICS,
+        AlternateSubcategory.PSYCHOLOGY,
+        AlternateSubcategory.SOCIOLOGY,
+        AlternateSubcategory.OTHER_SOCIAL_SCIENCE,
+    ]:
+        return (None, Subcategory.SOCIAL_SCIENCE)
+
+    if typed_alt_subcat in [
         AlternateSubcategory.DRAMA,
         AlternateSubcategory.LONG_FICTION,
         AlternateSubcategory.POETRY,
