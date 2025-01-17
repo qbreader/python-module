@@ -67,6 +67,7 @@ class Subcategory(enum.StrEnum):
     AUDITORY_FINE_ARTS = "Auditory Fine Arts"
     OTHER_FINE_ARTS = "Other Fine Arts"
 
+
 class AlternateSubcategory(enum.StrEnum):
     """Question alternate subcategory enum."""
 
@@ -100,6 +101,7 @@ class AlternateSubcategory(enum.StrEnum):
 
     BELIEFS = "Beliefs"
     PRACTICES = "Practices"
+
 
 class Difficulty(enum.StrEnum):
     """Question difficulty enum."""
@@ -308,7 +310,9 @@ class Tossup:
             packet=PacketMetadata.from_json(json["packet"]),
             set=SetMetadata.from_json(json["set"]),
             number=json["number"],
-            alternate_subcategory=AlternateSubcategory(alternate_subcategory) if alternate_subcategory else None,
+            alternate_subcategory=AlternateSubcategory(alternate_subcategory)
+            if alternate_subcategory
+            else None,
         )
 
     def check_answer_sync(self, givenAnswer: str) -> AnswerJudgement:
@@ -406,7 +410,9 @@ class Bonus:
             set=SetMetadata.from_json(json["set"]),
             packet=PacketMetadata.from_json(json["packet"]),
             number=json["number"],
-            alternate_subcategory=AlternateSubcategory(alternate_subcategory) if alternate_subcategory else None,
+            alternate_subcategory=AlternateSubcategory(alternate_subcategory)
+            if alternate_subcategory
+            else None,
             values=json.get("values", None),
             difficultyModifiers=json.get("difficultyModifiers", None),
         )
@@ -702,5 +708,5 @@ __all__ = (
     "UnnormalizedDifficulty",
     "UnnormalizedCategory",
     "UnnormalizedSubcategory",
-    "UnnormalizedAlternateSubcategory"
+    "UnnormalizedAlternateSubcategory",
 )

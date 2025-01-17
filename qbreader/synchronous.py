@@ -150,7 +150,11 @@ class Sync:
 
         url = BASE_URL + "/query"
 
-        (normalized_categories, normalized_subcategories, normalized_alternate_subcategories) = api_utils.normalize_cats(categories, subcategories, alternate_subcategories)
+        (
+            normalized_categories,
+            normalized_subcategories,
+            normalized_alternate_subcategories,
+        ) = api_utils.normalize_cats(categories, subcategories, alternate_subcategories)
 
         data = {
             "questionType": questionType,
@@ -237,7 +241,11 @@ class Sync:
 
         url = BASE_URL + "/random-tossup"
 
-        (normalized_categories, normalized_subcategories, normalized_alternate_subcategories) = api_utils.normalize_cats(categories, subcategories, alternate_subcategories)
+        (
+            normalized_categories,
+            normalized_subcategories,
+            normalized_alternate_subcategories,
+        ) = api_utils.normalize_cats(categories, subcategories, alternate_subcategories)
 
         data = {
             "difficulties": api_utils.normalize_diff(difficulties),
@@ -324,7 +332,11 @@ class Sync:
 
         url = BASE_URL + "/random-bonus"
 
-        (normalized_categories, normalized_subcategories, normalized_alternate_subcategories) = api_utils.normalize_cats(categories, subcategories, alternate_subcategories)
+        (
+            normalized_categories,
+            normalized_subcategories,
+            normalized_alternate_subcategories,
+        ) = api_utils.normalize_cats(categories, subcategories, alternate_subcategories)
 
         data = {
             "difficulties": api_utils.normalize_diff(difficulties),

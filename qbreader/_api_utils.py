@@ -93,6 +93,7 @@ def normalize_diff(unnormalized_diffs: UnnormalizedDifficulty):
     """Normalize a single or list of difficulty values to a comma separated string."""
     return normalize_enumlike(unnormalized_diffs, Difficulty)
 
+
 def normalize_cat(unnormalized_cats: UnnormalizedCategory):
     """Normalize a single or list of categories to a comma separated string."""
     return normalize_enumlike(unnormalized_cats, Category)
