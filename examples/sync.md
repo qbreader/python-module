@@ -28,7 +28,7 @@ for tossup in sync_client.random_tossup(number=3, categories=["Science"]):
     print(tossup)
 ```
 
-However, you are likely to get an error if you do not capitalize properly or make a spelling mistake. Instead, if you have some sort of LSP installed (or all-in-one extensions like VSCode Python), then figuring out what you want will be a lot easier through importing the QBReader module's `types`.
+However, you are likely to get an error if you do not capitalize properly or make a spelling mistake. Instead, if you have some sort of language server installed (or all-in-one extensions like VSCode Python), then figuring out what you want will be a lot easier through importing the QBReader module's `types`.
 ```py
 from qbreader import types
 
@@ -38,7 +38,7 @@ Category = types.Category
 for tossup in sync_client.random_tossup(number=3, categories=[Category.SCIENCE]):
     print(tossup)
 ```
-This way, while typing (:smile:), your LSP should give an autocomplete on this. This is usually a better strategy than trying to guess the string that is right.
+This way, while typing (:smile:), your language server should give an autocomplete on this. This is usually a better strategy than trying to guess the string that is right.
 
 ## Tossup by Difficulty
 
@@ -63,4 +63,77 @@ for bonus in sync_client.random_bonus(three_part_bonuses=True):
 ```py
 for bonus in sync_client.random_bonus(number=3, difficulties=[4, 5], min_year=2010, max_year=2020, categories=[Category.FINE_ARTS] three_part_bonuses=True):
     print(bonus)
+```
+
+# Examples
+
+## Simple quizbowl trainer CLI
+
+Here is a working example of a simple quizbowl trainer CLI. 
+
+```py
+from qbreader import Sync
+import time
+
+# Set up synchronous client
+sync_client = Sync()
+
+# Set up session configuration
+num_correct = 0
+num_tossups = int(input("How many tossups do you want to answer? "))
+
+# Clear the screen
+print("\033c")
+
+# Get tossups
+tossups = sync_client.random_tossup(number=num_tossups)
+
+# Read each tossup
+for i, tossup in enumerate(tossups):
+
+    # Print title and set up ANSI color
+    print(f"Tossup {i+1}:",
+          end="\033[94m\n")
+
+    # Print word by word
+    for word in tossup.question_sanitized.split():
+        # Print word, flush to see tossup after `time.sleep`
+        print(f"{word} ", end="", flush=True)
+
+        # Delay for each word in seconds
+        time.sleep(0.1)
+
+    # Reset color, go to next line
+    print("\033[0m\n")
+
+    # Get user input
+    response = input("Answer: ", end="\033[90m\n")
+
+    # Check if answer is correct
+    if sync_client.check_answer(tossup.answer, response):
+
+        num_correct += 1
+
+        # Green color for correct answer
+        print("\033[92m", "Correct!", sep="")
+
+        # Reset color, go to next line
+        print("\033[0m\n")
+
+    else:
+
+        # Red color for incorrect answer
+        print("\033[91m",
+              f"Incorrect. Correct Answer: {tossup.answer_sanitized}", sep="")
+
+        # Reset color, go to next line
+        print("\033[0m\n")
+
+# Clear the screen, end of program
+print("\033c")
+print("All done!")
+
+# Print session summary
+accuracy = num_correct / num_tossups * 100
+print(f"Accuracy: {accuracy:.2f}%")
 ```
