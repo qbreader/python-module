@@ -88,6 +88,7 @@ class AlternateSubcategory(enum.StrEnum):
     DANCE = "Dance"
     FILM = "Film"
     JAZZ = "Jazz"
+    MUSICALS = "Musicals"
     OPERA = "Opera"
     PHOTOGRAPHY = "Photography"
     MISC_ARTS = "Misc Arts"
