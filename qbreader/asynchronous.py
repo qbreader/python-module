@@ -16,10 +16,10 @@ from qbreader.types import (
     QuestionType,
     SearchType,
     Tossup,
+    UnnormalizedAlternateSubcategory,
     UnnormalizedCategory,
     UnnormalizedDifficulty,
     UnnormalizedSubcategory,
-    UnnormalizedAlternateSubcategory,
     Year,
 )
 
@@ -116,7 +116,8 @@ class Async:
             The subcategories to search for. Can be a single or an array of
             `Subcategory` enums or strings. The API does not check for consistency
             between categories and subcategories.
-        alternate_subcategories : qbreader.types.UnnormalizedAlternateSubcategory, optional
+        alternate_subcategories : qbreader.types.UnnormalizedAlternateSubcategory,\
+            optional
             The alternate subcategories to search for. Can be a single or an array of
             `AlternateSubcategory` enums or strings. The API does not check for
             consistency between categories and subcategories
@@ -244,7 +245,8 @@ class Async:
             The subcategories to search for. Can be a single or an array of
             `Subcategory` enums or strings. The API does not check for consistency
             between categories and subcategories.
-        alternate_subcategories : qbreader.types.UnnormalizedAlternateSubcategory, optional
+        alternate_subcategories : qbreader.types.UnnormalizedAlternateSubcategory,\
+            optional
             The alternate subcategories to search for. Can be a single or an array of
             `AlternateSubcategory` enums or strings. The API does not check for
             consistency between categories and subcategories
@@ -327,10 +329,11 @@ class Async:
             The subcategories to search for. Can be a single or an array of
             `Subcategory` enums or strings. The API does not check for consistency
             between categories and subcategories.
-        alternate_subcategories: qbreaader.types.UnnormalizedAlternateSubcategory, optional
+        alternate_subcategories: qbreader.types.UnnormalizedAlternateSubcategory, \
+            optional
             The alternates subcategories to search for. Can be a single or an array of
-            `AlternateSubcategory` enum variants or strings. The API does not check for consistency
-            between categories, subcategories, and alternate subcategories.
+            `AlternateSubcategory` enum variants or strings. The API does not check for
+            consistency between categories, subcategories, and alternate subcategories.
         number : int, default = 1
             The number of bonuses to return.
         min_year : int, default = Year.MIN_YEAR

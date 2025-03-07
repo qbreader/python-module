@@ -688,7 +688,7 @@ UnnormalizedSubcategory: TypeAlias = Optional[
 UnnormalizedAlternateSubcategory: TypeAlias = Optional[
     Union[AlternateSubcategory, str, Iterable[Union[AlternateSubcategory, str]]]
 ]
-"""Type alias for unnormalized alternate subcategories. Union of `AlternateSubcategory`, 
+"""Type alias for unnormalized alternate subcategories. Union of `AlternateSubcategory`,
 `str`, and `collections.abc.Iterable` containing either."""
 
 

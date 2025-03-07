@@ -4,17 +4,17 @@ from __future__ import annotations
 
 import warnings
 from enum import Enum, EnumType
-from typing import Iterable, Optional, Union, Tuple
+from typing import Iterable, Optional, Tuple, Union
 
 from qbreader.types import (
-    Difficulty,
-    Category,
-    Subcategory,
     AlternateSubcategory,
+    Category,
+    Difficulty,
+    Subcategory,
+    UnnormalizedAlternateSubcategory,
     UnnormalizedCategory,
     UnnormalizedDifficulty,
     UnnormalizedSubcategory,
-    UnnormalizedAlternateSubcategory,
 )
 
 
@@ -107,6 +107,7 @@ def normalize_subcat(unnormalized_subcats: UnnormalizedCategory):
 def category_correspondence(
     typed_alt_subcat: AlternateSubcategory,
 ) -> Tuple[Category | None, Subcategory | None]:
+    """Return the corresponding category/subcategory for a alternate_subcategory."""
     if typed_alt_subcat in [
         AlternateSubcategory.ASTRONOMY,
         AlternateSubcategory.COMPUTER_SCIENCE,
@@ -146,7 +147,7 @@ def category_correspondence(
         AlternateSubcategory.MISC_LITERATURE,
     ]:
         return (Category.LITERATURE, None)
-    
+
     # Accounts for AlternateSubcategory.PRACTICES and AlternateSubcategory.BELIEFS
     return (None, None)
 
@@ -156,12 +157,10 @@ def normalize_cats(
     unnormalized_subcats: UnnormalizedSubcategory,
     unnormalized_alt_subcats: UnnormalizedAlternateSubcategory,
 ) -> Tuple[str, str, str]:
-    """
-    Normalize a single or list of categories, subcategories, and alternate_subcategories
-    to their corresponding comma-separated strings, taking into account categories and
-    subcategories that must be added for the alternate_subcategories to work.
-    """
-
+    """Normalize a single or list of categories, subcategories, and\
+    alternate_subcategories to their corresponding comma-separated strings, taking into\
+    account categories and subcategories that must be added for the\
+    alternate_subcategories to work."""
     typed_alt_subcats: list[AlternateSubcategory] = []
 
     if isinstance(unnormalized_alt_subcats, str):
@@ -186,8 +185,8 @@ def normalize_cats(
     elif isinstance(unnormalized_cats, str):
         final_cats = [Category(unnormalized_cats), *to_be_pushed_cats]
     elif isinstance(unnormalized_cats, Iterable):
-        for cat in unnormalized_cats:
-            final_cats.append(Category(cat))
+        for unnormalized_cat in unnormalized_cats:
+            final_cats.append(Category(unnormalized_cat))
         final_cats.append(*to_be_pushed_cats)
 
     final_subcats = []
@@ -196,8 +195,8 @@ def normalize_cats(
     elif isinstance(unnormalized_subcats, str):
         final_subcats = [Subcategory(unnormalized_subcats), *to_be_pushed_subcats]
     elif isinstance(unnormalized_subcats, Iterable):
-        for subcat in unnormalized_subcats:
-            final_subcats.append(Subcategory(subcat))
+        for unnormalized_subcat in unnormalized_subcats:
+            final_subcats.append(Subcategory(unnormalized_subcat))
         final_subcats.append(*to_be_pushed_subcats)
 
     return (
