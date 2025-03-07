@@ -16,10 +16,10 @@ from qbreader.types import (
     QuestionType,
     SearchType,
     Tossup,
-    UnnormalizedDifficulty,
-    UnnormalizedCategory,
-    UnnormalizedSubcategory,
     UnnormalizedAlternateSubcategory,
+    UnnormalizedCategory,
+    UnnormalizedDifficulty,
+    UnnormalizedSubcategory,
     Year,
 )
 
@@ -81,10 +81,11 @@ class Sync:
             The subcategories to search for. Can be a single or an array of
             `Subcategory` enums or strings. The API does not check for consistency
             between categories and subcategories.
-        alternate_subcategories: qbreaader.types.UnnormalizedAlternateSubcategory, optional
+        alternate_subcategories: qbreaader.types.UnnormalizedAlternateSubcategory,\
+            optional
             The alternates subcategories to search for. Can be a single or an array of
-            `AlternateSubcategory` enum variants or strings. The API does not check for consistency
-            between categories, subcategories, and alternate subcategories.
+            `AlternateSubcategory` enum variants or strings. The API does not check for
+            consistency between categories, subcategories, and alternate subcategories.
         maxReturnLength : int, default = 25
             The maximum number of questions to return.
         tossupPagination : int, default = 1
@@ -209,10 +210,11 @@ class Sync:
             The subcategories to search for. Can be a single or an array of
             `Subcategory` enums or strings. The API does not check for consistency
             between categories and subcategories.
-        alternate_subcategories: qbreaader.types.UnnormalizedAlternateSubcategory, optional
+        alternate_subcategories: qbreaader.types.UnnormalizedAlternateSubcategory,
+            optional
             The alternates subcategories to search for. Can be a single or an array of
-            `AlternateSubcategory` enum variants or strings. The API does not check for consistency
-            between categories, subcategories, and alternate subcategories.
+            `AlternateSubcategory` enum variants or strings. The API does not check for
+            consistency between categories, subcategories, and alternate subcategories.
         number : int, default = 1
             The number of tossups to return.
         min_year : int, default = Year.MIN_YEAR
@@ -283,19 +285,20 @@ class Sync:
         Parameters
         ----------
         difficulties : qbreader.types.UnnormalizedDifficulty, optional
-            The difficulties to search for. Can be a single or an array of `Difficulty`
-            enums, strings, or integers.
+            The difficulties to search for. Can be a single or an array of
+            `Difficulty` enums, strings, or integers.
         categories : qbreader.types.UnnormalizedCategory, optional
-            The categories to search for. Can be a single or an array of `Category`
-            enums or strings.
+            The categories to search for. Can be a single or an array of
+            `Category` enums or strings.
         subcategories : qbreader.types.UnnormalizedSubcategory, optional
             The subcategories to search for. Can be a single or an array of
             `Subcategory` enums or strings. The API does not check for consistency
             between categories and subcategories.
-        alternate_subcategories: qbreaader.types.UnnormalizedAlternateSubcategory, optional
+        alternate_subcategories : qbreaader.types.UnnormalizedAlternateSubcategory,
+            optional
             The alternates subcategories to search for. Can be a single or an array of
-            `AlternateSubcategory` enum variants or strings. The API does not check for consistency
-            between categories, subcategories, and alternate subcategories.
+            `AlternateSubcategory` enum variants or strings. The API does not check for
+            consistency between categories, subcategories, and alternate subcategories.
         number : int, default = 1
             The number of bonuses to return.
         min_year : int, default = Year.MIN_YEAR
