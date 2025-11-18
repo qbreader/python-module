@@ -45,6 +45,8 @@ class Sync:
         maxReturnLength: Optional[int] = 25,
         tossupPagination: Optional[int] = 1,
         bonusPagination: Optional[int] = 1,
+        min_year: int = Year.MIN_YEAR,
+        max_year: int = Year.CURRENT_YEAR, 
     ) -> QueryResponse:
         """Query the qbreader database for questions.
 
@@ -92,7 +94,10 @@ class Sync:
             The page of tossups to return.
         bonusPagination : int, default = 1
             The page of bonuses to return.
-
+        min_year : int, default = Year.MIN_YEAR
+            The earliest year to search.
+        max_year : int, default = Year.CURRENT_YEAR
+            The latest year to search.
         Returns
         -------
         QueryResponse
@@ -149,6 +154,15 @@ class Sync:
             elif param < 1:
                 raise ValueError(f"{name} must be at least 1.")
 
+        for name, year in {
+            "minYear": min_year,
+            "maxYear": max_year,
+        }.items():
+            if not isinstance(year, int):
+                raise TypeError(
+                    f"{name} must be an integer, not {type(param).__name__}."
+                )
+
         url = BASE_URL + "/query"
 
         (
@@ -174,6 +188,8 @@ class Sync:
             "maxReturnLength": maxReturnLength,
             "tossupPagination": tossupPagination,
             "bonusPagination": bonusPagination,
+            "minYear": min_year,
+            "maxYear": max_year,
         }
         data = api_utils.prune_none(data)
 

@@ -88,6 +88,21 @@ class TestSync:
         elif params["questionType"] == "bonus":
             assert query.bonuses[0].check_answer_sync(0, expected_answer).correct()
 
+    def test_query_min_max_year_range(self):
+        min_year = 2010
+        max_year = 2015
+
+        query = qbr.query(
+            questionType="tossup",
+            searchType="question",
+            min_year=min_year,
+            max_year=max_year,
+            maxReturnLength=10,
+        )
+
+        for tossup in query.tossups:
+            assert min_year <= tossup.set.year <= max_year
+    
     @pytest.mark.parametrize(
         "params, exception",
         [
@@ -132,6 +147,18 @@ class TestSync:
                     "maxReturnLength": -1,
                 },
                 ValueError,
+            ),
+            (
+                {
+                    "min_year": "not an int",
+                },
+                TypeError,
+            ),
+            (
+                {
+                    "max_year": "not an int",
+                },
+                TypeError,
             ),
         ],
     )
