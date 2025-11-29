@@ -26,7 +26,7 @@ class Category(enum.StrEnum):
     CURRENT_EVENTS = "Current Events"
     GEOGRAPHY = "Geography"
     OTHER_ACADEMIC = "Other Academic"
-    TRASH = "Trash"
+    POP_CULTURE = "Pop Culture"
 
 
 class Subcategory(enum.StrEnum):
@@ -43,7 +43,7 @@ class Subcategory(enum.StrEnum):
     CURRENT_EVENTS = "Current Events"
     GEOGRAPHY = "Geography"
     OTHER_ACADEMIC = "Other Academic"
-    TRASH = "Trash"
+    POP_CULTURE = "Pop Culture"
 
     AMERICAN_LITERATURE = "American Literature"
     BRITISH_LITERATURE = "British Literature"
@@ -66,6 +66,13 @@ class Subcategory(enum.StrEnum):
     VISUAL_FINE_ARTS = "Visual Fine Arts"
     AUDITORY_FINE_ARTS = "Auditory Fine Arts"
     OTHER_FINE_ARTS = "Other Fine Arts"
+
+    MOVIES = "Movies"
+    MUSIC = "Music"
+    SPORTS = "Sports"
+    TELEVISION = "Television"
+    VIDEO_GAMES = "Video Games"
+    OTHER_POP_CULTURE = "Other Pop Culture"
 
 
 class AlternateSubcategory(enum.StrEnum):
