@@ -102,7 +102,7 @@ class TestSync:
 
         for tossup in query.tossups:
             assert min_year <= tossup.set.year <= max_year
-    
+
     @pytest.mark.parametrize(
         "params, exception",
         [

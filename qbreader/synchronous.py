@@ -46,7 +46,7 @@ class Sync:
         tossupPagination: Optional[int] = 1,
         bonusPagination: Optional[int] = 1,
         min_year: int = Year.MIN_YEAR,
-        max_year: int = Year.CURRENT_YEAR, 
+        max_year: int = Year.CURRENT_YEAR,
     ) -> QueryResponse:
         """Query the qbreader database for questions.
 
