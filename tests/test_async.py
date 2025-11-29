@@ -117,6 +117,22 @@ class TestAsync:
             assert judgement.correct()
 
     @pytest.mark.asyncio
+    async def test_query_min_max_year_range(self, qbr):
+        min_year = 2010
+        max_year = 2015
+
+        query = await qbr.query(
+            questionType="tossup",
+            searchType="question",
+            min_year=min_year,
+            max_year=max_year,
+            maxReturnLength=10,
+        )
+
+        for tossup in query.tossups:
+            assert min_year <= tossup.set.year <= max_year
+
+    @pytest.mark.asyncio
     @pytest.mark.parametrize(
         "params, exception",
         [
