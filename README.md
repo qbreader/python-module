@@ -32,6 +32,13 @@ Alternatively, you may install the most recent, but potentially unstable, develo
 $ pip install git+https://github.com/qbreader/python-module.git
 ```
 
+### Developing with Poetry
+
+1. [Install poetry](https://python-poetry.org/docs/#installation).
+2. Run `poetry install`
+3. After making changes, run `poetry run pytest`
+  - You can also run individual files with `poetry run python your_file.py`
+
 ## A quick glance
 
 ```py
