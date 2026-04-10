@@ -149,7 +149,13 @@ def category_correspondence(
         return (Category.LITERATURE, None)
 
     # Accounts for AlternateSubcategory.PRACTICES and AlternateSubcategory.BELIEFS
-    return (None, None)
+    if typed_alt_subcat in [
+        AlternateSubcategory.PRACTICES,
+        AlternateSubcategory.BELIEFS
+    ]:
+        return (None, None)
+
+    raise ValueError(f"Unmapped alternate subcategory: {typed_alt_subcat}")
 
 
 def normalize_cats(
