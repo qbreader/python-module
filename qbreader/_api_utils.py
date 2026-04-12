@@ -193,7 +193,7 @@ def normalize_cats(
     elif isinstance(unnormalized_cats, Iterable):
         for unnormalized_cat in unnormalized_cats:
             final_cats.append(Category(unnormalized_cat))
-        final_cats.append(*to_be_pushed_cats)
+        final_cats.extend(to_be_pushed_cats)
 
     final_subcats = []
     if unnormalized_subcats is None:
