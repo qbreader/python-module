@@ -133,6 +133,7 @@ class Async:
             The earliest year to search.
         max_year : int, default = Year.CURRENT_YEAR
             The latest year to search.
+
         Returns
         -------
         QueryResponse
