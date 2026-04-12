@@ -150,7 +150,7 @@ def category_correspondence(
 
     if typed_alt_subcat in [
         AlternateSubcategory.PRACTICES,
-        AlternateSubcategory.BELIEFS
+        AlternateSubcategory.BELIEFS,
     ]:
         return (None, None)
 
