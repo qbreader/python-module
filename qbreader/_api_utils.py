@@ -203,7 +203,7 @@ def normalize_cats(
     elif isinstance(unnormalized_subcats, Iterable):
         for unnormalized_subcat in unnormalized_subcats:
             final_subcats.append(Subcategory(unnormalized_subcat))
-        final_subcats.append(*to_be_pushed_subcats)
+        final_subcats.extend(to_be_pushed_subcats)
 
     return (
         normalize_enumlike(final_cats, Category),
